@@ -1,0 +1,16 @@
+.avatar {
+  width: min(100%, 560px);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.thumbs img {
+  width: 100%;
+  border-radius: 0.6rem;
+}

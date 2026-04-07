@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: inline-flex;
+  color: var(--accent);
+  opacity: 0.92;
+}
+
+.link:hover,
+.link:focus-visible {
+  opacity: 1;
+}
+
+.icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}

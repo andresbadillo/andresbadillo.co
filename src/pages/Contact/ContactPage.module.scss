@@ -1,0 +1,14 @@
+.form {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 640px;
+}
+
+.input,
+.textarea {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+}

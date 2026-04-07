@@ -1,0 +1,68 @@
+$reduced-fade-ms: 140ms;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  transform: translateY(-100%);
+  pointer-events: none;
+  z-index: 1200;
+}
+
+.overlayReduced {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1200;
+  transform: none;
+}
+
+.covering {
+  animation: cover 320ms ease forwards;
+}
+
+.revealing {
+  animation: reveal 320ms ease forwards;
+}
+
+@keyframes cover {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0%); }
+}
+
+@keyframes reveal {
+  from { transform: translateY(0%); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes reducedFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes reducedFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reducedFadeIn {
+    animation: reducedFadeIn $reduced-fade-ms ease forwards;
+    animation-duration: $reduced-fade-ms !important;
+  }
+
+  .reducedFadeOut {
+    animation: reducedFadeOut $reduced-fade-ms ease forwards;
+    animation-duration: $reduced-fade-ms !important;
+  }
+}

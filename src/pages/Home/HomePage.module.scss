@@ -1,0 +1,284 @@
+.home {
+  /* Sin overflow-x: hidden aquí: rompe position:sticky en algunos navegadores. */
+}
+
+/* Track alto: mientras haces scroll el hero queda sticky; al acabar el tramo sube entero (estrellas + contenido). */
+.heroTrack {
+  position: relative;
+  width: 100%;
+  min-width: 100%;
+  margin-top: -84px;
+  min-height: 320vh;
+  background: var(--home-hero-bg);
+}
+
+.heroTrackReduced {
+  min-height: 0;
+  background: transparent;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-width: 100%;
+  background: var(--home-hero-bg);
+  color: #e2e4e8;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.heroSticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  min-width: 100%;
+  min-height: 100dvh;
+  height: 100dvh;
+  margin: 0;
+  padding-top: 84px;
+  z-index: 2;
+}
+
+/* Modo reducido: flujo normal, sin scroll largo. */
+.heroStatic {
+  position: relative;
+  height: auto;
+  min-height: calc(100dvh - 84px);
+  margin-top: -84px;
+  padding-top: 84px;
+}
+
+.heroMotion {
+  position: relative;
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, 92vw);
+  margin: 0 auto;
+  min-height: calc(100dvh - 84px);
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: clamp(2rem, 6vw, 4rem);
+  align-items: center;
+  padding: 2rem 0 5rem;
+}
+
+.avatarWrap {
+  background: var(--home-preview-surface);
+  border-radius: 45% 55% 50% 50% / 40% 45% 55% 60%;
+  padding: 0.45rem;
+  justify-self: center;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.avatar {
+  width: 100%;
+  display: block;
+  border-radius: 42% 58% 55% 45% / 44% 50% 50% 56%;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+
+.intro h1 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.greet {
+  color: #b8bec7;
+  font-weight: 500;
+}
+
+.nameHighlight {
+  color: var(--accent);
+}
+
+.bio {
+  margin: 0;
+  max-width: 40ch;
+  line-height: 1.7;
+  color: #9ea5af;
+  font-size: 1.02rem;
+}
+
+.scrollCue {
+  position: fixed;
+  right: max(1rem, calc((100vw - 1080px) / 2 + 1rem));
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1100;
+  pointer-events: none;
+  transition:
+    opacity 280ms ease,
+    visibility 280ms ease;
+}
+
+.scrollCueHidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 2.5rem;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+.scrollText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.section {
+  padding: clamp(3rem, 8vw, 5rem) 0;
+}
+
+.sectionTitle {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  margin: 0 0 0.35rem;
+  letter-spacing: 0.02em;
+}
+
+.sectionAccent {
+  color: var(--fg);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.08rem;
+  margin-right: 0.35rem;
+}
+
+.seeAll {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.blogSection {
+  padding: clamp(3rem, 8vw, 4.5rem) 0;
+}
+
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.contactSection {
+  padding: clamp(3rem, 8vw, 5rem) 0 4rem;
+}
+
+.contactLead {
+  color: var(--muted);
+  margin: 0 0 1.25rem;
+  font-size: 0.98rem;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  max-width: 720px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+.input,
+.textarea {
+  border: none;
+  background: var(--home-form-input-bg);
+  color: var(--home-form-input-fg);
+  border-radius: 0.4rem;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+}
+
+.textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.send {
+  justify-self: start;
+  margin-top: 0.25rem;
+  padding: 0.55rem 1.75rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.formNote {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .blogGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    padding-top: 3rem;
+    text-align: center;
+  }
+
+  .bio {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .intro :global(ul) {
+    justify-content: center;
+  }
+
+  .blogGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .row2 {
+    grid-template-columns: 1fr;
+  }
+
+  .scrollCue {
+    right: 1rem;
+  }
+}

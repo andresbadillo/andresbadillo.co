@@ -1,0 +1,42 @@
+.card {
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 0.65rem;
+  overflow: hidden;
+}
+
+.mediaLink {
+  display: block;
+}
+
+.img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.title {
+  margin: 0.85rem 0.75rem 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.title a:hover,
+.title a:focus-visible {
+  color: var(--accent);
+}
+
+.tags {
+  margin: 0 0.75rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.tag {
+  color: var(--accent);
+}
