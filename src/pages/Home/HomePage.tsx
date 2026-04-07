@@ -139,7 +139,7 @@ export function HomePage() {
 
   return (
     <div className={styles.home}>
-      <Seo title="Home — Andres Badillo Demo" description="Home de portfolio minimalista con arte generativo." />
+      <Seo title="Home — Andres Badillo" description="Home de portfolio minimalista con arte generativo." />
       <div
         ref={heroTrackRef}
         className={clsx(styles.heroTrack, prefersReducedMotion && styles.heroTrackReduced)}
@@ -163,7 +163,7 @@ export function HomePage() {
             <div className={styles.intro}>
               <h1>
                 <span className={styles.greet}>Hey, I&apos;m</span>{" "}
-                <span className={styles.nameHighlight}>Alex Rivera</span>
+                <span className={styles.nameHighlight}>Andrés Badillo</span>
               </h1>
               <p className={styles.bio}>
                 Ingeniero de software full-stack de demostración. Construyo plataformas web claras, datos accesibles y
