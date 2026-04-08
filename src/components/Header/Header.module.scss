@@ -2,9 +2,22 @@
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
-  background: color-mix(in srgb, var(--home-hero-bg, var(--bg)) 72%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  background: transparent;
+  border-bottom: none;
+  transform: translateY(0);
+  transition: transform 0.32s ease;
+  will-change: transform;
+}
+
+.headerHidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition-duration: 0.15s;
+  }
 }
 
 .inner {
@@ -21,7 +34,13 @@
   letter-spacing: 0.18em;
   color: var(--accent);
   text-transform: uppercase;
-  font-size: 0.78rem;
+  font-size: 2rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .logoDot {
@@ -35,8 +54,8 @@
 
 .navLink {
   text-transform: uppercase;
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
   color: var(--fg);
   opacity: 0.82;
   padding-bottom: 0.2rem;
@@ -59,14 +78,46 @@
   gap: 1rem;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
 .menuButton {
   display: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--accent);
+  line-height: 0;
+  /* Misma altura visual que ThemeToggle (.track height 1.75rem) para alinear en .actions */
+  min-height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Tres barras centradas en una caja con altura real (las sombras no cuentan para el layout) */
+.menuButtonBars {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 1.35rem;
+  height: 1.75rem;
+}
+
+.menuButtonBars::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 -7px 0 currentColor, 0 7px 0 currentColor;
 }
 
 @media (max-width: 760px) {

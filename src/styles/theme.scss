@@ -6,10 +6,18 @@
   --border: #2b3441;
   --accent: #f2a36b;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-  --home-hero-bg: #000000;
+  --home-hero-bg: #0f1115;
+  --home-hero-fg: #e2e4e8;
+  --home-hero-muted: #9ea5af;
+  --home-hero-greet: #b8bec7;
+  --starfield-rgb: 242, 244, 255;
   --home-preview-surface: #4a5a6e;
   --home-form-input-bg: #ffffff;
   --home-form-input-fg: #1a1a1a;
+  --toggle-track-bg: #2c323c;
+  --toggle-thumb-bg: #f0f2f7;
+  --toggle-border: #3d4552;
+  --toggle-icon-dim: rgba(240, 242, 247, 0.45);
 }
 
 [data-theme="dark"] {
@@ -20,10 +28,18 @@
   --border: #2b3441;
   --accent: #f2a36b;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-  --home-hero-bg: #000000;
+  --home-hero-bg: #0f1115;
+  --home-hero-fg: #e2e4e8;
+  --home-hero-muted: #9ea5af;
+  --home-hero-greet: #b8bec7;
+  --starfield-rgb: 242, 244, 255;
   --home-preview-surface: #4a5a6e;
   --home-form-input-bg: #ffffff;
   --home-form-input-fg: #1a1a1a;
+  --toggle-track-bg: #2c323c;
+  --toggle-thumb-bg: #f0f2f7;
+  --toggle-border: #3d4552;
+  --toggle-icon-dim: rgba(240, 242, 247, 0.45);
 }
 
 [data-theme="light"] {
@@ -34,10 +50,18 @@
   --border: #c9d2dc;
   --accent: #c86f3a;
   --shadow: 0 10px 20px rgba(31, 35, 41, 0.1);
-  --home-hero-bg: #050508;
+  --home-hero-bg: #ffffff;
+  --home-hero-fg: #1f2329;
+  --home-hero-muted: #5d6670;
+  --home-hero-greet: #4a5563;
+  --starfield-rgb: 58, 65, 74;
   --home-preview-surface: #b8c5d6;
   --home-form-input-bg: #ffffff;
   --home-form-input-fg: #1a1a1a;
+  --toggle-track-bg: #e2e8f0;
+  --toggle-thumb-bg: #ffffff;
+  --toggle-border: #cbd5e1;
+  --toggle-icon-dim: rgba(31, 35, 41, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {

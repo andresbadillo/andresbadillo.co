@@ -22,7 +22,7 @@
   width: 100%;
   min-width: 100%;
   background: var(--home-hero-bg);
-  color: #e2e4e8;
+  color: var(--home-hero-fg);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -92,7 +92,7 @@
 }
 
 .greet {
-  color: #b8bec7;
+  color: var(--home-hero-greet);
   font-weight: 500;
 }
 
@@ -104,7 +104,7 @@
   margin: 0;
   max-width: 40ch;
   line-height: 1.7;
-  color: #9ea5af;
+  color: var(--home-hero-muted);
   font-size: 1.02rem;
 }
 

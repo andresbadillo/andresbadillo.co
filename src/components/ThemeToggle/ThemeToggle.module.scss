@@ -1,24 +1,77 @@
-.button {
+.switch {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 2.65rem;
-  height: 1.5rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-  background: color-mix(in srgb, var(--card) 88%, transparent);
-  color: var(--accent);
+  border: none;
+  background: none;
   cursor: pointer;
+  line-height: 0;
 }
 
 .track {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 3.35rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: var(--toggle-track-bg);
+  border: 1px solid var(--toggle-border);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.decorMoon,
+.decorSun {
+  position: absolute;
+  top: 50%;
+  width: 0.82rem;
+  height: 0.82rem;
+  transform: translateY(-50%);
+  color: var(--toggle-icon-dim);
+  pointer-events: none;
+}
+
+.decorMoon {
+  left: 0.42rem;
+}
+
+.decorSun {
+  right: 0.42rem;
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin: 0;
+  border-radius: 50%;
+  background: var(--toggle-thumb-bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  color: var(--accent);
+  transform: translateY(-50%);
+  transition: transform 0.22s ease;
 }
 
-.icon {
-  width: 1.05rem;
-  height: 1.05rem;
+/* Recorrido: 3.35rem carril − 1.35rem thumb − 6px (márgenes) − 2px (bordes del carril) */
+.thumbOn {
+  transform: translateY(-50%) translateX(calc(3.35rem - 1.35rem - 6px - 2px));
+}
+
+.thumbIcon {
+  width: 0.78rem;
+  height: 0.78rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb,
+  .thumb.thumbOn {
+    transition: none;
+  }
 }

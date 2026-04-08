@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useRef, type MutableRefObject, type Ref } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  type MutableRefObject,
+  type Ref,
+  type RefCallback,
+} from "react";
 import styles from "./StarfieldCanvas.module.scss";
 
 function assignRef<T>(r: Ref<T | null> | undefined, value: T | null) {
@@ -113,6 +120,16 @@ function wrapStar(s: Star, w: number, h: number, pad: number) {
   if (s.sy > h + pad) s.sy -= h + pad * 2;
 }
 
+function readStarfieldPalette(): { bg: string; starRgb: string } {
+  if (typeof document === "undefined") {
+    return { bg: "#000000", starRgb: "242, 244, 255" };
+  }
+  const cs = getComputedStyle(document.documentElement);
+  const bg = cs.getPropertyValue("--home-hero-bg").trim() || "#000000";
+  const starRgb = cs.getPropertyValue("--starfield-rgb").trim() || "242, 244, 255";
+  return { bg, starRgb };
+}
+
 export type ClusterTargetRef = MutableRefObject<{ x: number; y: number }>;
 
 interface StarfieldCanvasProps {
@@ -130,9 +147,9 @@ export function StarfieldCanvas({
   motionEnabledRef,
   canvasRef,
 }: StarfieldCanvasProps) {
-  const innerRef = useRef<HTMLCanvasElement>(null);
-  const setCanvasRef = useCallback(
-    (el: HTMLCanvasElement | null) => {
+  const innerRef = useRef<HTMLCanvasElement | null>(null);
+  const setCanvasRef: RefCallback<HTMLCanvasElement> = useCallback(
+    (el) => {
       innerRef.current = el;
       assignRef(canvasRef, el);
     },
@@ -170,7 +187,8 @@ export function StarfieldCanvas({
       const w = widthCss;
       const h = heightCss;
       if (w < 2 || h < 2) return;
-      ctx.fillStyle = "#000000";
+      const { bg, starRgb } = readStarfieldPalette();
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
       const stars = starsRef.current;
       for (let i = 0; i < stars.length; i++) {
@@ -181,7 +199,7 @@ export function StarfieldCanvas({
         const alpha = 0.13 + depth * 0.75;
         const radius = radiusFromDepth(s.depth);
         if (px < -6 || py < -6 || px > w + 6 || py > h + 6) continue;
-        ctx.fillStyle = `rgba(242,244,255,${alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(${starRgb},${alpha.toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(px, py, radius, 0, Math.PI * 2);
         ctx.fill();
@@ -214,7 +232,8 @@ export function StarfieldCanvas({
       /* 0 → ancla dispersa; 1 → nube en el avatar (reversible al subir scroll). */
       const clusterWeight = smoothstep((p - 0.1) / 0.82);
 
-      ctx.fillStyle = "#000000";
+      const { bg: skyBg, starRgb } = readStarfieldPalette();
+      ctx.fillStyle = skyBg;
       ctx.fillRect(0, 0, w, h);
 
       const stars = starsRef.current;
@@ -298,7 +317,7 @@ export function StarfieldCanvas({
 
         if (px < -10 || py < -10 || px > w + 10 || py > h + 10) continue;
 
-        ctx.fillStyle = `rgba(242,244,255,${alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(${starRgb},${alpha.toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(px, py, radius, 0, Math.PI * 2);
         ctx.fill();
@@ -326,6 +345,11 @@ export function StarfieldCanvas({
     ro.observe(parent);
     parent.addEventListener("pointermove", onPointerMove);
 
+    const themeMo = new MutationObserver(() => {
+      if (reducedMotion) drawStatic();
+    });
+    themeMo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
     if (!reducedMotion) {
       lastTimeRef.current = performance.now();
       frameRef.current = requestAnimationFrame(loop);
@@ -333,6 +357,7 @@ export function StarfieldCanvas({
 
     return () => {
       ro.disconnect();
+      themeMo.disconnect();
       parent.removeEventListener("pointermove", onPointerMove);
       cancelAnimationFrame(frameRef.current);
     };
