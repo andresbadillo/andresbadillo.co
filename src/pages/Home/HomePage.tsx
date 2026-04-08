@@ -7,7 +7,7 @@ import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { projects } from "@/data/projects";
 import { posts } from "@/data/posts";
-import avatarPlaceholder from "@/assets/placeholders/avatar.svg";
+import avatarPlaceholder from "@/assets/placeholders/avatar.png";
 import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
 import clsx from "clsx";
 import {
@@ -158,7 +158,7 @@ export function HomePage() {
         <div className={styles.heroMotion}>
           <div className={styles.heroContent}>
             <div ref={avatarWrapRef} className={styles.avatarWrap}>
-              <img src={avatarPlaceholder} className={styles.avatar} alt="Retrato placeholder del autor" />
+              <img src={avatarPlaceholder} className={styles.avatar} alt="Retrato de Andrés Badillo" />
             </div>
             <div className={styles.intro}>
               <h1>
