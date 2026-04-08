@@ -144,7 +144,41 @@
   max-width: 40ch;
   line-height: 1.7;
   color: var(--home-hero-muted);
-  font-size: 1.02rem;
+  font-size: 1.2rem;
+}
+
+.introReveal {
+  --intro-p1: 0;
+  --intro-p3: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.bioLine {
+  will-change: opacity, transform;
+}
+
+.bioLine1 {
+  color: var(--home-hero-greet);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  opacity: var(--intro-p1);
+  transform: translateY(calc((1 - var(--intro-p1)) * 0.65rem));
+}
+
+.bioLine3 {
+  max-width: 44ch;
+  padding-top: 0.15rem;
+  font-weight: 700;
+  opacity: var(--intro-p3);
+  transform: translateY(calc((1 - var(--intro-p3)) * 0.65rem));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bioLine1,
+  .bioLine3 {
+    transform: none;
+  }
 }
 
 .scrollCue {
@@ -300,9 +334,8 @@
     text-align: center;
   }
 
-  .bio {
-    margin-left: auto;
-    margin-right: auto;
+  .introReveal {
+    justify-items: center;
   }
 
   .intro :global(ul) {

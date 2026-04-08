@@ -231,6 +231,8 @@ export function StarfieldCanvas({
       const clusterTight = 0.34 + pull * pull * 0.54;
       /* 0 → ancla dispersa; 1 → nube en el avatar (reversible al subir scroll). */
       const clusterWeight = smoothstep((p - 0.1) / 0.82);
+      /* Scroll arriba → tamaño original; scroll abajo → hasta 50 % del radio (junto al movimiento existente). */
+      const starSizeMul = 1 - 0.8 * p;
 
       const { bg: skyBg, starRgb } = readStarfieldPalette();
       ctx.fillStyle = skyBg;
@@ -312,7 +314,7 @@ export function StarfieldCanvas({
 
         const depthVis = Math.max(DEPTH_LO, Math.min(DEPTH_HI, s.depth));
         let alpha = 0.11 + depthVis * 0.76 + pull * (s.mode === "field" ? 0.04 : 0.09);
-        const radius = radiusFromDepth(s.depth) + pull * (s.mode === "field" ? 0.12 : 0.28);
+        const radius = (radiusFromDepth(s.depth) + pull * (s.mode === "field" ? 0.12 : 0.28)) * starSizeMul;
         alpha = Math.min(1, alpha);
 
         if (px < -10 || py < -10 || px > w + 10 || py > h + 10) continue;

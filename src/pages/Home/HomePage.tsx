@@ -34,6 +34,7 @@ export function HomePage() {
   const avatarWrapRef = useRef<HTMLDivElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
   const portfolioSentinelRef = useRef<HTMLElement>(null);
+  const introRevealRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -52,8 +53,16 @@ export function HomePage() {
 
     const reduced = prefersReducedMotion;
 
+    const revealEl = introRevealRef.current;
+    const setIntroPhases = (p1: number, p3: number) => {
+      if (!revealEl) return;
+      revealEl.style.setProperty("--intro-p1", String(p1));
+      revealEl.style.setProperty("--intro-p3", String(p3));
+    };
+
     if (reduced) {
       scrollProgressRef.current = 0;
+      setIntroPhases(1, 1);
       const avatarRm = avatarWrapRef.current;
       if (avatarRm) {
         const cr = starCanvasRef.current?.getBoundingClientRect();
@@ -83,6 +92,11 @@ export function HomePage() {
     const progress = trackH >= vh * 2 ? Math.min(1, Math.max(0, raw)) : 0;
     scrollProgressRef.current = progress;
 
+    const span = (t: number, start: number, end: number) =>
+      Math.min(1, Math.max(0, (t - start) / Math.max(1e-6, end - start)));
+    /* Segundo bloque listo ~0,72 del hero para leerlo antes de Selected Portfolio */
+    setIntroPhases(span(progress, 0.05, 0.2), span(progress, 0.4, 0.72));
+
     const avatar = avatarWrapRef.current;
     if (avatar) {
       const cr = starCanvasRef.current?.getBoundingClientRect();
@@ -106,9 +120,11 @@ export function HomePage() {
     const track = heroTrackRef.current;
     const layer = heroStickyRef.current;
     const avatarEl = avatarWrapRef.current;
+    const introEl = introRevealRef.current;
     if (track) ro.observe(track);
     if (layer) ro.observe(layer);
     if (avatarEl) ro.observe(avatarEl);
+    if (introEl) ro.observe(introEl);
     return () => {
       window.removeEventListener("scroll", syncScrollDrivenUi);
       window.removeEventListener("resize", syncScrollDrivenUi);
@@ -165,10 +181,15 @@ export function HomePage() {
                 <span className={styles.greet}>Hey, I&apos;m</span>{" "}
                 <span className={styles.nameHighlight}>Andrés Badillo</span>
               </h1>
-              <p className={styles.bio}>
-                Ingeniero de software full-stack de demostración. Construyo plataformas web claras, datos accesibles y
-                interfaces que respiran. Basado en un hub inventado entre dos ciudades ficticias.
-              </p>
+              <div ref={introRevealRef} className={styles.introReveal}>
+                <p className={clsx(styles.bio, styles.bioLine, styles.bioLine1)}>
+                  MBA, Product Manager, Project Manager,<br />
+                  Data Analyst, Data Science, Frontend Developer.
+                </p>
+                <p className={clsx(styles.bio, styles.bioLine, styles.bioLine3)}>
+                  Turning complexity into software, data, and decisions that drive impact.
+                </p>
+              </div>
               <SocialLinksRow />
             </div>
           </div>
