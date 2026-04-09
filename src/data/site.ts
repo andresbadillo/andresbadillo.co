@@ -9,10 +9,8 @@ export const navItems = [
 ];
 
 export const socialLinks = [
-  { label: "GitHub", href: "https://example.com/github" },
-  { label: "LinkedIn", href: "https://example.com/linkedin" },
-  { label: "Medium", href: "https://example.com/medium" },
-  { label: "X", href: "https://example.com/x" },
-  { label: "Instagram", href: "https://example.com/instagram" },
-  { label: "YouTube", href: "https://example.com/youtube" },
+  { label: "GitHub", href: "https://github.com/andresbadillo" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/raul-andres-badillo-jaimes/" },
+  { label: "Instagram", href: "https://www.instagram.com/andresbadillo.co" },
+  { label: "TikTok", href: "https://www.tiktok.com/@andresbadillo.co" },
 ];
