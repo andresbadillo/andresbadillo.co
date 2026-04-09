@@ -52,9 +52,9 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
     <header className={clsx(styles.header, !headerVisible && styles.headerHidden)}>
       <div className={clsx("container", styles.inner)}>
         <TransitionLink to="/" className={styles.logo} ariaLabel="Ir al inicio">
-          <span className={styles.logoDot}>.</span>
+          <span className={styles.logoDot}>{'<'}</span>
           <span className={styles.logoText}>{siteBrandShort}</span>
-          <span className={styles.logoDot}>.</span>
+          <span className={styles.logoDot}>{'/>'}</span>
         </TransitionLink>
         <nav className={clsx(styles.nav, open && styles.open)} aria-label="Navegación principal">
           {navItems.map((item) => (
