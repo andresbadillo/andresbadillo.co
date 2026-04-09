@@ -230,11 +230,18 @@
   background: var(--bg);
 }
 
+/* Por encima del divisor en el solapamiento para tapar el hairline (fondo del padre .portfolioBand) */
+.portfolioBand > .container {
+  position: relative;
+  z-index: 4;
+}
+
 .heroPortfolioDivider {
   position: relative;
   width: 100%;
   height: clamp(116px, 14vw, 172px);
   margin-top: clamp(-58px, -6vw, -38px);
+  margin-bottom: -1px;
   overflow: hidden;
   background: var(--home-hero-bg);
   isolation: isolate;
@@ -401,6 +408,10 @@
 
   .scrollCue {
     right: 1rem;
+  }
+
+  .heroPortfolioDivider {
+    margin-bottom: -2px;
   }
 }
 
