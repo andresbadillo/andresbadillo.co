@@ -121,6 +121,12 @@
   opacity: 0.99;
 }
 
+.intro {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .intro h1 {
   margin: 0 0 0.85rem;
   font-size: clamp(1.75rem, 4vw, 2.75rem);
@@ -381,7 +387,7 @@
     justify-items: center;
   }
 
-  .intro :global(ul) {
+  .introSocial :global(ul) {
     justify-content: center;
   }
 
@@ -405,8 +411,37 @@
   }
 
   .heroContent {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-content: stretch;
+    align-items: stretch;
     gap: 1.35rem;
     padding-top: 2.35rem;
+  }
+
+  /* Los hijos de .intro participan en la grid del hero: avatar | textos | redes */
+  .intro {
+    display: contents;
+  }
+
+  .introText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .introSocial {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .introSocial :global(ul) {
+    margin-top: 0;
   }
 
   .avatarWrap {

@@ -140,3 +140,14 @@
     pointer-events: auto;
   }
 }
+
+@media (max-width: 425px) {
+  .logo {
+    font-size: clamp(1.35rem, 5.2vw, 1.55rem);
+    align-items: center;
+  }
+
+  .logoText {
+    margin: 0 0.12rem;
+  }
+}

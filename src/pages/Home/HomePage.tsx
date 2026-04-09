@@ -177,20 +177,24 @@ export function HomePage() {
               <img src={avatarPlaceholder} className={styles.avatar} alt="Retrato de Andrés Badillo" />
             </div>
             <div className={styles.intro}>
-              <h1>
-                <span className={styles.greet}>Hey, I&apos;m</span>{" "}
-                <span className={styles.nameHighlight}>Andrés Badillo</span>
-              </h1>
-              <div ref={introRevealRef} className={styles.introReveal}>
-                <p className={clsx(styles.bio, styles.bioLine, styles.bioLine1)}>
-                  MBA, Product Manager, Project Manager,<br />
-                  Data Analyst, Data Science, Frontend Developer.
-                </p>
-                <p className={clsx(styles.bio, styles.bioLine, styles.bioLine3)}>
-                  Turning complexity into software, data, and decisions that drive impact.
-                </p>
+              <div className={styles.introText}>
+                <h1>
+                  <span className={styles.greet}>Hey, I&apos;m</span>{" "}
+                  <span className={styles.nameHighlight}>Andrés Badillo</span>
+                </h1>
+                <div ref={introRevealRef} className={styles.introReveal}>
+                  <p className={clsx(styles.bio, styles.bioLine, styles.bioLine1)}>
+                    MBA, Product Manager, Project Manager,<br />
+                    Data Analyst, Data Science, Frontend Developer.
+                  </p>
+                  <p className={clsx(styles.bio, styles.bioLine, styles.bioLine3)}>
+                    Turning complexity into software, data, and decisions that drive impact.
+                  </p>
+                </div>
               </div>
-              <SocialLinksRow />
+              <div className={styles.introSocial}>
+                <SocialLinksRow />
+              </div>
             </div>
           </div>
         </div>
