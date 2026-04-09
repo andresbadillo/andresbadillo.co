@@ -1,4 +1,3 @@
-import { useCurtain } from "@/components/CurtainTransition/CurtainTransition";
 import clsx from "clsx";
 import styles from "./ThemeToggle.module.scss";
 
@@ -27,12 +26,11 @@ function MoonIcon({ className }: { className?: string }) {
 }
 
 export function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) {
-  const { startTransition } = useCurtain();
   const isLight = theme === "light";
   const next = isLight ? "dark" : "light";
 
   const handleClick = () => {
-    startTransition(() => onThemeChange(next));
+    onThemeChange(next);
   };
 
   return (

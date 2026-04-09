@@ -1,12 +1,24 @@
 $reduced-fade-ms: 140ms;
+$curtain-ms: 320ms;
 
 .overlay {
   position: fixed;
   inset: 0;
   background: var(--bg);
-  transform: translateY(-100%);
   pointer-events: none;
   z-index: 1200;
+}
+
+.overlayTb {
+  transform: translateY(-100%);
+}
+
+.overlayLtr {
+  transform: translateX(-100%);
+}
+
+.overlayRtl {
+  transform: translateX(100%);
 }
 
 .overlayReduced {
@@ -19,22 +31,82 @@ $reduced-fade-ms: 140ms;
   transform: none;
 }
 
-.covering {
-  animation: cover 320ms ease forwards;
+.coveringTb {
+  animation: coverTb $curtain-ms ease forwards;
 }
 
-.revealing {
-  animation: reveal 320ms ease forwards;
+.revealingTb {
+  animation: revealTb $curtain-ms ease forwards;
 }
 
-@keyframes cover {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0%); }
+.coveringLtr {
+  animation: coverLtr $curtain-ms ease forwards;
 }
 
-@keyframes reveal {
-  from { transform: translateY(0%); }
-  to { transform: translateY(100%); }
+.revealingLtr {
+  animation: revealLtr $curtain-ms ease forwards;
+}
+
+.coveringRtl {
+  animation: coverRtl $curtain-ms ease forwards;
+}
+
+.revealingRtl {
+  animation: revealRtl $curtain-ms ease forwards;
+}
+
+@keyframes coverTb {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes revealTb {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes coverLtr {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes revealLtr {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes coverRtl {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes revealRtl {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes reducedFadeIn {
