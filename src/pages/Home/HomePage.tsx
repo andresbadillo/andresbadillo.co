@@ -203,88 +203,99 @@ export function HomePage() {
         </section>
       </div>
 
-      <div className="container">
-        <section
-          ref={portfolioSentinelRef}
-          className={styles.section}
-          id="selected-portfolio-projects"
-          aria-labelledby="home-projects-heading"
-        >
-          <h2 id="home-projects-heading" className={styles.sectionTitle}>
-            <span className={styles.sectionAccent}>Selected</span>
-            Portfolio Projects
-          </h2>
-          {projects.slice(0, 4).map((project, index) => (
-            <HomeProjectRow key={project.slug} project={project} reversed={index % 2 === 0} />
-          ))}
-          <TransitionLink to="/portfolio" className={styles.seeAll}>
-            See all
-          </TransitionLink>
-        </section>
+      <div className={styles.portfolioBand}>
+        <div className={styles.heroPortfolioDivider} aria-hidden="true">
+          <svg className={styles.heroPortfolioWave} viewBox="0 0 1440 240" preserveAspectRatio="none">
+            <path d="M0,120 C120,52 240,52 360,120 C480,188 600,188 720,120 C840,52 960,52 1080,120 C1200,188 1320,188 1440,120 L1440,240 L0,240 Z" />
+          </svg>
+        </div>
+        <div className="container">
+          <section
+            ref={portfolioSentinelRef}
+            className={styles.section}
+            id="selected-portfolio-projects"
+            aria-labelledby="home-projects-heading"
+          >
+            <h2 id="home-projects-heading" className={styles.sectionTitle}>
+              <span className={styles.sectionAccent}>Selected</span>
+              Portfolio Projects
+            </h2>
+            {projects.slice(0, 4).map((project, index) => (
+              <HomeProjectRow key={project.slug} project={project} reversed={index % 2 === 0} />
+            ))}
+            <TransitionLink to="/portfolio" className={styles.seeAll}>
+              See all
+            </TransitionLink>
+          </section>
+        </div>
       </div>
 
       <SvgWavesDivider />
 
-      <div className="container">
-        <section className={styles.blogSection} aria-labelledby="home-blog-heading">
-          <h2 id="home-blog-heading" className={styles.sectionTitle}>
-            <span className={styles.sectionAccent}>Selected</span>
-            Blog Articles
-          </h2>
-          <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
-          <TransitionLink to="/blog" className={styles.seeAll}>
-            See all
-          </TransitionLink>
-        </section>
+      <div className={styles.blogBand}>
+        <div className="container">
+          <section className={styles.blogSection} aria-labelledby="home-blog-heading">
+            <h2 id="home-blog-heading" className={styles.sectionTitle}>
+              <span className={styles.sectionAccent}>Selected</span>
+              Blog Articles
+            </h2>
+            <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
+            <TransitionLink to="/blog" className={styles.seeAll}>
+              See all
+            </TransitionLink>
+          </section>
+        </div>
       </div>
 
       <CanvasBarsDivider />
 
-      <div className="container">
-        <section className={styles.contactSection} aria-labelledby="home-contact-heading">
-          <h2 id="home-contact-heading" className={styles.sectionTitle}>
-            Contact
-          </h2>
-          <p className={styles.contactLead}>
-            Si quieres comentar un proyecto, escribe a <strong>contacto@demo.dev</strong> o usa el formulario de prueba:
-          </p>
-          <form className={styles.form} onSubmit={onSubmitHomeContact}>
-            <div className={styles.row2}>
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="home-contact-name">
-                  Name
-                </label>
-                <input id="home-contact-name" name="name" className={styles.input} autoComplete="name" required />
+      <div className={styles.contactBand}>
+        <div className="container">
+          <section className={styles.contactSection} aria-labelledby="home-contact-heading">
+            <h2 id="home-contact-heading" className={styles.sectionTitle}>
+              Contact
+            </h2>
+            <p className={styles.contactLead}>
+              Si quieres comentar un proyecto, escribe a <strong>contacto@demo.dev</strong> o usa el formulario de prueba:
+            </p>
+            <form className={styles.form} onSubmit={onSubmitHomeContact}>
+              <div className={styles.row2}>
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="home-contact-name">
+                    Name
+                  </label>
+                  <input id="home-contact-name" name="name" className={styles.input} autoComplete="name" required />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="home-contact-email">
+                    Email
+                  </label>
+                  <input
+                    id="home-contact-email"
+                    name="email"
+                    type="email"
+                    className={styles.input}
+                    autoComplete="email"
+                    required
+                  />
+                </div>
               </div>
               <div className={styles.field}>
-                <label className={styles.label} htmlFor="home-contact-email">
-                  Email
+                <label className={styles.label} htmlFor="home-contact-message">
+                  Message
                 </label>
-                <input
-                  id="home-contact-email"
-                  name="email"
-                  type="email"
-                  className={styles.input}
-                  autoComplete="email"
-                  required
-                />
+                <textarea id="home-contact-message" name="message" className={styles.textarea} rows={6} required />
               </div>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="home-contact-message">
-                Message
-              </label>
-              <textarea id="home-contact-message" name="message" className={styles.textarea} rows={6} required />
-            </div>
-            <button type="submit" className={styles.send}>
-              Send
-            </button>
-          </form>
-          <p role="status" aria-live="polite" className={styles.formNote}>
-            {formStatus}
-          </p>
-          <p className={styles.formNote}>Para enviar realmente, conecta un backend.</p>
-        </section>
+              <button type="submit" className={styles.send}>
+                Send
+              </button>
+            </form>
+            <p role="status" aria-live="polite" className={styles.formNote}>
+              {formStatus}
+            </p>
+            <p className={styles.formNote}>Para enviar realmente, conecta un backend.</p>
+          </section>
+        </div>
       </div>
     </div>
   );

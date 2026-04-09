@@ -1,6 +1,4 @@
-.home {
-  /* Sin overflow-x: hidden aquí: rompe position:sticky en algunos navegadores. */
-}
+/* No usar overflow-x: hidden en este scope: rompe position: sticky en algunos navegadores. */
 
 /* Track alto: mientras haces scroll el hero queda sticky; al acabar el tramo sube entero (estrellas + contenido). */
 .heroTrack {
@@ -222,6 +220,51 @@
   padding: clamp(3rem, 8vw, 5rem) 0;
 }
 
+.portfolioBand {
+  background: var(--bg);
+}
+
+.heroPortfolioDivider {
+  position: relative;
+  width: 100%;
+  height: clamp(116px, 14vw, 172px);
+  margin-top: clamp(-58px, -6vw, -38px);
+  overflow: hidden;
+  background: var(--home-hero-bg);
+  isolation: isolate;
+  z-index: 3;
+}
+
+.heroPortfolioWave {
+  position: absolute;
+  left: -25%;
+  top: 0;
+  width: 150%;
+  height: 100%;
+  fill: var(--bg);
+  will-change: transform;
+  animation: waveSlide 3.8s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes waveSlide {
+  0% {
+    transform: translateX(-12.6%) translateY(0);
+  }
+  100% {
+    transform: translateX(12.6%) translateY(0);
+  }
+}
+
+.blogBand {
+  background: var(--home-hero-bg);
+}
+
+.contactBand {
+  background: var(--bg);
+}
+
 .sectionTitle {
   font-weight: 500;
   color: var(--muted);
@@ -356,6 +399,11 @@
 }
 
 @media (max-width: 425px) {
+  .heroPortfolioDivider {
+    height: clamp(94px, 23vw, 126px);
+    margin-top: clamp(-44px, -11vw, -28px);
+  }
+
   .heroContent {
     gap: 1.35rem;
     padding-top: 2.35rem;
@@ -373,5 +421,11 @@
   .bio {
     font-size: 1rem;
     line-height: 1.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroPortfolioWave {
+    animation: none;
   }
 }
