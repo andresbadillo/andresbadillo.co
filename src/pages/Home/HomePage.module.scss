@@ -1,12 +1,12 @@
 /* No usar overflow-x: hidden en este scope: rompe position: sticky en algunos navegadores. */
 
-/* Track alto: mientras haces scroll el hero queda sticky; al acabar el tramo sube entero (estrellas + contenido). */
+/* Track alto: hero sticky hasta fin del tramo; 224vh el scroll hasta portfolio. */
 .heroTrack {
   position: relative;
   width: 100%;
   min-width: 100%;
   margin-top: -84px;
-  min-height: 320vh;
+  min-height: 200vh;
   background: var(--home-hero-bg);
 }
 
