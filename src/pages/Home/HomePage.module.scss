@@ -206,9 +206,11 @@
 }
 
 .scrollLine {
-  width: 1px;
+  display: block;
   height: 2.5rem;
-  background: var(--accent);
+  width: auto;
+  aspect-ratio: 10 / 40;
+  color: var(--accent);
   opacity: 0.85;
 }
 

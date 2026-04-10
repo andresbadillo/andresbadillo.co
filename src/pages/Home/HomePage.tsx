@@ -200,8 +200,24 @@ export function HomePage() {
         </div>
         {!prefersReducedMotion && (
           <div ref={scrollCueRef} className={styles.scrollCue}>
-            <span className={styles.scrollLine} />
             <span className={styles.scrollText}>SCROLL</span>
+            <svg
+              className={styles.scrollLine}
+              viewBox="0 0 10 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <line x1="5" y1="0" x2="5" y2="30" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+              <path
+                d="M 1 30 L 5 38 L 9 30"
+                stroke="currentColor"
+                strokeWidth="1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
           </div>
         )}
         </section>
