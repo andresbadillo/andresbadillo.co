@@ -1,3 +1,20 @@
+/**
+ * StarfieldCanvas — fondo de “cielo estrellado” en canvas 2D para el hero.
+ *
+ * **Qué hace:** pinta ~1200 partículas (círculos) con profundidad simulada, movimiento tipo “revuelo”
+ * y, según el scroll del hero, un efecto de **agrupación hacia un punto** (el avatar), controlado
+ * desde el padre vía refs (sin re-renders por frame).
+ *
+ * **Entradas (refs, leídas dentro de requestAnimationFrame):**
+ * - `scrollProgressRef` — 0…1 progreso del scroll en la sección hero (Home calcula según scroll).
+ * - `clusterTargetRef` — coordenadas del centro de agrupación en **espacio del canvas** (p. ej. centro del avatar).
+ * - `motionEnabledRef` — permite desactivar animación (p. ej. `prefers-reduced-motion` o lógica externa).
+ *
+ * **Tema / color:** el cielo usa `--home-hero-bg`; las estrellas `--starfield-rgb` (RGB sin `rgba()`).
+ * Un `MutationObserver` en `data-theme` fuerza repintado estático si el usuario tiene movimiento reducido.
+ *
+ * @module StarfieldCanvas
+ */
 import {
   useCallback,
   useEffect,
@@ -8,6 +25,7 @@ import {
 } from "react";
 import styles from "./StarfieldCanvas.module.scss";
 
+/** Asigna ref de callback o objeto `{ current }` (patrón merge con ref externa opcional). */
 function assignRef<T>(r: Ref<T | null> | undefined, value: T | null) {
   if (!r) return;
   if (typeof r === "function") (r as (instance: T | null) => void)(value);
@@ -15,50 +33,61 @@ function assignRef<T>(r: Ref<T | null> | undefined, value: T | null) {
 }
 
 /**
- * Estrellas en pantalla: revuelo independiente.
- * Progreso de scroll alto → nube hacia el avatar; al bajar el progreso (scroll hacia arriba)
- * vuelven a tender hacia sus anclas dispersas en el viewport.
+ * Estado de una partícula. Las posiciones `sx/sy` son el “físico” interno; al dibujar se suman
+ * jitter (`jx/jy`) y parallax del puntero.
  */
-
 type Star = {
+  /** Posición actual (px, espacio lógico del canvas). */
   sx: number;
   sy: number;
-  /** Posición de “reposo” dispersa; hacia aquí se tira cuando el scroll vuelve arriba. */
+  /** Posición de “reposo” dispersa; base del lerp cuando el scroll vuelve arriba. */
   anchorX: number;
   anchorY: number;
+  /** Velocidad del revuelo (dirección aleatoria renovada por `rollWander`). */
   vx: number;
   vy: number;
+  /** Profundidad 0…1: afecta tamaño y opacidad. */
   depth: number;
+  /** Velocidad de cambio de profundidad (rebota en 0 y 1). */
   vDepth: number;
+  /** Jitter suavizado (micro-temblor visual). */
   jx: number;
   jy: number;
+  /** Fotogramas hasta el siguiente `rollWander`. */
   wanderCountdown: number;
+  /** Offset respecto al centro de agrupación (avatar): define la forma de la “nube” al hacer cluster. */
   offX: number;
   offY: number;
+  /** `cluster` nace cerca del eje del avatar; `field` reparte anclas por toda la pantalla (no colapsa del todo). */
   mode: "cluster" | "field";
 };
 
 const STAR_COUNT = 1200;
 
 const STAR_RADIUS_MIN = 0.14;
-const STAR_RADIUS_MAX = 1.72;
+/** Radio máximo en viewports anchos; en ≤425px se usa `STAR_RADIUS_MAX_NARROW`. */
+const STAR_RADIUS_MAX_DESKTOP = 1.4;
+const STAR_RADIUS_MAX_NARROW = 1;
 
 const DEPTH_LO = 0;
 const DEPTH_HI = 1;
 
+/** Escala global del movimiento (posición, profundidad, parallax). */
 const STAR_SPEED = 0.4;
 
-/** Fracción que permanece repartida por la pantalla (no colapsa hacia el avatar). */
+/** Parte de las estrellas nace en modo `field` (se quedan más dispersas al agrupar). */
 const FIELD_FRACTION = 0.24;
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/** Suaviza 0…1 (curva S) para transiciones de scroll y pesos de cluster. */
 function smoothstep(t: number) {
   const x = Math.min(1, Math.max(0, t));
   return x * x * (3 - 2 * x);
 }
 
+/** Nueva dirección aleatoria de vuelo y cuenta atrás hasta el siguiente cambio. */
 function rollWander(s: Star) {
   const a = Math.random() * Math.PI * 2;
   const mag = 0.38 + Math.random() * 1.35;
@@ -68,6 +97,11 @@ function rollWander(s: Star) {
   s.wanderCountdown = 22 + Math.floor(Math.random() * 88);
 }
 
+/**
+ * Crea el array inicial de estrellas para el tamaño actual del canvas.
+ * - `cluster`: offset elíptico alrededor del futuro centro (avatar), para que la nube no quede hueca a un lado.
+ * - `field`: offsets repartidos en todo el viewport.
+ */
 function makeStars(w: number, h: number): Star[] {
   const stars: Star[] = [];
   for (let i = 0; i < STAR_COUNT; i++) {
@@ -108,11 +142,12 @@ function makeStars(w: number, h: number): Star[] {
   return stars;
 }
 
-function radiusFromDepth(depth: number) {
+function radiusFromDepth(depth: number, starRadiusMax: number) {
   const t = Math.max(DEPTH_LO, Math.min(DEPTH_HI, depth));
-  return STAR_RADIUS_MIN + t * (STAR_RADIUS_MAX - STAR_RADIUS_MIN);
+  return STAR_RADIUS_MIN + t * (starRadiusMax - STAR_RADIUS_MIN);
 }
 
+/** Toroide suave: si la estrella sale del área + margen, reaparece por el lado opuesto (efecto infinito). */
 function wrapStar(s: Star, w: number, h: number, pad: number) {
   if (s.sx < -pad) s.sx += w + pad * 2;
   if (s.sx > w + pad) s.sx -= w + pad * 2;
@@ -120,6 +155,7 @@ function wrapStar(s: Star, w: number, h: number, pad: number) {
   if (s.sy > h + pad) s.sy -= h + pad * 2;
 }
 
+/** Lee variables CSS del tema para fondo y color RGB de estrellas (formato `R, G, B`). */
 function readStarfieldPalette(): { bg: string; starRgb: string } {
   if (typeof document === "undefined") {
     return { bg: "#000000", starRgb: "242, 244, 255" };
@@ -130,13 +166,17 @@ function readStarfieldPalette(): { bg: string; starRgb: string } {
   return { bg, starRgb };
 }
 
+/** Centro de la agrupación en coordenadas de canvas (actualizado por el padre, p. ej. desde layout del avatar). */
 export type ClusterTargetRef = MutableRefObject<{ x: number; y: number }>;
 
 interface StarfieldCanvasProps {
   className?: string;
+  /** 0 = inicio del tramo hero; 1 = final (scroll hacia abajo). */
   scrollProgressRef: MutableRefObject<number>;
   clusterTargetRef: ClusterTargetRef;
+  /** Si es false, solo se dibuja estado fijo (sin animación de loop). */
   motionEnabledRef: MutableRefObject<boolean>;
+  /** Ref opcional al elemento canvas (además de la ref interna). */
   canvasRef?: Ref<HTMLCanvasElement | null>;
 }
 
@@ -157,6 +197,7 @@ export function StarfieldCanvas({
   );
   const starsRef = useRef<Star[]>([]);
   const frameRef = useRef<number>(0);
+  /** Puntero normalizado a [-0.5, 0.5] en ancho/alto del contenedor (parallax suave). */
   const pointerRef = useRef({ nx: 0, ny: 0 });
   const lastTimeRef = useRef<number>(0);
 
@@ -170,8 +211,11 @@ export function StarfieldCanvas({
     if (!parent) return;
 
     const reducedMotion = prefersReducedMotion();
+    /** Dimensiones en CSS px (espacio de dibujo lógico; el bitmap puede ser mayor por DPR). */
     let widthCss = 0;
     let heightCss = 0;
+    /** Máximo radio según ancho (móvil estrecho = estrellas más pequeñas). */
+    let starRadiusMax = STAR_RADIUS_MAX_DESKTOP;
 
     const onPointerMove = (event: PointerEvent) => {
       const rect = parent.getBoundingClientRect();
@@ -183,6 +227,7 @@ export function StarfieldCanvas({
       };
     };
 
+    /** Un solo frame: mismo aspecto que el loop pero sin actualizar física (accesibilidad / tema). */
     const drawStatic = () => {
       const w = widthCss;
       const h = heightCss;
@@ -197,7 +242,7 @@ export function StarfieldCanvas({
         const py = s.sy;
         const depth = Math.max(DEPTH_LO, Math.min(DEPTH_HI, s.depth));
         const alpha = 0.13 + depth * 0.75;
-        const radius = radiusFromDepth(s.depth);
+        const radius = radiusFromDepth(s.depth, starRadiusMax);
         if (px < -6 || py < -6 || px > w + 6 || py > h + 6) continue;
         ctx.fillStyle = `rgba(${starRgb},${alpha.toFixed(3)})`;
         ctx.beginPath();
@@ -206,6 +251,7 @@ export function StarfieldCanvas({
       }
     };
 
+    /** Bucle principal: integra posición/velocidad, atrae hacia el cluster según scroll, dibuja. */
     const loop = (now: number) => {
       const w = widthCss;
       const h = heightCss;
@@ -229,10 +275,10 @@ export function StarfieldCanvas({
       const pull = smoothstep(p * 1.02);
       const pullLerpCore = 0.012 + pull * pull * 0.26;
       const clusterTight = 0.34 + pull * pull * 0.54;
-      /* 0 → ancla dispersa; 1 → nube en el avatar (reversible al subir scroll). */
+      /** 0 = dispersas; 1 = agrupadas hacia avatar (sube/baja con el scroll). */
       const clusterWeight = smoothstep((p - 0.1) / 0.82);
-      /* Scroll arriba → tamaño original; scroll abajo → hasta 50 % del radio (junto al movimiento existente). */
-      const starSizeMul = 1 - 0.8 * p;
+      /** Al bajar scroll las estrellas se encogen (hasta ~30 % del radio base). */
+      const starSizeMul = 1 - 0.7 * p;
 
       const { bg: skyBg, starRgb } = readStarfieldPalette();
       ctx.fillStyle = skyBg;
@@ -248,6 +294,7 @@ export function StarfieldCanvas({
         const s = stars[i];
 
         if (allowMotion) {
+          /* Revuelo: renovar dirección, rotar velocidad, variar profundidad. */
           s.wanderCountdown -= 1;
           if (s.wanderCountdown <= 0) {
             rollWander(s);
@@ -268,6 +315,7 @@ export function StarfieldCanvas({
           s.sx += s.vx * posStep;
           s.sy += s.vy * posStep;
 
+          /* Atracción suave hacia un punto entre la ancla dispersa y la nube junto al avatar. */
           const wx = s.mode === "cluster" ? clusterWeight : clusterWeight * 0.26;
           const tcxCloud = tx + s.offX * clusterTight;
           const tcyCloud = ty + s.offY * clusterTight;
@@ -289,6 +337,7 @@ export function StarfieldCanvas({
           wrapStar(s, w, h, pad);
         }
 
+        /* Temblor amortiguado encima de la posición base. */
         if (jitterAmp > 0.01) {
           const j = jitterAmp * 0.5 * (dt / 16);
           s.jx += (Math.random() - 0.5) * j;
@@ -303,6 +352,7 @@ export function StarfieldCanvas({
         px += parallaxX * 0.22;
         py += parallaxY * 0.22;
 
+        /* Segundo lerp hacia el cluster solo para posición en pantalla (refuerzo visual al hacer scroll). */
         if (allowMotion && clusterWeight > 0.04) {
           const wxD = s.mode === "cluster" ? clusterWeight : clusterWeight * 0.24;
           const tcxD = s.anchorX * (1 - wxD) + (tx + s.offX * clusterTight) * wxD;
@@ -314,7 +364,7 @@ export function StarfieldCanvas({
 
         const depthVis = Math.max(DEPTH_LO, Math.min(DEPTH_HI, s.depth));
         let alpha = 0.11 + depthVis * 0.76 + pull * (s.mode === "field" ? 0.04 : 0.09);
-        const radius = (radiusFromDepth(s.depth) + pull * (s.mode === "field" ? 0.12 : 0.28)) * starSizeMul;
+        const radius = (radiusFromDepth(s.depth, starRadiusMax) + pull * (s.mode === "field" ? 0.12 : 0.28)) * starSizeMul;
         alpha = Math.min(1, alpha);
 
         if (px < -10 || py < -10 || px > w + 10 || py > h + 10) continue;
@@ -329,9 +379,11 @@ export function StarfieldCanvas({
     };
 
     const resize = () => {
+      /* Bitmap nítido en pantallas HiDPI (cap a 2×); coordenadas de dibujo siguen en px CSS. */
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       widthCss = parent.clientWidth;
       heightCss = parent.clientHeight;
+      starRadiusMax = widthCss <= 425 ? STAR_RADIUS_MAX_NARROW : STAR_RADIUS_MAX_DESKTOP;
       canvas.width = Math.floor(widthCss * dpr);
       canvas.height = Math.floor(heightCss * dpr);
       canvas.style.width = `${widthCss}px`;
@@ -347,6 +399,7 @@ export function StarfieldCanvas({
     ro.observe(parent);
     parent.addEventListener("pointermove", onPointerMove);
 
+    /* Tema claro/oscuro: sin animación hay que repintar para leer de nuevo las variables CSS. */
     const themeMo = new MutationObserver(() => {
       if (reducedMotion) drawStatic();
     });
@@ -363,8 +416,11 @@ export function StarfieldCanvas({
       parent.removeEventListener("pointermove", onPointerMove);
       cancelAnimationFrame(frameRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- refs del padre estables; un solo ciclo de vida del canvas
+    /* Refs del padre son estables; el efecto solo monta una vez el canvas y el rAF. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <canvas ref={setCanvasRef} className={`${styles.canvas} ${className ?? ""}`.trim()} aria-hidden="true" />;
+  return (
+    <canvas ref={setCanvasRef} className={`${styles.canvas} ${className ?? ""}`.trim()} aria-hidden="true" />
+  );
 }
