@@ -8,8 +8,15 @@
   list-style: none;
 }
 
+.row li {
+  display: flex;
+  align-items: center;
+}
+
 .link {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--accent);
   opacity: 0.92;
 }
@@ -19,7 +26,11 @@
   opacity: 1;
 }
 
+$icon-size: calc(1.35rem * 1.5);
+
 .icon {
-  width: 1.35rem;
-  height: 1.35rem;
+  display: block;
+  flex-shrink: 0;
+  width: $icon-size;
+  height: $icon-size;
 }
