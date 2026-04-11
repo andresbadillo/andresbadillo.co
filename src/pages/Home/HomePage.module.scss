@@ -263,12 +263,35 @@
   pointer-events: none;
 }
 
+/* Detrás de la principal (z-0): misma escala vertical; menos ciclos; un pelín más arriba para franja visible bajo el hero */
+.heroPortfolioWaveSub {
+  position: absolute;
+  left: -25%;
+  top: 0;
+  width: 150%;
+  height: 100%;
+  fill: color-mix(in srgb, var(--home-hero-bg) 72%, #000);
+  will-change: transform;
+  animation: waveSlideSub 5.75s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
 @keyframes waveSlide {
   0% {
     transform: translateX(-12.6%) translateY(0);
   }
   100% {
     transform: translateX(12.6%) translateY(0);
+  }
+}
+
+@keyframes waveSlideSub {
+  0% {
+    transform: translateX(-9%) translateY(0);
+  }
+  100% {
+    transform: translateX(9%) translateY(0);
   }
 }
 
@@ -501,7 +524,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroPortfolioWave {
+  .heroPortfolioWave,
+  .heroPortfolioWaveSub {
     animation: none;
   }
 }

@@ -1,10 +1,60 @@
 .wrap {
+  position: relative;
   width: 100%;
+  height: clamp(80px, 12vw, 90px);
   overflow: hidden;
+  /* Continúa el portfolio (--bg); la onda frontal pinta hacia el blog (--home-hero-bg) */
+  background: var(--bg);
+  isolation: isolate;
 }
 
-.svg {
-  display: block;
-  width: 100%;
-  height: 90px;
+.waveMain {
+  position: absolute;
+  left: -25%;
+  top: 0;
+  width: 150%;
+  height: 100%;
+  fill: var(--home-hero-bg);
+  will-change: transform;
+  animation: svgWavesDividerMain 3.8s ease-in-out infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.waveSub {
+  position: absolute;
+  left: -25%;
+  top: 0;
+  width: 150%;
+  height: 100%;
+  fill: color-mix(in srgb, var(--bg) 72%, #000);
+  will-change: transform;
+  animation: svgWavesDividerSub 5.75s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes svgWavesDividerMain {
+  0% {
+    transform: translateX(-12.6%) translateY(0);
+  }
+  100% {
+    transform: translateX(12.6%) translateY(0);
+  }
+}
+
+@keyframes svgWavesDividerSub {
+  0% {
+    transform: translateX(-9%) translateY(0);
+  }
+  100% {
+    transform: translateX(9%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waveMain,
+  .waveSub {
+    animation: none;
+  }
 }

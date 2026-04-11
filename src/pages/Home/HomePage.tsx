@@ -257,6 +257,10 @@ export function HomePage() {
 
       <div className={styles.portfolioBand}>
         <div className={styles.heroPortfolioDivider} aria-hidden="true">
+          {/* Detrás de la onda principal: misma amplitud, mitad de frecuencia (2 vs 4 ciclos); borde ~10px más arriba para que se vea la franja */}
+          <svg className={styles.heroPortfolioWaveSub} viewBox="0 0 1440 240" preserveAspectRatio="none">
+            <path d="M0,110 C240,42 480,42 720,110 C960,178 1200,178 1440,110 L1440,240 L0,240 Z" />
+          </svg>
           <svg className={styles.heroPortfolioWave} viewBox="0 0 1440 240" preserveAspectRatio="none">
             <path d="M0,120 C120,52 240,52 360,120 C480,188 600,188 720,120 C840,52 960,52 1080,120 C1200,188 1320,188 1440,120 L1440,240 L0,240 Z" />
           </svg>

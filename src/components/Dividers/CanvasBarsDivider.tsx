@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import styles from "./CanvasBarsDivider.module.scss";
 
+/** Altura máxima de una barra: 15 + sin*12 + lift, con lift ≤ 26 → 53px */
+const BAR_MAX_PX = 53;
+
 export function CanvasBarsDivider() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mouseX = useRef<number>(-999);
@@ -45,12 +48,15 @@ export function CanvasBarsDivider() {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={styles.canvas}
-      onMouseMove={(e) => (mouseX.current = e.nativeEvent.offsetX)}
-      onMouseLeave={() => (mouseX.current = -999)}
-      aria-hidden="true"
-    />
+    <div className={styles.wrap}>
+      <canvas
+        ref={canvasRef}
+        className={styles.canvas}
+        onMouseMove={(e) => (mouseX.current = e.nativeEvent.offsetX)}
+        onMouseLeave={() => (mouseX.current = -999)}
+        aria-hidden="true"
+        height={BAR_MAX_PX}
+      />
+    </div>
   );
 }

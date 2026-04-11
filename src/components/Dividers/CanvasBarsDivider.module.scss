@@ -1,5 +1,12 @@
-.canvas {
+.wrap {
   width: 100%;
-  height: 120px;
+  /* Mismo fondo que .blogBand (Selected Blog Articles) */
+  background: var(--home-hero-bg);
+}
+
+.canvas {
   display: block;
+  width: 100%;
+  /* Misma altura que la barra más alta: 15 + 12 + 26 (lift máximo) */
+  height: 53px;
 }
