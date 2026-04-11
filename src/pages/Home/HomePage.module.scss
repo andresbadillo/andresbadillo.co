@@ -1,12 +1,13 @@
 /* No usar overflow-x: hidden en este scope: rompe position: sticky en algunos navegadores. */
 
-/* Track alto: hero sticky hasta fin del tramo; 224vh el scroll hasta portfolio. */
+/* Track alto: hero sticky hasta fin del tramo; 200× lvh (viewport grande, estable) alinea scroll con el hero sin usar dvh. */
 .heroTrack {
   position: relative;
   width: 100%;
   min-width: 100%;
   margin-top: -84px;
   min-height: 200vh;
+  min-height: 200lvh;
   background: var(--home-hero-bg);
 }
 
@@ -30,8 +31,11 @@
   top: 0;
   width: 100%;
   min-width: 100%;
-  min-height: 100dvh;
-  height: 100dvh;
+  /* lvh: viewport “grande” (barra oculta); estable frente al scroll, a diferencia de dvh. Cubre el borde inferior en móvil. */
+  min-height: 100vh;
+  min-height: 100lvh;
+  height: 100vh;
+  height: 100lvh;
   margin: 0;
   padding-top: 84px;
   z-index: 2;
@@ -41,7 +45,8 @@
 .heroStatic {
   position: relative;
   height: auto;
-  min-height: calc(100dvh - 84px);
+  min-height: calc(100vh - 84px);
+  min-height: calc(100lvh - 84px);
   margin-top: -84px;
   padding-top: 84px;
 }
@@ -56,7 +61,8 @@
   z-index: 1;
   width: min(1080px, 92vw);
   margin: 0 auto;
-  min-height: calc(100dvh - 84px);
+  min-height: calc(100vh - 84px);
+  min-height: calc(100lvh - 84px);
   display: grid;
   grid-template-columns: minmax(220px, 320px) 1fr;
   gap: clamp(2rem, 6vw, 4rem);

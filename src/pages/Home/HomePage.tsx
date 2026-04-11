@@ -84,7 +84,8 @@ export function HomePage() {
     if (!track) return;
 
     const docY = window.scrollY;
-    const vh = window.innerHeight;
+    /* Misma altura que el hero en CSS (lvh): innerHeight en móvil varía con la barra y desincroniza el progreso. */
+    const vh = layer.clientHeight > 1 ? layer.clientHeight : window.innerHeight;
     const trackH = track.offsetHeight;
     const trackRect = track.getBoundingClientRect();
     const trackTop = trackRect.top + docY;
