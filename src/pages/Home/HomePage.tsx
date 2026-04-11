@@ -34,6 +34,8 @@ export function HomePage() {
   const avatarWrapRef = useRef<HTMLDivElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
   const portfolioSentinelRef = useRef<HTMLElement>(null);
+  const projectsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const blogHeadingRef = useRef<HTMLHeadingElement>(null);
   const introRevealRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -148,6 +150,36 @@ export function HomePage() {
     return () => io.disconnect();
   }, [prefersReducedMotion]);
 
+  useEffect(() => {
+    const reveal = (el: HTMLHeadingElement | null) => {
+      el?.classList.add(styles.sectionTitleAccentRevealed);
+    };
+
+    if (prefersReducedMotion) {
+      reveal(projectsHeadingRef.current);
+      reveal(blogHeadingRef.current);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(styles.sectionTitleAccentRevealed);
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.22, rootMargin: "0px 0px -6% 0px" },
+    );
+
+    const hProjects = projectsHeadingRef.current;
+    const hBlog = blogHeadingRef.current;
+    if (hProjects) io.observe(hProjects);
+    if (hBlog) io.observe(hBlog);
+    return () => io.disconnect();
+  }, [prefersReducedMotion]);
+
   const onSubmitHomeContact = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormStatus("Mensaje de prueba registrado. Para envío real, conecta un backend.");
@@ -236,7 +268,7 @@ export function HomePage() {
             id="selected-portfolio-projects"
             aria-labelledby="home-projects-heading"
           >
-            <h2 id="home-projects-heading" className={styles.sectionTitle}>
+            <h2 id="home-projects-heading" ref={projectsHeadingRef} className={styles.sectionTitle}>
               <span className={styles.sectionAccent}>Selected</span>
               Portfolio Projects
             </h2>
@@ -255,7 +287,7 @@ export function HomePage() {
       <div className={styles.blogBand}>
         <div className="container">
           <section className={styles.blogSection} aria-labelledby="home-blog-heading">
-            <h2 id="home-blog-heading" className={styles.sectionTitle}>
+            <h2 id="home-blog-heading" ref={blogHeadingRef} className={styles.sectionTitle}>
               <span className={styles.sectionAccent}>Selected</span>
               Blog Articles
             </h2>

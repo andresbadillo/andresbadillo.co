@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Evita bandas / desplazamiento lateral por transforms u otros desbordes puntuales */
+  overflow-x: clip;
+}
+
 html,
 body,
 #root {

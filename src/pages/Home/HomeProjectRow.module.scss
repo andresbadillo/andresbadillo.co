@@ -51,8 +51,8 @@
   max-width: 38ch;
 }
 
-.row:not(.reversed) .text,
-.row:not(.reversed) .title {
+/* Misma arista que título/CTA/meta: izquierda en fila normal, derecha en reversed */
+.reversed .text {
   margin-left: auto;
   margin-right: 0;
 }
@@ -92,8 +92,7 @@
     text-align: left;
   }
 
-  .row:not(.reversed) .text,
-  .row:not(.reversed) .title {
+  .reversed .text {
     margin-left: 0;
   }
 }

@@ -20,8 +20,24 @@
     <meta name="theme-color" content="#111111" />
 
     <link rel="icon" href="/favicon.svg" />
-    <script type="module" crossorigin src="/assets/index-BeJsTuyn.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DWCkn9tl.css">
+    <!-- Oculta el skip-link antes de que cargue el bundle (evita FOUC del enlace) -->
+    <style>
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 1rem;
+        z-index: 9999;
+        background: #f2a36b;
+        color: #111;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.4rem;
+      }
+      .skip-link:focus {
+        top: 1rem;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-Cp_C_K9A.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BJr7wgzD.css">
   </head>
   <body>
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
