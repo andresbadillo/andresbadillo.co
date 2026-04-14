@@ -9,10 +9,76 @@
   color: var(--muted);
 }
 
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.footerMain {
+  min-width: 0;
+}
+
 .footerSocial {
   margin-bottom: 0.75rem;
 }
 
+.backToTop {
+  flex-shrink: 0;
+  margin: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition:
+    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.backToTopVisible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.backToTop:hover {
+  background: var(--bg);
+  color: color-mix(in srgb, var(--accent) 88%, var(--fg));
+}
+
+.backToTop:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.backToTopIcon {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
 .accentName {
   color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backToTop {
+    transition: opacity 0.15s ease;
+  }
+
+  .backToTopVisible {
+    transform: none;
+  }
 }
