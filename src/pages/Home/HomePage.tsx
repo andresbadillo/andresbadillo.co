@@ -36,6 +36,7 @@ export function HomePage() {
   const portfolioSentinelRef = useRef<HTMLElement>(null);
   const projectsHeadingRef = useRef<HTMLHeadingElement>(null);
   const blogHeadingRef = useRef<HTMLHeadingElement>(null);
+  const contactHeadingRef = useRef<HTMLHeadingElement>(null);
   const introRevealRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -159,6 +160,7 @@ export function HomePage() {
     if (prefersReducedMotion) {
       reveal(projectsHeadingRef.current);
       reveal(blogHeadingRef.current);
+      reveal(contactHeadingRef.current);
       return;
     }
 
@@ -176,8 +178,10 @@ export function HomePage() {
 
     const hProjects = projectsHeadingRef.current;
     const hBlog = blogHeadingRef.current;
+    const hContact = contactHeadingRef.current;
     if (hProjects) io.observe(hProjects);
     if (hBlog) io.observe(hBlog);
+    if (hContact) io.observe(hContact);
     return () => io.disconnect();
   }, [prefersReducedMotion]);
 
@@ -304,27 +308,41 @@ export function HomePage() {
         </div>
       </div>
 
-      <CanvasBarsDivider />
+      <div className={styles.blogContactDivider} aria-hidden="true">
+        <svg className={styles.blogContactWaveSub} viewBox="0 0 1440 240" preserveAspectRatio="none">
+          <path d="M0,110 C240,42 480,42 720,110 C960,178 1200,178 1440,110 L1440,240 L0,240 Z" />
+        </svg>
+        <svg className={styles.blogContactWave} viewBox="0 0 1440 240" preserveAspectRatio="none">
+          <path d="M0,120 C120,52 240,52 360,120 C480,188 600,188 720,120 C840,52 960,52 1080,120 C1200,188 1320,188 1440,120 L1440,240 L0,240 Z" />
+        </svg>
+      </div>
 
       <div className={styles.contactBand}>
         <div className="container">
           <section className={styles.contactSection} aria-labelledby="home-contact-heading">
-            <h2 id="home-contact-heading" className={styles.sectionTitle}>
-              Contact
+            <h2 id="home-contact-heading" ref={contactHeadingRef} className={styles.sectionTitle}>
+              <span className={styles.sectionAccent}>Contact</span>
             </h2>
             <p className={styles.contactLead}>
-              Si quieres comentar un proyecto, escribe a <strong>contacto@demo.dev</strong> o usa el formulario de prueba:
+              Feel free to contact me at <strong>r.andres.badillo@gmail.com</strong> or drop me a message using the contact form below:
             </p>
             <form className={styles.form} onSubmit={onSubmitHomeContact}>
               <div className={styles.row2}>
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="home-contact-name">
+                  <label className={styles.srOnly} htmlFor="home-contact-name">
                     Name
                   </label>
-                  <input id="home-contact-name" name="name" className={styles.input} autoComplete="name" required />
+                  <input
+                    id="home-contact-name"
+                    name="name"
+                    className={styles.input}
+                    autoComplete="name"
+                    placeholder="Name"
+                    required
+                  />
                 </div>
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="home-contact-email">
+                  <label className={styles.srOnly} htmlFor="home-contact-email">
                     Email
                   </label>
                   <input
@@ -333,15 +351,23 @@ export function HomePage() {
                     type="email"
                     className={styles.input}
                     autoComplete="email"
+                    placeholder="Email"
                     required
                   />
                 </div>
               </div>
               <div className={styles.field}>
-                <label className={styles.label} htmlFor="home-contact-message">
+                <label className={styles.srOnly} htmlFor="home-contact-message">
                   Message
                 </label>
-                <textarea id="home-contact-message" name="message" className={styles.textarea} rows={6} required />
+                <textarea
+                  id="home-contact-message"
+                  name="message"
+                  className={styles.textarea}
+                  rows={6}
+                  placeholder="Message"
+                  required
+                />
               </div>
               <button type="submit" className={styles.send}>
                 Send
@@ -350,10 +376,10 @@ export function HomePage() {
             <p role="status" aria-live="polite" className={styles.formNote}>
               {formStatus}
             </p>
-            <p className={styles.formNote}>Para enviar realmente, conecta un backend.</p>
           </section>
         </div>
       </div>
+      <CanvasBarsDivider topBackground="var(--bg)" bottomBackground="var(--home-hero-bg)" />
     </div>
   );
 }

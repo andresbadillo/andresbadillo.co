@@ -1,11 +1,15 @@
 .wrap {
   position: relative;
   width: 100%;
-  height: clamp(80px, 12vw, 90px);
+  /* Misma escala que .blogContactDivider en HomePage */
+  height: clamp(116px, 14vw, 172px);
+  margin-top: clamp(-58px, -6vw, -38px);
+  margin-bottom: -1px;
   overflow: hidden;
   /* Continúa el portfolio (--bg); la onda frontal pinta hacia el blog (--home-hero-bg) */
   background: var(--bg);
   isolation: isolate;
+  z-index: 3;
 }
 
 .waveMain {
@@ -49,6 +53,19 @@
   }
   100% {
     transform: translateX(9%) translateY(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .wrap {
+    margin-bottom: -2px;
+  }
+}
+
+@media (max-width: 425px) {
+  .wrap {
+    height: clamp(94px, 23vw, 126px);
+    margin-top: clamp(-44px, -11vw, -28px);
   }
 }
 

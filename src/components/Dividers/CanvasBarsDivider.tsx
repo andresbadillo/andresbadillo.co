@@ -1,10 +1,19 @@
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 import styles from "./CanvasBarsDivider.module.scss";
 
 /** Altura máxima de una barra: 15 + sin*12 + lift, con lift ≤ 26 → 53px */
 const BAR_MAX_PX = 53;
+const DIVIDER_HEIGHT_PX = BAR_MAX_PX * 2;
 
-export function CanvasBarsDivider() {
+interface CanvasBarsDividerProps {
+  topBackground?: string;
+  bottomBackground?: string;
+}
+
+export function CanvasBarsDivider({
+  topBackground = "var(--home-hero-bg)",
+  bottomBackground = "var(--bg)",
+}: CanvasBarsDividerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mouseX = useRef<number>(-999);
 
@@ -17,9 +26,10 @@ export function CanvasBarsDivider() {
     let t = 0;
 
     const resize = () => {
-      canvas.width = canvas.clientWidth * window.devicePixelRatio;
-      canvas.height = canvas.clientHeight * window.devicePixelRatio;
-      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      const dpr = window.devicePixelRatio;
+      canvas.width = canvas.clientWidth * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -35,7 +45,8 @@ export function CanvasBarsDivider() {
         const lift = Math.max(0, 1 - dist * 4) * 26;
         const h = 15 + Math.sin(t + i * 0.2) * 12 + lift;
         ctx.fillStyle = "rgba(242,163,107,0.35)";
-        ctx.fillRect(x, canvas.clientHeight - h, barWidth - 1, h);
+        ctx.fillRect(x, BAR_MAX_PX - h, barWidth - 1, h);
+        ctx.fillRect(x, BAR_MAX_PX, barWidth - 1, h);
       }
       raf = requestAnimationFrame(draw);
     };
@@ -48,14 +59,22 @@ export function CanvasBarsDivider() {
   }, []);
 
   return (
-    <div className={styles.wrap}>
+    <div
+      className={styles.wrap}
+      style={
+        {
+          "--canvas-top-bg": topBackground,
+          "--canvas-bottom-bg": bottomBackground,
+        } as CSSProperties
+      }
+    >
       <canvas
         ref={canvasRef}
         className={styles.canvas}
         onMouseMove={(e) => (mouseX.current = e.nativeEvent.offsetX)}
         onMouseLeave={() => (mouseX.current = -999)}
         aria-hidden="true"
-        height={BAR_MAX_PX}
+        height={DIVIDER_HEIGHT_PX}
       />
     </div>
   );

@@ -3,8 +3,16 @@
 }
 
 .footer {
-  border-top: 1px solid var(--border);
-  margin-top: 3rem;
+  background: var(--home-hero-bg);
+  margin-top: 0;
   padding: 1.5rem 0 2rem;
   color: var(--muted);
+}
+
+.footerSocial {
+  margin-bottom: 0.75rem;
+}
+
+.accentName {
+  color: var(--accent);
 }

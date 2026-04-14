@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header/Header";
-import { socialLinks } from "@/data/site";
+import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import type { PropsWithChildren } from "react";
 import styles from "./SiteLayout.module.scss";
 
@@ -17,13 +17,11 @@ export function SiteLayout({ theme, onThemeChange, children }: PropsWithChildren
       </main>
       <footer className={styles.footer}>
         <div className="container">
-          <p>© 2026 Andres Badillo. Demo frontend minimalista.</p>
+          <div className={styles.footerSocial}>
+            <SocialLinksRow />
+          </div>
           <p>
-            {socialLinks.map((social) => (
-              <a key={social.label} href={social.href} target="_blank" rel="noreferrer" style={{ marginRight: 12 }}>
-                {social.label}
-              </a>
-            ))}
+            © 2026 - Designed and built by <span className={styles.accentName}>Andres Badillo</span>. 
           </p>
         </div>
       </footer>
