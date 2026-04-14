@@ -1,8 +1,110 @@
 import { Header } from "@/components/Header/Header";
 import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import clsx from "clsx";
-import { type PropsWithChildren, useEffect, useState } from "react";
+import { type PropsWithChildren, useEffect, useRef, useState } from "react";
 import styles from "./SiteLayout.module.scss";
+
+const FOOTER_ATTRIBUTION_NAME = "Andres Badillo";
+const FOOTER_TYPE_STEP_MS = 28;
+
+function FooterAttributionName() {
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  const [typed, setTyped] = useState("");
+  const [complete, setComplete] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  const typingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const typingActiveRef = useRef(false);
+  const animationFinishedRef = useRef(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const el = wrapRef.current;
+    if (!el) return;
+
+    const clearIntervalSafe = () => {
+      if (typingIntervalRef.current !== null) {
+        clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = null;
+      }
+    };
+
+    const startTyping = () => {
+      clearIntervalSafe();
+      typingActiveRef.current = true;
+      animationFinishedRef.current = false;
+      setComplete(false);
+      setTyped("");
+      let i = 0;
+      const step = () => {
+        i += 1;
+        setTyped(FOOTER_ATTRIBUTION_NAME.slice(0, i));
+        if (i >= FOOTER_ATTRIBUTION_NAME.length) {
+          setComplete(true);
+          clearIntervalSafe();
+          typingActiveRef.current = false;
+          animationFinishedRef.current = true;
+        }
+      };
+      step();
+      typingIntervalRef.current = setInterval(step, FOOTER_TYPE_STEP_MS);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            clearIntervalSafe();
+            typingActiveRef.current = false;
+            animationFinishedRef.current = false;
+            setTyped("");
+            setComplete(false);
+            continue;
+          }
+          if (typingActiveRef.current || animationFinishedRef.current) continue;
+          startTyping();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px 8% 0px" },
+    );
+
+    io.observe(el);
+    return () => {
+      clearIntervalSafe();
+      io.disconnect();
+    };
+  }, [reducedMotion]);
+
+  if (reducedMotion) {
+    return <span className={styles.accentName}>{FOOTER_ATTRIBUTION_NAME}</span>;
+  }
+
+  return (
+    <span ref={wrapRef} className={styles.accentName}>
+      <span className={styles.srOnly}>{FOOTER_ATTRIBUTION_NAME}</span>
+      <span className={styles.accentNameType} aria-hidden="true">
+        {typed}
+        <span
+          className={clsx(
+            styles.typeCursor,
+            (typed.length > 0 || complete) && styles.typeCursorVisible,
+            complete && styles.typeCursorBlink,
+          )}
+        />
+      </span>
+    </span>
+  );
+}
 
 interface SiteLayoutProps {
   theme: "dark" | "light";
@@ -47,7 +149,7 @@ export function SiteLayout({ theme, onThemeChange, children }: PropsWithChildren
                 <SocialLinksRow />
               </div>
               <p>
-                © 2026 - Designed and built by <span className={styles.accentName}>Andres Badillo</span>.
+                © 2026 - Designed and built by <FooterAttributionName />
               </p>
             </div>
             <button

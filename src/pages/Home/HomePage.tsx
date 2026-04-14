@@ -169,7 +169,8 @@ export function HomePage() {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             entry.target.classList.add(styles.sectionTitleAccentRevealed);
-            io.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove(styles.sectionTitleAccentRevealed);
           }
         }
       },
@@ -284,7 +285,7 @@ export function HomePage() {
             {projects.slice(0, 4).map((project, index) => (
               <HomeProjectRow key={project.slug} project={project} reversed={index % 2 === 0} />
             ))}
-            <TransitionLink to="/portfolio" className={styles.seeAll}>
+            <TransitionLink to="/portfolio" className={styles.seeAllCta}>
               See all
             </TransitionLink>
           </section>
@@ -301,7 +302,7 @@ export function HomePage() {
               Blog Articles
             </h2>
             <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
-            <TransitionLink to="/blog" className={styles.seeAll}>
+            <TransitionLink to="/blog" className={styles.seeAllCta}>
               See all
             </TransitionLink>
           </section>

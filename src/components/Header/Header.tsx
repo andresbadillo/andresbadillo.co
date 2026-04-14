@@ -68,6 +68,9 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
             </TransitionLink>
           ))}
         </nav>
+        <div className={styles.themeSlot}>
+          <ThemeToggle theme={theme} onThemeChange={onThemeChange} />
+        </div>
         <div className={styles.actions}>
           <button
             type="button"
@@ -78,7 +81,6 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
           >
             <span className={styles.menuButtonBars} aria-hidden="true" />
           </button>
-          <ThemeToggle theme={theme} onThemeChange={onThemeChange} />
         </div>
       </div>
     </header>

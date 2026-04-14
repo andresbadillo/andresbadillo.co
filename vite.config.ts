@@ -13,7 +13,7 @@ export default defineConfig({
     allowedHosts: [
       "localhost",
       "127.0.0.1",
-      "yen1gv-ip-177-254-59-197.tunnelmole.net",
+      "tiqhuu-ip-177-254-59-197.tunnelmole.net",
     ],
   },
   resolve: {

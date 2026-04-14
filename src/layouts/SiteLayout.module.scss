@@ -22,6 +22,10 @@
 
 .footerSocial {
   margin-bottom: 0.75rem;
+
+  ul {
+    margin-top: 0;
+  }
 }
 
 .backToTop {
@@ -70,7 +74,54 @@
 }
 
 .accentName {
+  position: relative;
   color: var(--accent);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.accentNameType {
+  position: relative;
+}
+
+.typeCursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  margin-left: 1px;
+  vertical-align: -0.05em;
+  background: currentColor;
+  opacity: 0;
+}
+
+.typeCursorVisible {
+  opacity: 1;
+}
+
+.typeCursorBlink {
+  animation: footerTypeCursorBlink 1s step-end infinite;
+}
+
+@keyframes footerTypeCursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -80,5 +131,9 @@
 
   .backToTopVisible {
     transform: none;
+  }
+
+  .typeCursorBlink {
+    animation: none;
   }
 }
