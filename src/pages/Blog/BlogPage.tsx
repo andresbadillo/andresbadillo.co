@@ -3,16 +3,24 @@ import { Seo } from "@/components/Seo/Seo";
 import { BlogPostCard } from "@/components/cards/BlogPostCard";
 import { availableTags, posts } from "@/data/posts";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
+import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import pageLayout from "@/styles/pageLayout.module.scss";
+import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
+import { useRef } from "react";
 import styles from "./BlogPage.module.scss";
 
 export function BlogPage() {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingAccentReveal(headingRef);
+
   return (
     <>
       <section className={clsx("container", pageLayout.mainBlock)}>
         <Seo title="Blog — Andres Badillo Demo" description="Artículos placeholder con navegación por etiquetas." />
-        <h1>Blog</h1>
+        <h1 ref={headingRef} className={pageLayout.pageHeading}>
+          <span className={headingAccent.sectionAccent}>Blog</span>
+        </h1>
         <div className={styles.tags}>
           {availableTags.map((tag) => (
             <TransitionLink key={tag} to={`/blog/tag/${tag}`} className={styles.tag}>

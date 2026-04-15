@@ -1,10 +1,12 @@
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
-import { useState } from "react";
+import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
+import { useState, useRef } from "react";
 import avatar from "@/assets/placeholders/avatar.svg";
 import thumb1 from "@/assets/placeholders/thumb-1.svg";
 import thumb2 from "@/assets/placeholders/thumb-2.svg";
 import pageLayout from "@/styles/pageLayout.module.scss";
+import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
 import styles from "./AboutPage.module.scss";
 
@@ -20,12 +22,16 @@ const publications = [
 export function AboutPage() {
   const [expanded, setExpanded] = useState(false);
   const visiblePublications = expanded ? publications : publications.slice(0, 3);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingAccentReveal(headingRef);
 
   return (
     <>
       <section className={clsx("container", pageLayout.mainBlock)}>
         <Seo title="About — Andres Badillo Demo" description="Perfil profesional y publicaciones mock." />
-        <h1>About</h1>
+        <h1 ref={headingRef} className={pageLayout.pageHeading}>
+          <span className={headingAccent.sectionAccent}>About</span>
+        </h1>
         <p>Frontend engineer enfocado en sistemas robustos, visualización clara y performance.</p>
         <img className={styles.avatar} src={avatar} alt="Avatar placeholder de perfil" />
         <h2>Public speaking</h2>

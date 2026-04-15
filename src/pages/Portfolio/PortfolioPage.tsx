@@ -1,23 +1,32 @@
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
-import { ProjectCard } from "@/components/cards/ProjectCard";
+import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
+import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
 import { projects } from "@/data/projects";
-import pageLayout from "@/styles/pageLayout.module.scss";
+import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
+import { useRef } from "react";
 import styles from "./PortfolioPage.module.scss";
 
 export function PortfolioPage() {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingAccentReveal(headingRef);
+
   return (
     <>
-      <section className={clsx("container", pageLayout.mainBlock)}>
+      <section
+        className={clsx("container", styles.section)}
+        aria-labelledby="portfolio-page-heading"
+      >
         <Seo title="Portfolio — Andres Badillo Demo" description="Listado de proyectos mock con tags y fecha." />
-        <h1>Portfolio</h1>
-        <p>Selección curada de proyectos de producto y experimentos visuales.</p>
-        <div className={styles.grid}>
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
-        </div>
+        <h1 ref={headingRef} id="portfolio-page-heading" className={styles.sectionTitle}>
+          <span className={headingAccent.sectionAccent}>Portfolio</span>
+          Projects
+        </h1>
+        <p className={styles.lead}>Selección curada de proyectos de producto y experimentos visuales.</p>
+        {projects.map((project, index) => (
+          <HomeProjectRow key={project.slug} project={project} reversed={index % 2 === 0} />
+        ))}
       </section>
       <CanvasBarsDivider topBackground="var(--bg)" bottomBackground="var(--home-hero-bg)" />
     </>

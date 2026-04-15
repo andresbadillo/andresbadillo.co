@@ -1,5 +1,21 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
+/* Alineado con Home; padding inferior = 50% del que aplicaban .section y .mainBlock (el mayor en cascada) */
+.section {
+  padding-top: clamp(3rem, 8vw, 5rem);
+  padding-bottom: calc(max(clamp(3rem, 8vw, 5rem), clamp(2.25rem, 5vw, 4rem)) * 0.5);
+}
+
+.sectionTitle {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  margin: 0 0 clamp(2.35rem, 3.5vw, 2rem);
+  letter-spacing: 0.02em;
+}
+
+.lead {
+  margin: -1.25rem 0 clamp(2rem, 4vw, 2.75rem);
+  max-width: 52ch;
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
 }

@@ -2,3 +2,12 @@
 .mainBlock {
   padding-bottom: clamp(2.25rem, 5vw, 4rem);
 }
+
+/* h1 de páginas internas (Blog, About, Contact…); alineado con .sectionTitle de Home/Portfolio */
+.pageHeading {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  margin: 0 0 clamp(1.25rem, 3vw, 1.75rem);
+  letter-spacing: 0.02em;
+}

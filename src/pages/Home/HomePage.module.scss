@@ -360,41 +360,6 @@
   letter-spacing: 0.02em;
 }
 
-.sectionAccent {
-  position: relative;
-  display: inline-block;
-  vertical-align: baseline;
-  color: var(--fg);
-  padding-bottom: 0.28rem;
-  margin-right: 0.35rem;
-
-  /* Solo scaleX: un translate tipo 92vw ensanchaba el scroll horizontal y en móvil corría todo el layout */
-  &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 999px;
-    transform: scaleX(0);
-    transform-origin: right center;
-    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-}
-
-.sectionTitle.sectionTitleAccentRevealed .sectionAccent::after {
-  transform: scaleX(1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sectionAccent::after {
-    transition: none;
-    transform: scaleX(1);
-  }
-}
-
 /* Mismo aspecto que HomeProjectRow .cta, centrado */
 .seeAllCta {
   display: block;

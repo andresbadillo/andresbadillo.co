@@ -1,12 +1,16 @@
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
-import { useState, type FormEvent } from "react";
+import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
+import { useState, useRef, type FormEvent } from "react";
 import pageLayout from "@/styles/pageLayout.module.scss";
+import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
 import styles from "./ContactPage.module.scss";
 
 export function ContactPage() {
   const [status, setStatus] = useState("");
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useHeadingAccentReveal(headingRef);
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -17,7 +21,9 @@ export function ContactPage() {
     <>
       <section className={clsx("container", pageLayout.mainBlock)}>
         <Seo title="Contact — Andres Badillo Demo" description="Formulario de contacto demo sin backend." />
-        <h1>Contact</h1>
+        <h1 ref={headingRef} className={pageLayout.pageHeading}>
+          <span className={headingAccent.sectionAccent}>Contact</span>
+        </h1>
         <p>Si quieres conversar sobre producto y frontend, escríbeme.</p>
         <form className={styles.form} onSubmit={onSubmit}>
           <label htmlFor="name">Name</label>

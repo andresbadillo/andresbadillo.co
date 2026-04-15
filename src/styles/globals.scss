@@ -56,6 +56,15 @@ a:hover {
   margin: 0 auto;
 }
 
+/* Más aire respecto a los bordes en móvil / tablet estrecha (header, main, home, footer…) */
+@media (max-width: 786px) {
+  .container {
+    width: 100%;
+    max-width: 1080px;
+    padding-inline: clamp(1.35rem, 5.5vw, 2rem);
+  }
+}
+
 h1,
 h2,
 h3 {

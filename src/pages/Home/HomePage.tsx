@@ -8,7 +8,9 @@ import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { projects } from "@/data/projects";
 import { posts } from "@/data/posts";
 import avatarPlaceholder from "@/assets/placeholders/avatar.png";
+import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
+import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
 import {
   type FormEvent,
@@ -38,6 +40,10 @@ export function HomePage() {
   const blogHeadingRef = useRef<HTMLHeadingElement>(null);
   const contactHeadingRef = useRef<HTMLHeadingElement>(null);
   const introRevealRef = useRef<HTMLDivElement>(null);
+
+  useHeadingAccentReveal(projectsHeadingRef);
+  useHeadingAccentReveal(blogHeadingRef);
+  useHeadingAccentReveal(contactHeadingRef);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -152,40 +158,6 @@ export function HomePage() {
     return () => io.disconnect();
   }, [prefersReducedMotion]);
 
-  useEffect(() => {
-    const reveal = (el: HTMLHeadingElement | null) => {
-      el?.classList.add(styles.sectionTitleAccentRevealed);
-    };
-
-    if (prefersReducedMotion) {
-      reveal(projectsHeadingRef.current);
-      reveal(blogHeadingRef.current);
-      reveal(contactHeadingRef.current);
-      return;
-    }
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add(styles.sectionTitleAccentRevealed);
-          } else {
-            entry.target.classList.remove(styles.sectionTitleAccentRevealed);
-          }
-        }
-      },
-      { threshold: 0.22, rootMargin: "0px 0px -6% 0px" },
-    );
-
-    const hProjects = projectsHeadingRef.current;
-    const hBlog = blogHeadingRef.current;
-    const hContact = contactHeadingRef.current;
-    if (hProjects) io.observe(hProjects);
-    if (hBlog) io.observe(hBlog);
-    if (hContact) io.observe(hContact);
-    return () => io.disconnect();
-  }, [prefersReducedMotion]);
-
   const onSubmitHomeContact = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormStatus("Mensaje de prueba registrado. Para envío real, conecta un backend.");
@@ -279,7 +251,7 @@ export function HomePage() {
             aria-labelledby="home-projects-heading"
           >
             <h2 id="home-projects-heading" ref={projectsHeadingRef} className={styles.sectionTitle}>
-              <span className={styles.sectionAccent}>Selected</span>
+              <span className={headingAccent.sectionAccent}>Selected</span>
               Portfolio Projects
             </h2>
             {projects.slice(0, 4).map((project, index) => (
@@ -298,7 +270,7 @@ export function HomePage() {
         <div className="container">
           <section className={styles.blogSection} aria-labelledby="home-blog-heading">
             <h2 id="home-blog-heading" ref={blogHeadingRef} className={styles.sectionTitle}>
-              <span className={styles.sectionAccent}>Selected</span>
+              <span className={headingAccent.sectionAccent}>Selected</span>
               Blog Articles
             </h2>
             <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
@@ -322,7 +294,7 @@ export function HomePage() {
         <div className="container">
           <section className={styles.contactSection} aria-labelledby="home-contact-heading">
             <h2 id="home-contact-heading" ref={contactHeadingRef} className={styles.sectionTitle}>
-              <span className={styles.sectionAccent}>Contact</span>
+              <span className={headingAccent.sectionAccent}>Contact</span>
             </h2>
             <p className={styles.contactLead}>
               Feel free to contact me at <strong>r.andres.badillo@gmail.com</strong> or drop me a message using the contact form below:
