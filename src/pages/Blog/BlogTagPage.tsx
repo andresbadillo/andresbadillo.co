@@ -21,7 +21,7 @@ export function BlogTagPage() {
 
   return (
     <>
-      <section className={clsx("container", pageLayout.mainBlock)}>
+      <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
         <Seo title={`Blog tag ${tag} — Demo`} description="Filtrado de artículos por etiqueta." />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Blog</span>

@@ -3,6 +3,7 @@ import { Seo } from "@/components/Seo/Seo";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
 import { projects } from "@/data/projects";
+import pageLayout from "@/styles/pageLayout.module.scss";
 import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
 import { useRef } from "react";
@@ -15,7 +16,7 @@ export function PortfolioPage() {
   return (
     <>
       <section
-        className={clsx("container", styles.section)}
+        className={clsx("container", pageLayout.pageSection, styles.section)}
         aria-labelledby="portfolio-page-heading"
       >
         <Seo title="Portfolio — Andres Badillo Demo" description="Listado de proyectos mock con tags y fecha." />

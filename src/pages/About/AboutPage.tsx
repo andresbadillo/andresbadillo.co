@@ -27,7 +27,7 @@ export function AboutPage() {
 
   return (
     <>
-      <section className={clsx("container", pageLayout.mainBlock)}>
+      <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
         <Seo title="About — Andres Badillo Demo" description="Perfil profesional y publicaciones mock." />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>About</span>

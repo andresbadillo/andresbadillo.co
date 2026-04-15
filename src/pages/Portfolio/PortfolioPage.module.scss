@@ -1,6 +1,5 @@
-/* Alineado con Home; padding inferior = 50% del que aplicaban .section y .mainBlock (el mayor en cascada) */
+/* padding-top en pageLayout.pageSection; aquí solo el inferior respecto al CanvasBarsDivider */
 .section {
-  padding-top: clamp(3rem, 8vw, 5rem);
   padding-bottom: calc(max(clamp(3rem, 8vw, 5rem), clamp(2.25rem, 5vw, 4rem)) * 0.5);
 }
 

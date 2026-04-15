@@ -3,11 +3,16 @@
   padding-bottom: clamp(2.25rem, 5vw, 4rem);
 }
 
+/* Mismo margen superior que la sección de Portfolio / bloques de Home antes del título */
+.pageSection {
+  padding-top: clamp(3rem, 8vw, 5rem);
+}
+
 /* h1 de páginas internas (Blog, About, Contact…); alineado con .sectionTitle de Home/Portfolio */
 .pageHeading {
   font-weight: 500;
   color: var(--muted);
   font-size: clamp(1.1rem, 2vw, 1.35rem);
-  margin: 0 0 clamp(1.25rem, 3vw, 1.75rem);
+  margin: 0 0 clamp(2.35rem, 3.5vw, 2rem);
   letter-spacing: 0.02em;
 }
