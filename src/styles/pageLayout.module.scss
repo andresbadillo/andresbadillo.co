@@ -1,0 +1,4 @@
+/* Aire entre el contenido y el CanvasBarsDivider; el canvas sigue siendo el último hijo de main */
+.mainBlock {
+  padding-bottom: clamp(2.25rem, 5vw, 4rem);
+}
