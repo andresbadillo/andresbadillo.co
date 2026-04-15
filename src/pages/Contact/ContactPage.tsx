@@ -1,5 +1,8 @@
+import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
 import { useState, type FormEvent } from "react";
+import pageLayout from "@/styles/pageLayout.module.scss";
+import clsx from "clsx";
 import styles from "./ContactPage.module.scss";
 
 export function ContactPage() {
@@ -11,23 +14,26 @@ export function ContactPage() {
   };
 
   return (
-    <section className="container">
-      <Seo title="Contact — Andres Badillo Demo" description="Formulario de contacto demo sin backend." />
-      <h1>Contact</h1>
-      <p>Si quieres conversar sobre producto y frontend, escríbeme.</p>
-      <form className={styles.form} onSubmit={onSubmit}>
-        <label htmlFor="name">Name</label>
-        <input id="name" className={styles.input} name="name" required />
-        <label htmlFor="email">Email</label>
-        <input id="email" className={styles.input} name="email" type="email" required />
-        <label htmlFor="message">Message</label>
-        <textarea id="message" className={styles.textarea} name="message" rows={6} required />
-        <button type="submit">Send</button>
-      </form>
-      <p role="status" aria-live="polite">
-        {status}
-      </p>
-      <p>Nota: Para enviar realmente, conecta un backend.</p>
-    </section>
+    <>
+      <section className={clsx("container", pageLayout.mainBlock)}>
+        <Seo title="Contact — Andres Badillo Demo" description="Formulario de contacto demo sin backend." />
+        <h1>Contact</h1>
+        <p>Si quieres conversar sobre producto y frontend, escríbeme.</p>
+        <form className={styles.form} onSubmit={onSubmit}>
+          <label htmlFor="name">Name</label>
+          <input id="name" className={styles.input} name="name" required />
+          <label htmlFor="email">Email</label>
+          <input id="email" className={styles.input} name="email" type="email" required />
+          <label htmlFor="message">Message</label>
+          <textarea id="message" className={styles.textarea} name="message" rows={6} required />
+          <button type="submit">Send</button>
+        </form>
+        <p role="status" aria-live="polite">
+          {status}
+        </p>
+        <p>Nota: Para enviar realmente, conecta un backend.</p>
+      </section>
+      <CanvasBarsDivider topBackground="var(--bg)" bottomBackground="var(--home-hero-bg)" />
+    </>
   );
 }

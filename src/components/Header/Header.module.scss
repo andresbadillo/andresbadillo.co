@@ -1,16 +1,18 @@
+/* Sin transform en el header: si no, position:fixed del menú móvil queda anclado al header
+   (bloque de contención) y solo cubre la franja superior en lugar del viewport. */
 .header {
   position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
   background: transparent;
   border-bottom: none;
-  transform: translateY(0);
-  transition: transform 0.32s ease;
-  will-change: transform;
+  transition: top 0.32s ease;
 }
 
 .headerHidden {
-  transform: translateY(-100%);
+  top: -5.5rem;
   pointer-events: none;
 }
 
@@ -84,6 +86,14 @@
   gap: 1rem;
 }
 
+.navMobileInner {
+  display: contents;
+}
+
+.navStaggerSlot {
+  display: contents;
+}
+
 .menuButton {
   display: none;
   padding: 0;
@@ -103,7 +113,7 @@
   outline-offset: 3px;
 }
 
-/* Tres barras centradas en una caja con altura real (las sombras no cuentan para el layout) */
+/* Hamburguesa (3 barras) → X al abrir el menú (.menuButtonOpen) */
 .menuButtonBars {
   position: relative;
   display: block;
@@ -112,7 +122,8 @@
   height: 1.75rem;
 }
 
-.menuButtonBars::before {
+.menuButtonBars::before,
+.menuButtonBars::after {
   content: "";
   position: absolute;
   left: 0;
@@ -122,7 +133,48 @@
   margin-top: -1px;
   background: currentColor;
   border-radius: 1px;
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
+}
+
+.menuButtonBars::before {
   box-shadow: 0 -7px 0 currentColor, 0 7px 0 currentColor;
+}
+
+.menuButtonBars::after {
+  opacity: 0;
+  box-shadow: none;
+}
+
+.menuButtonOpen .menuButtonBars::before {
+  box-shadow: none;
+  transform: rotate(45deg);
+}
+
+.menuButtonOpen .menuButtonBars::after {
+  opacity: 1;
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuButtonBars::before,
+  .menuButtonBars::after {
+    transition-duration: 0.12s;
+  }
+}
+
+@keyframes navItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 767px) {
@@ -144,7 +196,10 @@
     justify-self: center;
   }
 
+  /* Solo la X por encima del overlay; logo y tema quedan tapados por el panel */
   .actions {
+    position: relative;
+    z-index: 1002;
     display: flex;
     grid-column: 3;
     grid-row: 1;
@@ -155,23 +210,93 @@
   .menuButton {
     display: inline-flex;
   }
-  .nav {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    position: absolute;
-    top: 64px;
-    right: 1rem;
+
+  .navMobileInner {
+    display: flex;
     flex-direction: column;
-    padding: 1rem;
-    border: 1px solid var(--border);
-    background: var(--card);
-    box-shadow: var(--shadow);
-    opacity: 0;
-    pointer-events: none;
+    align-items: center;
+    gap: 1.35rem;
   }
-  .open {
-    opacity: 1;
+
+  .nav {
+    --nav-panel-duration: 0.42s;
+    --nav-stagger-step: 0.07s;
+
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0;
+    border: none;
+    box-shadow: none;
+    background: var(--home-hero-bg);
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      clip-path var(--nav-panel-duration) cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear var(--nav-panel-duration);
+  }
+
+  .nav.open {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
     pointer-events: auto;
+    transition:
+      clip-path var(--nav-panel-duration) cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0s;
+  }
+
+  .navLink {
+    text-align: center;
+    font-size: 1.05rem;
+    letter-spacing: 0.18em;
+    color: var(--home-hero-fg);
+    border-bottom-color: transparent;
+    padding: 0.35rem 0;
+  }
+
+  .nav:not(.open) .navLink {
+    opacity: 0;
+    transform: translateY(0.65rem);
+    animation: none;
+  }
+
+  .nav.open .navLink {
+    animation: navItemIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--nav-panel-duration) + var(--nav-stagger, 0) * var(--nav-stagger-step));
+  }
+
+  .navLink:hover,
+  .navLink:focus-visible {
+    color: var(--accent);
+  }
+
+  .nav.open .navActive {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .nav {
+    transition-duration: 0.01s;
+    transition-delay: 0s;
+  }
+
+  .nav.open {
+    transition-duration: 0.01s;
+  }
+
+  .nav.open .navLink {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
