@@ -1,0 +1,55 @@
+.article {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.title {
+  font-weight: 600;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  margin: 0 0 0.75rem;
+  line-height: 1.25;
+  color: var(--fg);
+}
+
+.header {
+  margin-bottom: 1.25rem;
+}
+
+.date {
+  display: block;
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.tags {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.tag {
+  color: var(--accent);
+}
+
+.fallback {
+  margin: 0 0 1.5rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.back {
+  display: inline-block;
+  margin-top: 1.75rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--accent);
+}

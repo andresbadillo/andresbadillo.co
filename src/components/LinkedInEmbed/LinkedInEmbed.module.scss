@@ -1,0 +1,25 @@
+.root {
+  position: relative;
+  width: 100%;
+  max-width: 504px;
+  margin-inline: auto;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.compact {
+  max-width: min(504px, 100%);
+}
+
+.full {
+  max-width: min(560px, 100%);
+}
+
+.iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
