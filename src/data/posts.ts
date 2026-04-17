@@ -27,105 +27,27 @@ export interface Post {
   linkedinEmbed?: LinkedInEmbedPair;
 }
 
-/**
- * Cada publicación de LinkedIn debe tener su propio objeto `linkedinEmbed` en su entrada.
- * Si reutilizas el mismo objeto en varios posts, el mismo iframe se mostrará en todos.
- *
- * Metadatos (`slug`, `title`, `tags`, `excerpt`): los defines tú aquí; LinkedIn no los importa
- * automáticamente. Ajusta título y slug para que coincidan con lo que quieres en el sitio.
- */
-const linkedinWebPersonal: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7448138398982160385?collapsed=1",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7448138398982160385",
-    height: 760,
-    width: 504,
-  },
-};
-
-const linkedinInterseccion: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7446888014242398209",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7446888014242398209",
-    height: 760,
-    width: 504,
-  },
-};
-
-const linkedinLiderazgo: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7442629095978422272",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7442629095978422272",
-    height: 760,
-    width: 504,
-  },
-};
-
-const linkedinDisciplinaDatos: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7440378569089945600?collapsed=1",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7440378569089945600",
-    height: 760,
-    width: 504,
-  },
-};
-
-const linkedinValorDeNegocio: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7438344692884373506?collapsed=1",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7438344692884373506",
-    height: 760,
-    width: 504,
-  },
-};
-
-const linkedinConstruirSoluciones: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7432927059125104640",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7432927059125104640",
-    height: 760,
-    width: 504,
-  },
-};
-
-const linkedinPensarEnSistemas: LinkedInEmbedPair = {
-  compact: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7419898886749749248?collapsed=1",
-    height: 420,
-    width: 504,
-  },
-  full: {
-    src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7419898886749749248",
-    height: 760,
-    width: 504,
-  },
-};
-
 export const posts: Post[] = [
+  {
+    slug: "preparen-fuego-apunten",
+    title: "Preparen - Fuego - Apunten",
+    excerpt: "No esperes a tener la solución perfecta para empezar.",
+    date: "2026-04-6",
+    tags: ["Agile", "Transformacion Digital", "Productividad"],
+    coverImage: thumb1,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7450736389186449408?collapsed=1",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7450736389186449408",
+        height: 760,
+        width: 504,
+      },
+    },
+  },
   {
     slug: "web-personal",
     title: "Construyendo para mí",
@@ -133,7 +55,18 @@ export const posts: Post[] = [
     date: "2026-04-09",
     tags: ["web", "react", "typescript"],
     coverImage: thumb1,
-    linkedinEmbed: linkedinWebPersonal,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7448138398982160385?collapsed=1",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7448138398982160385",
+        height: 760,
+        width: 504,
+      },
+    },
   },
   {
     slug: "interseccion-de-habilidades",
@@ -142,7 +75,18 @@ export const posts: Post[] = [
     date: "2026-04-07",
     tags: ["Transformacion Digital", "DataDriven", "BI"],
     coverImage: thumb2,
-    linkedinEmbed: linkedinInterseccion,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7446888014242398209",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7446888014242398209",
+        height: 760,
+        width: 504,
+      },
+    },
   },
   {
     slug: "liderando-equipos",
@@ -151,7 +95,18 @@ export const posts: Post[] = [
     date: "2026-03-26",
     tags: ["Liderazgo", "DataDriven", "Automatizacion"],
     coverImage: project1,
-    linkedinEmbed: linkedinLiderazgo,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7442629095978422272",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7442629095978422272",
+        height: 760,
+        width: 504,
+      },
+    },
   },
   {
     slug: "disciplina-de-datos",
@@ -160,7 +115,18 @@ export const posts: Post[] = [
     date: "2026-03-16",
     tags: ["DataDriven", "BI", "Automatizacion"],
     coverImage: project2,
-    linkedinEmbed: linkedinDisciplinaDatos,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7440378569089945600?collapsed=1",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7440378569089945600",
+        height: 760,
+        width: 504,
+      },
+    },
   },
   {
     slug: "valor-de-negocio",
@@ -169,7 +135,18 @@ export const posts: Post[] = [
     date: "2026-03-10",
     tags: ["DataDriven", "Negocios", "Transformacion Digital"],
     coverImage: project3,
-    linkedinEmbed: linkedinValorDeNegocio,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7438344692884373506?collapsed=1",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7438344692884373506",
+        height: 760,
+        width: 504,
+      },
+    },
   },
   {
     slug: "construyendo-soluciones",
@@ -178,7 +155,18 @@ export const posts: Post[] = [
     date: "2026-03-03",
     tags: ["DataDriven", "Python", "Automatizacion"],
     coverImage: thumb1,
-    linkedinEmbed: linkedinConstruirSoluciones,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7432927059125104640",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7432927059125104640",
+        height: 760,
+        width: 504,
+      },
+    },
   },
   {
     slug: "pensar-en-sistemas",
@@ -187,7 +175,18 @@ export const posts: Post[] = [
     date: "2026-02-19",
     tags: ["Python", "Streamlit", "Data"],
     coverImage: thumb1,
-    linkedinEmbed: linkedinPensarEnSistemas,
+    linkedinEmbed: {
+      compact: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7419898886749749248?collapsed=1",
+        height: 420,
+        width: 504,
+      },
+      full: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7419898886749749248",
+        height: 760,
+        width: 504,
+      },
+    },
   },
 ];
 
