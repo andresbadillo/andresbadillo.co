@@ -13,24 +13,25 @@ import styles from "./BlogPage.module.scss";
 
 export function BlogTagPage() {
   const { tag = "all" } = useParams();
-  const normalized = tag.toLowerCase();
+  const currentTag = decodeURIComponent(tag);
+  const normalized = currentTag.toLowerCase();
   const filtered = normalized === "all" ? posts : posts.filter((post) => post.tags.map((t) => t.toLowerCase()).includes(normalized));
-  const isKnownTag = availableTags.includes(normalized);
+  const isKnownTag = availableTags.some((availableTag) => availableTag.toLowerCase() === normalized);
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingAccentReveal(headingRef);
 
   return (
     <>
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title={`Blog tag ${tag} — Demo`} description="Filtrado de artículos por etiqueta." />
+        <Seo title={`Blog tag ${currentTag} — Demo`} description="Filtrado de artículos por etiqueta." />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Blog</span>
           {" / "}
-          {tag}
+          {currentTag}
         </h1>
         <div className={styles.tags}>
           {availableTags.map((currentTag) => (
-            <TransitionLink key={currentTag} to={`/blog/tag/${currentTag}`} className={styles.tag}>
+            <TransitionLink key={currentTag} to={`/blog/tag/${encodeURIComponent(currentTag)}`} className={styles.tag}>
               {currentTag}
             </TransitionLink>
           ))}

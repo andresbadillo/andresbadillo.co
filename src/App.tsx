@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { AppRouter } from "@/router";
 import { SiteLayout } from "@/layouts/SiteLayout";
 import { CurtainProvider } from "@/components/CurtainTransition/CurtainTransition";
+import { ScrollToTop } from "@/components/ScrollToTop/ScrollToTop";
 
 const THEME_KEY = "andres_badillo_theme";
 
@@ -22,6 +23,7 @@ export function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <CurtainProvider>
         <SiteLayout theme={theme} onThemeChange={setTheme}>
           <AppRouter />

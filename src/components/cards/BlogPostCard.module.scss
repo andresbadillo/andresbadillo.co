@@ -3,6 +3,13 @@
   background: transparent;
   border-radius: 0.65rem;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.embedBlock {
+  width: 100%;
+  padding: 0.5rem 0.5rem 0;
 }
 
 .mediaLink {
@@ -29,7 +36,7 @@
 }
 
 .tags {
-  margin: 0 0.75rem 1rem;
+  margin: 0 0.75rem 0.5rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.65rem;
@@ -38,5 +45,19 @@
 }
 
 .tag {
+  color: var(--accent);
+}
+
+.detailCta {
+  margin: 0 0.75rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  align-self: flex-start;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.detailCta:hover,
+.detailCta:focus-visible {
   color: var(--accent);
 }

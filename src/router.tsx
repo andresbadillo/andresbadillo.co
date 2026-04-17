@@ -3,6 +3,7 @@ import { HomePage } from "@/pages/Home/HomePage";
 import { PortfolioPage } from "@/pages/Portfolio/PortfolioPage";
 import { ProjectDetailPage } from "@/pages/Portfolio/ProjectDetailPage";
 import { BlogPage } from "@/pages/Blog/BlogPage";
+import { BlogPostDetailPage } from "@/pages/Blog/BlogPostDetailPage";
 import { BlogTagPage } from "@/pages/Blog/BlogTagPage";
 import { AboutPage } from "@/pages/About/AboutPage";
 import { ContactPage } from "@/pages/Contact/ContactPage";
@@ -17,6 +18,7 @@ export function AppRouter() {
       <Route path="/portfolio/:slug" element={<ProjectDetailPage />} />
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/blog/tag/:tag" element={<BlogTagPage />} />
+      <Route path="/blog/:slug" element={<BlogPostDetailPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
