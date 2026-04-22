@@ -22,6 +22,7 @@ export function BlogPage() {
           <span className={headingAccent.sectionAccent}>Blog</span>
         </h1>
         <div className={styles.tags}>
+          <span className={styles.tagsLabel}>Tags:</span>
           {availableTags.map((tag) => (
             <TransitionLink key={tag} to={`/blog/tag/${encodeURIComponent(tag)}`} className={styles.tag}>
               {tag}

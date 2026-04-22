@@ -30,6 +30,7 @@ export function BlogTagPage() {
           {currentTag}
         </h1>
         <div className={styles.tags}>
+          <span className={styles.tagsLabel}>Tags:</span>
           {availableTags.map((currentTag) => (
             <TransitionLink key={currentTag} to={`/blog/tag/${encodeURIComponent(currentTag)}`} className={styles.tag}>
               {currentTag}
