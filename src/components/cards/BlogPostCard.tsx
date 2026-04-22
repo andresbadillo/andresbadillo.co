@@ -32,9 +32,6 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
           </span>
         ))}
       </p>
-      <TransitionLink to={detailPath} className={styles.detailCta}>
-        Ver publicación completa
-      </TransitionLink>
     </article>
   );
 }

@@ -103,7 +103,7 @@ export const posts: Post[] = [
       },
       full: {
         src: "https://www.linkedin.com/embed/feed/update/urn:li:share:7442629095978422272",
-        height: 760,
+        height: 640,
         width: 504,
       },
     },

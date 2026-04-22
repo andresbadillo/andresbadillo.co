@@ -26,7 +26,7 @@ export function LinkedInEmbed({ spec, variant, title, loading = "lazy" }: Linked
         src={spec.src}
         title={title}
         height={height}
-        width={width}
+        {...(variant === "compact" && width != null ? { width } : {})}
         loading={loading}
       />
     </div>

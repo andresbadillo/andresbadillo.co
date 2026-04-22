@@ -13,8 +13,9 @@
   max-width: min(504px, 100%);
 }
 
+/* Ancho del contenedor del artículo (p. ej. blog detalle ~720px); sin tope fijo tipo 560px */
 .full {
-  max-width: min(560px, 100%);
+  max-width: 100%;
 }
 
 .iframe {
