@@ -14,6 +14,13 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Agentes / skills (config local)
+/.agents
+/.claude
+/.windsurf
+/skills
+/skills-lock.json
+
 # Editor / OS
 .DS_Store
 Thumbs.db
