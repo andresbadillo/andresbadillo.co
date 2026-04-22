@@ -15,7 +15,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
     <article className={styles.card}>
       {post.linkedinEmbed ? (
         <div className={styles.embedBlock}>
-          <LinkedInEmbed spec={post.linkedinEmbed.compact} variant="compact" title={iframeTitle} loading="lazy" />
+          <LinkedInEmbed spec={post.linkedinEmbed.compact} variant="compact" title={iframeTitle} loading="lazy" surfaceWhite />
         </div>
       ) : (
         <TransitionLink to={detailPath} className={styles.mediaLink} ariaLabel={`Artículo: ${post.title}`}>
