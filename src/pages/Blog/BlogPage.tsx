@@ -1,7 +1,7 @@
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
+import { usePosts } from "@/context/PostsContext";
 import { BlogPostCard } from "@/components/cards/BlogPostCard";
-import { availableTags, posts } from "@/data/posts";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import pageLayout from "@/styles/pageLayout.module.scss";
@@ -11,6 +11,7 @@ import { useRef } from "react";
 import styles from "./BlogPage.module.scss";
 
 export function BlogPage() {
+  const { availableTags, posts, loading, error } = usePosts();
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingAccentReveal(headingRef);
 
@@ -21,6 +22,8 @@ export function BlogPage() {
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Blog</span>
         </h1>
+        {error && <p role="alert">No se pudo cargar el blog. {error.message}</p>}
+        {loading && <p aria-live="polite">Cargando artículos…</p>}
         <div className={styles.tags}>
           <span className={styles.tagsLabel}>Tags:</span>
           {availableTags.map((tag) => (
@@ -30,7 +33,9 @@ export function BlogPage() {
           ))}
         </div>
         <div className={styles.grid}>
-          {posts.map((post) => (
+          {!loading &&
+            !error &&
+            posts.map((post) => (
             <BlogPostCard key={post.slug} post={post} />
           ))}
         </div>

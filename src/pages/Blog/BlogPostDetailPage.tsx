@@ -1,7 +1,7 @@
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
 import { LinkedInEmbed } from "@/components/LinkedInEmbed/LinkedInEmbed";
-import { getPostBySlug } from "@/data/posts";
+import { usePosts } from "@/context/PostsContext";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { useParams } from "react-router-dom";
 import pageLayout from "@/styles/pageLayout.module.scss";
@@ -10,7 +10,30 @@ import styles from "./BlogPostDetailPage.module.scss";
 
 export function BlogPostDetailPage() {
   const { slug = "" } = useParams();
+  const { getPostBySlug, loading, error } = usePosts();
   const post = getPostBySlug(slug);
+
+  if (error) {
+    return (
+      <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
+        <Seo title="Error — Blog" description="No se pudo cargar el artículo." />
+        <h1 className={styles.title}>Blog</h1>
+        <p role="alert">No se pudo cargar el blog. {error.message}</p>
+        <TransitionLink to="/blog">Volver al blog</TransitionLink>
+      </section>
+    );
+  }
+
+  if (loading) {
+    return (
+      <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
+        <Seo title="Cargando — Blog" description="Cargando artículo…" />
+        <h1 className={styles.title}>Blog</h1>
+        <p aria-live="polite">Cargando artículo…</p>
+        <TransitionLink to="/blog">Volver al blog</TransitionLink>
+      </section>
+    );
+  }
 
   if (!post) {
     return (

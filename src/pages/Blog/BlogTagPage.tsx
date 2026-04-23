@@ -1,7 +1,7 @@
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
+import { usePosts } from "@/context/PostsContext";
 import { BlogPostCard } from "@/components/cards/BlogPostCard";
-import { availableTags, posts } from "@/data/posts";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import pageLayout from "@/styles/pageLayout.module.scss";
@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import styles from "./BlogPage.module.scss";
 
 export function BlogTagPage() {
+  const { availableTags, posts, loading, error } = usePosts();
   const { tag = "all" } = useParams();
   const currentTag = decodeURIComponent(tag);
   const normalized = currentTag.toLowerCase();
@@ -29,17 +30,21 @@ export function BlogTagPage() {
           {" / "}
           {currentTag}
         </h1>
+        {error && <p role="alert">No se pudo cargar el blog. {error.message}</p>}
+        {loading && <p aria-live="polite">Cargando artículos…</p>}
         <div className={styles.tags}>
           <span className={styles.tagsLabel}>Tags:</span>
-          {availableTags.map((currentTag) => (
-            <TransitionLink key={currentTag} to={`/blog/tag/${encodeURIComponent(currentTag)}`} className={styles.tag}>
-              {currentTag}
+          {availableTags.map((t) => (
+            <TransitionLink key={t} to={`/blog/tag/${encodeURIComponent(t)}`} className={styles.tag}>
+              {t}
             </TransitionLink>
           ))}
         </div>
         {!isKnownTag && <p>Etiqueta no reconocida, mostrando coincidencias vacías.</p>}
         <div className={styles.grid}>
-          {filtered.map((post) => (
+          {!loading &&
+            !error &&
+            filtered.map((post) => (
             <BlogPostCard key={post.slug} post={post} />
           ))}
         </div>

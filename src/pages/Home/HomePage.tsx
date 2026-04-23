@@ -5,8 +5,8 @@ import { SvgWavesDivider } from "@/components/Dividers/SvgWavesDivider";
 import { BlogPostCard } from "@/components/cards/BlogPostCard";
 import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
+import { usePosts } from "@/context/PostsContext";
 import { projects } from "@/data/projects";
-import { posts } from "@/data/posts";
 import avatarPlaceholder from "@/assets/placeholders/avatar.png";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
@@ -23,6 +23,7 @@ import {
 import styles from "./HomePage.module.scss";
 
 export function HomePage() {
+  const { posts, loading: postsLoading, error: postsError } = usePosts();
   const [formStatus, setFormStatus] = useState("");
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -273,7 +274,11 @@ export function HomePage() {
               <span className={headingAccent.sectionAccent}>Selected</span>
               Blog Articles
             </h2>
-            <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
+            {postsError && <p role="alert">No se pudo cargar el blog. {postsError.message}</p>}
+            {postsLoading && <p aria-live="polite">Cargando artículos…</p>}
+            {!postsLoading && !postsError && (
+              <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
+            )}
             <TransitionLink to="/blog" className={styles.seeAllCta}>
               See all
             </TransitionLink>
