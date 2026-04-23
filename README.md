@@ -68,3 +68,19 @@ npm run typecheck
 3. `load()` consulta la tabla `posts` en Supabase.
 4. Las filas se adaptan con `rowToPost()`.
 5. Las páginas consumen datos con `usePosts()`.
+
+### Diagrama rápido de arquitectura (onboarding)
+
+```mermaid
+flowchart LR
+  A[(Supabase DB\nTabla: posts)]
+  B[src/lib/supabaseClient.ts\ncreateClient(url, key)]
+  C[src/context/PostsContext.tsx\nload() + from('posts').select(...)]
+  D[src/data/postMapper.ts\nPostRow -> rowToPost() -> Post]
+  E[UI React\nPages + Components con usePosts()]
+
+  A --> C
+  B --> C
+  C --> D
+  D --> E
+```
