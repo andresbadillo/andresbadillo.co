@@ -1,6 +1,7 @@
 import type { LinkedInEmbedPair, Post } from "@/data/posts";
 import { coverKeyToImageUrl } from "@/data/coverAssets";
 
+// Construye tags únicos para filtros de UI a partir de los posts ya cargados.
 export function buildAvailableTags(posts: Post[]): string[] {
   const unique = new Set(
     posts.flatMap((post) => post.tags.map((tag) => tag.trim()).filter(Boolean)),
@@ -21,6 +22,7 @@ export interface PostRow {
   display_order: number;
 }
 
+// Guard de runtime para embebidos de LinkedIn en formato frame.
 function isFrameSpec(
   v: unknown,
 ): v is { src: string; height?: number; width?: number } {
@@ -29,12 +31,14 @@ function isFrameSpec(
   return typeof o.src === "string";
 }
 
+// Guard para validar estructura completa { compact, full }.
 function isLinkedInEmbedPair(v: unknown): v is LinkedInEmbedPair {
   if (v === null || typeof v !== "object") return false;
   const o = v as { compact?: unknown; full?: unknown };
   return isFrameSpec(o.compact) && isFrameSpec(o.full);
 }
 
+// Normaliza fecha proveniente de DB (ISO) a etiqueta yyyy-mm-dd.
 function formatDateLabel(isoOrDate: string): string {
   if (/^\d{4}-\d{2}-\d{2}/.test(isoOrDate)) {
     const d = new Date(isoOrDate);
@@ -48,6 +52,7 @@ function formatDateLabel(isoOrDate: string): string {
   return isoOrDate;
 }
 
+// Mapper principal entre fila SQL (Supabase) y modelo usado por React.
 export function rowToPost(row: PostRow): Post {
   const tags = Array.isArray(row.tags) ? row.tags : [];
   return {

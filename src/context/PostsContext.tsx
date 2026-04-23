@@ -14,6 +14,14 @@ interface PostsContextValue {
 
 const PostsContext = createContext<PostsContextValue | null>(null);
 
+/**
+ * Provider que centraliza el acceso a posts desde Supabase.
+ *
+ * Flujo:
+ * 1) Consulta la tabla `posts`.
+ * 2) Mapea filas SQL (`PostRow`) al modelo de UI (`Post`).
+ * 3) Expone estado de carga/error y helpers de consumo.
+ */
 export function PostsProvider({ children }: { children: ReactNode }) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,11 +31,13 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     void (async () => {
+      // Lectura principal de DB: solo columnas necesarias para la UI.
       const { data, error: qError } = await supabase
         .from("posts")
         .select(
           "id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order",
         )
+        // Orden estable para controlar el listado desde DB.
         .order("display_order", { ascending: true });
       if (qError) {
         setError(new Error(qError.message));
@@ -36,6 +46,7 @@ export function PostsProvider({ children }: { children: ReactNode }) {
         return;
       }
       const rows = (data ?? []) as PostRow[];
+      // Adaptación de shape DB -> shape de dominio/UI.
       setPosts(rows.map(rowToPost));
       setLoading(false);
     })();
@@ -67,6 +78,10 @@ export function PostsProvider({ children }: { children: ReactNode }) {
   return <PostsContext.Provider value={value}>{children}</PostsContext.Provider>;
 }
 
+/**
+ * Hook de consumo del contexto de posts.
+ * Obliga el uso dentro de `PostsProvider` para evitar estado nulo.
+ */
 export function usePosts(): PostsContextValue {
   const ctx = useContext(PostsContext);
   if (!ctx) {
