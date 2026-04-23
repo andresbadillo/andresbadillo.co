@@ -18,7 +18,7 @@ export function BlogPage() {
   return (
     <>
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Blog — Andres Badillo Demo" description="Artículos placeholder con navegación por etiquetas." />
+        <Seo title="Blog — Andres Badillo" description="Artículos de linkedIn publicados." />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Blog</span>
         </h1>

@@ -19,7 +19,7 @@ export function PortfolioPage() {
         className={clsx("container", pageLayout.pageSection, styles.section)}
         aria-labelledby="portfolio-page-heading"
       >
-        <Seo title="Portfolio — Andres Badillo Demo" description="Listado de proyectos mock con tags y fecha." />
+        <Seo title="Portfolio — Andres Badillo" description="Listado de proyectos mock con tags y fecha." />
         <h1 ref={headingRef} id="portfolio-page-heading" className={styles.sectionTitle}>
           <span className={headingAccent.sectionAccent}>Portfolio</span>
           Projects

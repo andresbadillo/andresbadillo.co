@@ -20,7 +20,7 @@ export function ContactPage() {
   return (
     <>
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Contact — Andres Badillo Demo" description="Formulario de contacto demo sin backend." />
+        <Seo title="Contact — Andres Badillo" description="Formulario de contacto demo sin backend." />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Contact</span>
         </h1>
