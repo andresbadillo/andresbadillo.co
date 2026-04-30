@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import { HelmetProvider } from "react-helmet-async";
 import { PostsProvider } from "@/context/PostsContext";
 import { App } from "./App";
@@ -10,6 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <HelmetProvider>
       <PostsProvider>
         <App />
+        <Analytics />
       </PostsProvider>
     </HelmetProvider>
   </React.StrictMode>,
