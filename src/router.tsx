@@ -9,6 +9,10 @@ import { AboutPage } from "@/pages/About/AboutPage";
 import { ContactPage } from "@/pages/Contact/ContactPage";
 import { PrivacyPolicyPage } from "@/pages/Legal/PrivacyPolicyPage";
 import { NotFoundPage } from "@/pages/NotFound/NotFoundPage";
+import { AdminRoute } from "@/components/AdminRoute/AdminRoute";
+import { AdminLoginPage } from "@/pages/Admin/AdminLoginPage";
+import { AdminPostsPage } from "@/pages/Admin/AdminPostsPage";
+import { AdminPostEditorPage } from "@/pages/Admin/AdminPostEditorPage";
 
 export function AppRouter() {
   return (
@@ -22,6 +26,13 @@ export function AppRouter() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminPostsPage />} />
+        <Route path="/admin/posts" element={<AdminPostsPage />} />
+        <Route path="/admin/posts/new" element={<AdminPostEditorPage mode="create" />} />
+        <Route path="/admin/posts/:id/edit" element={<AdminPostEditorPage mode="edit" />} />
+      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

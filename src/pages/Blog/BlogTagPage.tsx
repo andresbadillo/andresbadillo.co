@@ -14,7 +14,7 @@ import styles from "./BlogPage.module.scss";
 export function BlogTagPage() {
   const { availableTags, posts, loading, error } = usePosts();
   const { tag = "all" } = useParams();
-  const currentTag = decodeURIComponent(tag);
+  const currentTag = tag;
   const normalized = currentTag.toLowerCase();
   const filtered = normalized === "all" ? posts : posts.filter((post) => post.tags.map((t) => t.toLowerCase()).includes(normalized));
   const isKnownTag = availableTags.some((availableTag) => availableTag.toLowerCase() === normalized);

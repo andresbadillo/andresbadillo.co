@@ -9,7 +9,12 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier . --write",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "check:generated": "node scripts/check-generated.mjs",
+    "security:audit": "npm audit --audit-level=low",
+    "verify": "npm run check:generated && npm run typecheck && npm run lint && npm run test:run && npm run build && npm run security:audit"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.0",
@@ -19,21 +24,24 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^6.30.1"
+    "react-router-dom": "^7.18.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@vercel/config": "0.0.32",
+    "@vitejs/plugin-react": "^6.1.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.5.3",
     "sass": "^1.86.3",
+    "supabase": "^2.116.0",
     "typescript": "^5.8.3",
-    "vite": "^5.4.18"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }

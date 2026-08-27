@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import type { Post } from "@/data/posts";
-import { buildAvailableTags, rowToPost, type PostRow } from "@/data/postMapper";
+import { buildAvailableTags, rowToPost } from "@/data/postMapper";
+import type { PostRow } from "@/types/database";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 interface PostsContextValue {

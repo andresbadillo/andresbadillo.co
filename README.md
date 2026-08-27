@@ -14,24 +14,56 @@ npm run dev
 ## Comandos
 
 ```bash
-npm i
+npm ci
 npm run dev
 npm run build
 npm run preview
 npm run lint
-npm run format
 npm run typecheck
+npm run test:run
+npm run check:generated
+npm run security:audit
+npm run verify
 ```
 
-## Deploy
+## Seguridad, Supabase y panel administrativo
 
-- `npm run build` genera la carpeta `dist`.
-- Sube `dist` a tu proveedor de hosting estático.
-- Configura fallback SPA para redirigir rutas a `index.html`.
-- En Vercel, basta con detectar Vite y desplegar; verifica que rutas internas usen fallback.
-- Configura dominio con `CNAME` o `A` según tu proveedor DNS.
+- El blog mantiene lectura pública mediante RLS.
+- Las escrituras requieren un JWT con `app_metadata.role = "admin"`.
+- No existe registro público. Las cuentas administrativas se crean manualmente.
+- El panel está en `/admin/login`; no aparece en la navegación pública.
+- Todos los posts guardados son públicos y la eliminación es definitiva, con confirmación.
+- Nunca uses una clave `sb_secret_` o `service_role` en variables `VITE_*`.
 
-## Supabase y consumo de DB
+### Preparación remota de Supabase
+
+```bash
+npx supabase login
+npx supabase link --project-ref <project-ref>
+npx supabase db push --dry-run
+npx supabase db push
+npx supabase db advisors --linked --type security --level warn
+```
+
+La migración `supabase/migrations/20260827192024_harden_posts_rls.sql` valida primero los datos existentes y después aplica constraints, privilegios y políticas. Si alguno de los embeds heredados no cumple la allowlist de LinkedIn, el despliegue se detiene antes de cambiar el acceso.
+
+En Authentication del Dashboard:
+
+1. Deshabilita **Allow new users to sign up**.
+2. Crea el usuario administrador manualmente.
+3. Asigna `{"role":"admin"}` a `app_metadata` mediante Dashboard o Admin API fuera del frontend.
+4. Cierra las sesiones existentes y vuelve a iniciar sesión para refrescar el JWT.
+
+Para validar RLS en el stack local:
+
+```bash
+npx supabase start
+npx supabase db reset --local
+npx supabase test db --local supabase/tests/posts_rls.sql
+npx supabase db advisors --local --type security --level warn --fail-on error
+```
+
+### Variables de entorno
 
 ### Variables de entorno
 
@@ -41,11 +73,22 @@ npm run typecheck
   - `VITE_SUPABASE_PUBLISHABLE_KEY`
 - Importante: en frontend solo usar clave publicable, nunca `service_role`.
 
+### Despliegue en Vercel
+
+`vercel.ts` configura Vite, CSP y las cabeceras defensivas. Tras aplicar RLS y crear el administrador:
+
+```bash
+vercel pull --yes --environment=preview
+vercel deploy
+```
+
+Comprueba en el preview el fallback SPA, `/admin/login`, el CRUD completo y las cabeceras antes de promoverlo a producción. Si el panel falla, revierte únicamente el despliegue web; no relajes RLS.
+
 ### Dónde se conecta Supabase
 
 - Cliente: `src/lib/supabaseClient.ts`
-  - Crea un cliente singleton con `createClient(url, key)`.
-  - Valida que existan variables de entorno antes de iniciar.
+  - Crea un cliente singleton tipado con `createClient(url, key)`.
+  - Rechaza variables ausentes, URLs inseguras y claves secretas.
 
 ### Dónde se consulta la base de datos
 

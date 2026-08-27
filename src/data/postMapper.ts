@@ -1,5 +1,7 @@
-import type { LinkedInEmbedPair, Post } from "@/data/posts";
+import type { Post } from "@/data/posts";
 import { coverKeyToImageUrl } from "@/data/coverAssets";
+import { isLinkedInEmbedPair } from "@/data/postValidation";
+import type { PostRow } from "@/types/database";
 
 // Construye tags únicos para filtros de UI a partir de los posts ya cargados.
 export function buildAvailableTags(posts: Post[]): string[] {
@@ -7,35 +9,6 @@ export function buildAvailableTags(posts: Post[]): string[] {
     posts.flatMap((post) => post.tags.map((tag) => tag.trim()).filter(Boolean)),
   );
   return ["all", ...Array.from(unique)];
-}
-
-export interface PostRow {
-  id: number;
-  slug: string;
-  title: string;
-  excerpt: string;
-  published_at: string;
-  featured: boolean;
-  tags: string[] | null;
-  cover_key: string | null;
-  linkedin_embed: unknown;
-  display_order: number;
-}
-
-// Guard de runtime para embebidos de LinkedIn en formato frame.
-function isFrameSpec(
-  v: unknown,
-): v is { src: string; height?: number; width?: number } {
-  if (v === null || typeof v !== "object") return false;
-  const o = v as { src?: unknown };
-  return typeof o.src === "string";
-}
-
-// Guard para validar estructura completa { compact, full }.
-function isLinkedInEmbedPair(v: unknown): v is LinkedInEmbedPair {
-  if (v === null || typeof v !== "object") return false;
-  const o = v as { compact?: unknown; full?: unknown };
-  return isFrameSpec(o.compact) && isFrameSpec(o.full);
 }
 
 // Normaliza fecha proveniente de DB (ISO) a etiqueta yyyy-mm-dd.

@@ -32,6 +32,8 @@ export function LinkedInEmbed({ spec, variant, title, loading = "lazy", surfaceW
         height={height}
         {...(variant === "compact" && width != null ? { width } : {})}
         loading={loading}
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        referrerPolicy="strict-origin-when-cross-origin"
       />
     </div>
   );

@@ -1,0 +1,269 @@
+.page {
+  padding-top: clamp(5.5rem, 11vw, 8rem);
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: var(--accent);
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.headingRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.9rem, 5vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.subtitle {
+  max-width: 42rem;
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14rem;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.panel,
+.statusRail,
+.loginPanel {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.panel,
+.loginPanel {
+  padding: clamp(1.15rem, 3vw, 2rem);
+}
+
+.loginPanel {
+  width: min(31rem, 100%);
+  margin-top: 1.5rem;
+}
+
+.statusRail {
+  position: sticky;
+  top: 5.5rem;
+  padding: 1rem;
+}
+
+.statusLabel {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.statusValue {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-bottom: 1rem;
+  font-size: 0.86rem;
+}
+
+.statusOk {
+  color: var(--accent);
+}
+
+.actions,
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.button,
+.buttonSecondary,
+.buttonDanger,
+.textButton {
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  padding: 0.62rem 0.85rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #111;
+  font-weight: 700;
+}
+
+.buttonSecondary,
+.textButton {
+  background: transparent;
+  color: var(--fg);
+}
+
+.buttonDanger {
+  border-color: #c45b5b;
+  background: transparent;
+  color: #e98989;
+}
+
+.button:disabled,
+.buttonSecondary:disabled,
+.buttonDanger:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.field,
+.checkboxField {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.checkboxField {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.field label,
+.fieldset legend {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0.72rem 0.78rem;
+  font: inherit;
+}
+
+.textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.fieldGrid,
+.embedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.fieldset {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  border: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.hint,
+.error,
+.success,
+.empty {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.hint,
+.empty {
+  color: var(--muted);
+}
+
+.error {
+  color: #ef9292;
+}
+
+.success {
+  color: #8fd6ad;
+}
+
+.postList {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.postRow {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.postRow:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.order {
+  color: var(--accent);
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+
+.postTitle {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.postMeta {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .headingRow,
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .statusRail {
+    position: static;
+    order: -1;
+  }
+
+  .fieldGrid,
+  .embedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .postRow {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+
+  .rowActions {
+    grid-column: 2;
+  }
+}
