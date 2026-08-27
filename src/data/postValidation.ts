@@ -37,6 +37,12 @@ const MIN_FRAME_WIDTH = 320;
 const MAX_FRAME_WIDTH = 800;
 const MIN_FRAME_HEIGHT = 200;
 const MAX_FRAME_HEIGHT = 1000;
+const IFRAME_CODE_PATTERN = /^\s*<iframe\b([\s\S]*?)>\s*<\/iframe>\s*$/i;
+const ATTRIBUTE_PATTERN = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+
+export type LinkedInIframeParseResult =
+  | { ok: true; value: LinkedInFrameSpec }
+  | { ok: false; error: string };
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -51,6 +57,33 @@ function isOptionalDimension(
     value === undefined ||
     (typeof value === "number" && Number.isInteger(value) && value >= minimum && value <= maximum)
   );
+}
+
+function decodeHtmlAttribute(value: string): string {
+  const namedEntities: Record<string, string> = {
+    amp: "&",
+    apos: "'",
+    gt: ">",
+    lt: "<",
+    quot: '"',
+  };
+
+  return value.replace(/&(?:#(\d+)|#x([\da-f]+)|([a-z]+));/gi, (entity, decimal, hexadecimal, named) => {
+    if (decimal || hexadecimal) {
+      const codePoint = decimal ? Number(decimal) : Number.parseInt(hexadecimal, 16);
+      return Number.isInteger(codePoint) && codePoint >= 0 && codePoint <= 0x10ffff
+        ? String.fromCodePoint(codePoint)
+        : entity;
+    }
+    return namedEntities[String(named).toLowerCase()] ?? entity;
+  });
+}
+
+function parseIframeDimension(value: string | undefined, minimum: number, maximum: number): number | undefined | null {
+  if (value === undefined) return undefined;
+  if (!/^\d+$/.test(value)) return null;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= minimum && parsed <= maximum ? parsed : null;
 }
 
 function isValidIsoDate(value: string): boolean {
@@ -96,6 +129,45 @@ export function isLinkedInFrameSpec(value: unknown): value is LinkedInFrameSpec 
 export function isLinkedInEmbedPair(value: unknown): value is LinkedInEmbedPair {
   if (!isObject(value)) return false;
   return isLinkedInFrameSpec(value.compact) && isLinkedInFrameSpec(value.full);
+}
+
+export function parseLinkedInIframeCode(value: string): LinkedInIframeParseResult {
+  const match = IFRAME_CODE_PATTERN.exec(value);
+  if (!match) {
+    return { ok: false, error: "Pega el código <iframe> completo que entrega LinkedIn." };
+  }
+
+  const attributes = new Map<string, string>();
+  let attributeMatch: RegExpExecArray | null;
+  ATTRIBUTE_PATTERN.lastIndex = 0;
+  while ((attributeMatch = ATTRIBUTE_PATTERN.exec(match[1])) !== null) {
+    const name = attributeMatch[1].toLowerCase();
+    if (!['src', 'width', 'height'].includes(name)) continue;
+    if (attributes.has(name)) {
+      return { ok: false, error: `El iframe contiene el atributo ${name} más de una vez.` };
+    }
+    attributes.set(name, decodeHtmlAttribute(attributeMatch[2] ?? attributeMatch[3] ?? attributeMatch[4] ?? ""));
+  }
+
+  const src = attributes.get("src") ?? "";
+  if (!isSafeLinkedInUrl(src)) {
+    return { ok: false, error: "El iframe debe usar una URL https://www.linkedin.com/embed/… válida." };
+  }
+
+  const width = parseIframeDimension(attributes.get("width"), MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
+  const height = parseIframeDimension(attributes.get("height"), MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
+  if (width === null || height === null) {
+    return { ok: false, error: "El ancho debe estar entre 320–800 y el alto entre 200–1000." };
+  }
+
+  return { ok: true, value: { src, width, height } };
+}
+
+export function linkedInFrameToIframeCode(frame: LinkedInFrameSpec): string {
+  const src = frame.src.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+  const width = frame.width === undefined ? "" : ` width="${frame.width}"`;
+  const height = frame.height === undefined ? "" : ` height="${frame.height}"`;
+  return `<iframe src="${src}"${width}${height}></iframe>`;
 }
 
 export function normalizeTags(tags: string[]): string[] {

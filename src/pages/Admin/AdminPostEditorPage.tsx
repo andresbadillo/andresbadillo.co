@@ -2,6 +2,8 @@ import { Seo } from "@/components/Seo/Seo";
 import { usePosts } from "@/context/PostsContext";
 import {
   COVER_KEYS,
+  linkedInFrameToIframeCode,
+  parseLinkedInIframeCode,
   postInputToInsert,
   postRowToInput,
   validatePostInput,
@@ -30,9 +32,11 @@ interface EditorState {
   coverKey: CoverKey | "";
   displayOrder: string;
   useEmbed: boolean;
+  compactCode: string;
   compactSrc: string;
   compactWidth: string;
   compactHeight: string;
+  fullCode: string;
   fullSrc: string;
   fullWidth: string;
   fullHeight: string;
@@ -55,9 +59,11 @@ function emptyState(): EditorState {
     coverKey: "thumb-1",
     displayOrder: "0",
     useEmbed: false,
+    compactCode: "",
     compactSrc: "",
     compactWidth: "504",
     compactHeight: "420",
+    fullCode: "",
     fullSrc: "",
     fullWidth: "504",
     fullHeight: "760",
@@ -108,9 +114,11 @@ function inputToState(input: PostInput): EditorState {
     coverKey: input.coverKey ?? "",
     displayOrder: String(input.displayOrder),
     useEmbed: input.linkedinEmbed !== null,
+    compactCode: input.linkedinEmbed ? linkedInFrameToIframeCode(input.linkedinEmbed.compact) : "",
     compactSrc: input.linkedinEmbed?.compact.src ?? "",
     compactWidth: String(input.linkedinEmbed?.compact.width ?? 504),
     compactHeight: String(input.linkedinEmbed?.compact.height ?? 420),
+    fullCode: input.linkedinEmbed ? linkedInFrameToIframeCode(input.linkedinEmbed.full) : "",
     fullSrc: input.linkedinEmbed?.full.src ?? "",
     fullWidth: String(input.linkedinEmbed?.full.width ?? 504),
     fullHeight: String(input.linkedinEmbed?.full.height ?? 760),
@@ -164,10 +172,44 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
     setState((current) => ({ ...current, [field]: value }));
   };
 
+  const updateEmbedCode = (variant: "compact" | "full", code: string) => {
+    const parsed = parseLinkedInIframeCode(code);
+    const codeField = variant === "compact" ? "compactCode" : "fullCode";
+    const srcField = variant === "compact" ? "compactSrc" : "fullSrc";
+    const widthField = variant === "compact" ? "compactWidth" : "fullWidth";
+    const heightField = variant === "compact" ? "compactHeight" : "fullHeight";
+    const errorField = variant === "compact" ? "linkedinCompact" : "linkedinFull";
+
+    setState((current) => ({
+      ...current,
+      [codeField]: code,
+      [srcField]: parsed.ok ? parsed.value.src : "",
+      [widthField]: parsed.ok ? String(parsed.value.width ?? "") : "",
+      [heightField]: parsed.ok ? String(parsed.value.height ?? "") : "",
+    }));
+    setErrors((current) => ({
+      ...current,
+      [errorField]: parsed.ok ? undefined : parsed.error,
+      linkedinEmbed: undefined,
+    }));
+  };
+
   const save = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setRequestError("");
     setErrors({});
+
+    if (state.useEmbed) {
+      const compactCode = parseLinkedInIframeCode(state.compactCode);
+      const fullCode = parseLinkedInIframeCode(state.fullCode);
+      if (!compactCode.ok || !fullCode.ok) {
+        setErrors({
+          linkedinCompact: compactCode.ok ? undefined : compactCode.error,
+          linkedinFull: fullCode.ok ? undefined : fullCode.error,
+        });
+        return;
+      }
+    }
 
     const validation = validatePostInput(stateToInput(state));
     if (!validation.ok) {
@@ -294,35 +336,55 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
           {state.useEmbed ? (
             <fieldset className={styles.fieldset}>
               <legend>Embeds permitidos</legend>
-              <p className={styles.hint}>Solo se aceptan URLs https://www.linkedin.com/embed/…</p>
-              <div className={styles.field}>
-                <label htmlFor="compact-src">URL compacta</label>
-                <input id="compact-src" className={styles.input} type="url" value={state.compactSrc} onChange={(event) => update("compactSrc", event.target.value)} required />
-              </div>
-              <div className={styles.embedGrid}>
+              <p className={styles.hint}>En LinkedIn, elige cada opción y pega aquí el código completo que aparece al pulsar “Copiar código”. Solo guardaremos la URL y las dimensiones.</p>
+
+              <section className={styles.embedCard} aria-labelledby="compact-embed-title">
+                <h2 id="compact-embed-title" className={styles.embedTitle}>Opción colapsada · menos texto</h2>
                 <div className={styles.field}>
-                  <label htmlFor="compact-width">Ancho compacto</label>
-                  <input id="compact-width" className={styles.input} type="number" min="320" max="800" value={state.compactWidth} onChange={(event) => update("compactWidth", event.target.value)} />
+                  <label htmlFor="compact-code">Código iframe colapsado</label>
+                  <textarea id="compact-code" className={`${styles.textarea} ${styles.codeInput}`} value={state.compactCode} onChange={(event) => updateEmbedCode("compact", event.target.value)} placeholder={'<iframe src="https://www.linkedin.com/embed/…" width="504" height="420"></iframe>'} spellCheck={false} required />
+                  {errors.linkedinCompact ? <span className={styles.error}>{errors.linkedinCompact}</span> : null}
+                  {!errors.linkedinCompact && state.compactSrc ? <span className={styles.success}>Código leído. Puedes ajustar ancho y alto.</span> : null}
                 </div>
                 <div className={styles.field}>
-                  <label htmlFor="compact-height">Alto compacto</label>
-                  <input id="compact-height" className={styles.input} type="number" min="200" max="1000" value={state.compactHeight} onChange={(event) => update("compactHeight", event.target.value)} />
+                  <label htmlFor="compact-src">URL extraída</label>
+                  <input id="compact-src" className={`${styles.input} ${styles.readonlyInput}`} type="url" value={state.compactSrc} readOnly aria-readonly="true" />
                 </div>
-              </div>
-              <div className={styles.field}>
-                <label htmlFor="full-src">URL completa</label>
-                <input id="full-src" className={styles.input} type="url" value={state.fullSrc} onChange={(event) => update("fullSrc", event.target.value)} required />
-              </div>
-              <div className={styles.embedGrid}>
+                <div className={styles.embedGrid}>
+                  <div className={styles.field}>
+                    <label htmlFor="compact-width">Ancho</label>
+                    <input id="compact-width" className={styles.input} type="number" min="320" max="800" value={state.compactWidth} onChange={(event) => update("compactWidth", event.target.value)} />
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="compact-height">Alto</label>
+                    <input id="compact-height" className={styles.input} type="number" min="200" max="1000" value={state.compactHeight} onChange={(event) => update("compactHeight", event.target.value)} />
+                  </div>
+                </div>
+              </section>
+
+              <section className={styles.embedCard} aria-labelledby="full-embed-title">
+                <h2 id="full-embed-title" className={styles.embedTitle}>Opción completa · publicación completa</h2>
                 <div className={styles.field}>
-                  <label htmlFor="full-width">Ancho completo</label>
-                  <input id="full-width" className={styles.input} type="number" min="320" max="800" value={state.fullWidth} onChange={(event) => update("fullWidth", event.target.value)} />
+                  <label htmlFor="full-code">Código iframe completo</label>
+                  <textarea id="full-code" className={`${styles.textarea} ${styles.codeInput}`} value={state.fullCode} onChange={(event) => updateEmbedCode("full", event.target.value)} placeholder={'<iframe src="https://www.linkedin.com/embed/…" width="504" height="760"></iframe>'} spellCheck={false} required />
+                  {errors.linkedinFull ? <span className={styles.error}>{errors.linkedinFull}</span> : null}
+                  {!errors.linkedinFull && state.fullSrc ? <span className={styles.success}>Código leído. Puedes ajustar ancho y alto.</span> : null}
                 </div>
                 <div className={styles.field}>
-                  <label htmlFor="full-height">Alto completo</label>
-                  <input id="full-height" className={styles.input} type="number" min="200" max="1000" value={state.fullHeight} onChange={(event) => update("fullHeight", event.target.value)} />
+                  <label htmlFor="full-src">URL extraída</label>
+                  <input id="full-src" className={`${styles.input} ${styles.readonlyInput}`} type="url" value={state.fullSrc} readOnly aria-readonly="true" />
                 </div>
-              </div>
+                <div className={styles.embedGrid}>
+                  <div className={styles.field}>
+                    <label htmlFor="full-width">Ancho</label>
+                    <input id="full-width" className={styles.input} type="number" min="320" max="800" value={state.fullWidth} onChange={(event) => update("fullWidth", event.target.value)} />
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="full-height">Alto</label>
+                    <input id="full-height" className={styles.input} type="number" min="200" max="1000" value={state.fullHeight} onChange={(event) => update("fullHeight", event.target.value)} />
+                  </div>
+                </div>
+              </section>
               {errors.linkedinEmbed ? <p className={styles.error}>{errors.linkedinEmbed}</p> : null}
             </fieldset>
           ) : null}

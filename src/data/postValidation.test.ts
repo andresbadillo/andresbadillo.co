@@ -1,7 +1,9 @@
 import {
   isLinkedInEmbedPair,
   isSafeLinkedInUrl,
+  linkedInFrameToIframeCode,
   normalizeTags,
+  parseLinkedInIframeCode,
   validatePostInput,
   type PostInput,
 } from "@/data/postValidation";
@@ -66,6 +68,62 @@ describe("LinkedIn embed validation", () => {
       compact: { ...validEmbed.compact, width: 320, height: 200 },
       full: { ...validEmbed.full, width: 800, height: 1000 },
     })).toBe(true);
+  });
+
+  it("extracts the URL and dimensions from a complete LinkedIn iframe", () => {
+    expect(parseLinkedInIframeCode(`
+      <iframe
+        src="https://www.linkedin.com/embed/feed/update/urn:li:share:123?foo=1&amp;bar=2"
+        height="760"
+        width="504"
+        frameborder="0"
+        allowfullscreen=""
+        title="Publicación integrada"
+      ></iframe>
+    `)).toEqual({
+      ok: true,
+      value: {
+        src: "https://www.linkedin.com/embed/feed/update/urn:li:share:123?foo=1&bar=2",
+        width: 504,
+        height: 760,
+      },
+    });
+  });
+
+  it("accepts iframe code without optional dimensions", () => {
+    expect(parseLinkedInIframeCode(
+      "<iframe src='https://www.linkedin.com/embed/feed/update/urn:li:share:123'></iframe>",
+    )).toEqual({
+      ok: true,
+      value: { src: validEmbed.compact.src, width: undefined, height: undefined },
+    });
+  });
+
+  it.each([
+    ["not an iframe", "Pega el código"],
+    ["<script>alert(1)</script>", "Pega el código"],
+    ["<iframe src=\"javascript:alert(1)\"></iframe>", "https://www.linkedin.com"],
+    ["<iframe src=\"https://www.linkedin.com.evil.test/embed/1\"></iframe>", "https://www.linkedin.com"],
+    ["<iframe src=\"https://www.linkedin.com/embed/1\" width=\"319\" height=\"200\"></iframe>", "320–800"],
+    ["<iframe src=\"https://www.linkedin.com/embed/1\" width=\"504\" height=\"1001\"></iframe>", "200–1000"],
+    ["<iframe src=\"https://www.linkedin.com/embed/1\" src=\"https://www.linkedin.com/embed/2\"></iframe>", "más de una vez"],
+  ])("rejects invalid pasted iframe code: %s", (code, message) => {
+    const result = parseLinkedInIframeCode(code);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain(message);
+  });
+
+  it("drops untrusted iframe attributes when rebuilding code", () => {
+    const result = parseLinkedInIframeCode(
+      `<iframe src="${validEmbed.compact.src}" width="504" height="420" onload="alert(1)" sandbox="allow-all"></iframe>`,
+    );
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const rebuilt = linkedInFrameToIframeCode(result.value);
+      expect(rebuilt).toBe(`<iframe src="${validEmbed.compact.src}" width="504" height="420"></iframe>`);
+      expect(rebuilt).not.toContain("onload");
+      expect(rebuilt).not.toContain("sandbox");
+    }
   });
 });
 
