@@ -45,7 +45,7 @@ npx supabase db push
 npx supabase db advisors --linked --type security --level warn
 ```
 
-La migración `supabase/migrations/20260827192024_harden_posts_rls.sql` valida primero los datos existentes y después aplica constraints, privilegios y políticas. Si alguno de los embeds heredados no cumple la allowlist de LinkedIn, el despliegue se detiene antes de cambiar el acceso.
+La migración base `supabase/migrations/20260827202146_remote_schema_baseline.sql` reproduce el esquema remoto enlazado. A continuación, `supabase/migrations/20260827202233_harden_posts_rls_remote.sql` valida los datos existentes y aplica constraints, privilegios y políticas. Si algún embed heredado no cumple la allowlist de LinkedIn, el despliegue se detiene antes de cambiar el acceso.
 
 En Authentication del Dashboard:
 

@@ -166,7 +166,7 @@ export function postInputToInsert(input: PostInput): Omit<PostInsert, "id"> {
     slug: input.slug,
     title: input.title,
     excerpt: input.excerpt,
-    published_at: `${input.publishedAt}T00:00:00.000Z`,
+    published_at: input.publishedAt,
     featured: input.featured,
     tags: input.tags,
     cover_key: input.coverKey,

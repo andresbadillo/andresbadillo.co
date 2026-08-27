@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(12);
+select plan(18);
 
 insert into public.posts (
   id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order
@@ -17,6 +17,15 @@ select throws_ok(
   'permission denied for table posts',
   'anon cannot insert posts'
 );
+select is(
+  has_function_privilege(
+    current_user,
+    'public.create_post_at_top(text,text,text,date,boolean,text[],text,jsonb)',
+    'EXECUTE'
+  ),
+  false,
+  'anon has no execute privilege on the create-post RPC'
+);
 reset role;
 
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000001","app_metadata":{"role":"viewer"}}', true);
@@ -30,6 +39,12 @@ select throws_ok(
 );
 update public.posts set title = 'Viewer changed it' where id = 900001;
 select is((select title from public.posts where id = 900001), 'RLS existing', 'authenticated non-admin cannot update posts');
+select throws_ok(
+  $$select public.create_post_at_top('viewer-rpc', 'Denied', 'Denied', current_date, false, '{}', null, null)$$,
+  '42501',
+  'Administrators only',
+  'authenticated non-admin cannot create a post through the RPC'
+);
 reset role;
 
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000002","app_metadata":{"role":"admin"}}', true);
@@ -95,6 +110,36 @@ select throws_ok(
 delete from public.posts where id = 900005;
 delete from public.posts where id = 900004;
 select is((select count(*) from public.posts where id = 900004), 0::bigint, 'admin can delete posts');
+
+select lives_ok(
+  $$select public.create_post_at_top(
+    'admin-rpc',
+    'Created at top',
+    'Allowed',
+    current_date,
+    false,
+    '{Supabase}',
+    'thumb-1',
+    null
+  )$$,
+  'admin can create a post atomically at the top'
+);
+select is(
+  (select display_order from public.posts where slug = 'admin-rpc'),
+  0,
+  'the newly created post receives position zero'
+);
+select is(
+  (select display_order from public.posts where id = 900001),
+  9001,
+  'the existing post moves down one position'
+);
+select is(
+  (select count(*) from public.posts),
+  (select count(distinct display_order) from public.posts),
+  'all display positions remain unique'
+);
+delete from public.posts where slug = 'admin-rpc';
 reset role;
 
 select * from finish();

@@ -178,7 +178,16 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
     setSaving(true);
     const payload = postInputToInsert(validation.value);
     const result = postId === null
-      ? await supabase.from("posts").insert(payload).select("id").single()
+      ? await supabase.rpc("create_post_at_top", {
+          p_slug: payload.slug,
+          p_title: payload.title,
+          p_excerpt: payload.excerpt,
+          p_published_at: payload.published_at,
+          p_featured: payload.featured ?? false,
+          p_tags: payload.tags ?? [],
+          p_cover_key: payload.cover_key ?? null,
+          p_linkedin_embed: payload.linkedin_embed ?? null,
+        })
       : await supabase.from("posts").update(payload).eq("id", postId).select("id").single();
 
     if (result.error) {
@@ -248,17 +257,11 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
             {errors.excerpt ? <span className={styles.error}>{errors.excerpt}</span> : null}
           </div>
 
-          <div className={styles.fieldGrid}>
-            <div className={styles.field}>
-              <label htmlFor="post-date">Fecha de publicación</label>
-              <input id="post-date" className={styles.input} type="date" value={state.publishedAt} onChange={(event) => update("publishedAt", event.target.value)} required />
-              {errors.publishedAt ? <span className={styles.error}>{errors.publishedAt}</span> : null}
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="post-order">Orden</label>
-              <input id="post-order" className={styles.input} type="number" min="0" max="9999" step="1" value={state.displayOrder} onChange={(event) => update("displayOrder", event.target.value)} required />
-              {errors.displayOrder ? <span className={styles.error}>{errors.displayOrder}</span> : null}
-            </div>
+          <div className={styles.field}>
+            <label htmlFor="post-date">Fecha de publicación</label>
+            <input id="post-date" className={styles.input} type="date" value={state.publishedAt} onChange={(event) => update("publishedAt", event.target.value)} required />
+            {errors.publishedAt ? <span className={styles.error}>{errors.publishedAt}</span> : null}
+            {mode === "create" ? <span className={styles.hint}>La nueva publicación se guardará automáticamente en la posición 0.</span> : null}
           </div>
 
           <div className={styles.fieldGrid}>

@@ -7,6 +7,9 @@ export type Json =
   | Json[];
 
 export interface Database {
+  __InternalSupabase: {
+    PostgrestVersion: "14.17";
+  };
   public: {
     Tables: {
       posts: {
@@ -16,8 +19,10 @@ export interface Database {
           title: string;
           excerpt: string;
           published_at: string;
+          created_at: string;
+          updated_at: string;
           featured: boolean;
-          tags: string[] | null;
+          tags: string[];
           cover_key: string | null;
           linkedin_embed: Json | null;
           display_order: number;
@@ -28,19 +33,24 @@ export interface Database {
           title: string;
           excerpt: string;
           published_at: string;
+          created_at?: string;
+          updated_at?: string;
           featured?: boolean;
-          tags?: string[] | null;
+          tags?: string[];
           cover_key?: string | null;
           linkedin_embed?: Json | null;
           display_order?: number;
         };
         Update: {
+          id?: number;
           slug?: string;
           title?: string;
           excerpt?: string;
           published_at?: string;
+          created_at?: string;
+          updated_at?: string;
           featured?: boolean;
-          tags?: string[] | null;
+          tags?: string[];
           cover_key?: string | null;
           linkedin_embed?: Json | null;
           display_order?: number;
@@ -49,7 +59,21 @@ export interface Database {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      create_post_at_top: {
+        Args: {
+          p_slug: string;
+          p_title: string;
+          p_excerpt: string;
+          p_published_at: string;
+          p_featured: boolean;
+          p_tags: string[];
+          p_cover_key: string | null;
+          p_linkedin_embed: Json | null;
+        };
+        Returns: number;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
