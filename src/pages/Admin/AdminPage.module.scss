@@ -111,6 +111,12 @@
   font-weight: 700;
 }
 
+.button:hover,
+.button:focus-visible {
+  color: #111;
+  filter: brightness(1.06);
+}
+
 .buttonSecondary,
 .textButton {
   background: transparent;
@@ -174,6 +180,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  align-items: start;
 }
 
 .fieldset {

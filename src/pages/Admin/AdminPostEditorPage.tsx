@@ -319,6 +319,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
                 <option value="">Sin portada específica</option>
                 {COVER_KEYS.map((key) => <option key={key} value={key}>{key}</option>)}
               </select>
+              <span className={styles.hint}>Con embed se muestra LinkedIn. Sin embed, esta opción usa thumb-1.</span>
               {errors.coverKey ? <span className={styles.error}>{errors.coverKey}</span> : null}
             </div>
           </div>
