@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./AdminPage.module.scss";
 
 export function AdminLoginPage() {
-  const { loading, isAdmin, refreshUser, signOut } = useAuth();
+  const { loading, isAdmin, inactivityTimedOut, refreshUser, signOut } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +46,11 @@ export function AdminLoginPage() {
       <p className={styles.eyebrow}>Área privada / autenticación</p>
       <h1 className={styles.title}>Consola editorial</h1>
       <p className={styles.subtitle}>Acceso exclusivo para cuentas creadas y autorizadas en Supabase.</p>
+      {inactivityTimedOut ? (
+        <p className={styles.error} role="status">
+          La sesión se cerró tras 15 minutos de inactividad.
+        </p>
+      ) : null}
 
       <div className={styles.loginPanel}>
         <form className={styles.form} onSubmit={(event) => void onSubmit(event)}>
