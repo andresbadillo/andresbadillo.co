@@ -1,7 +1,13 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(18);
+select plan(19);
+
+select matches(
+  (select pg_get_functiondef('public.create_post_at_top(text,text,text,date,boolean,text[],text,jsonb)'::regprocedure)),
+  'where true',
+  'the create-post RPC is compatible with PostgREST safeupdate'
+);
 
 insert into public.posts (
   id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order

@@ -238,7 +238,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
         setSaving(false);
         return;
       }
-      setRequestError("No se pudo guardar. Verifica la sesión y las políticas RLS.");
+      setRequestError("No se pudo guardar la publicación. Intenta nuevamente.");
       setSaving(false);
       return;
     }
