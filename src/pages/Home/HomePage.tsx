@@ -120,7 +120,14 @@ export function HomePage() {
       };
     }
 
-    scrollCueRef.current?.classList.toggle(styles.scrollCueHidden, progress >= 0.96);
+    const portfolioTop = portfolioSentinelRef.current?.getBoundingClientRect().top;
+    const portfolioReached =
+      portfolioTop !== undefined && portfolioTop <= window.innerHeight;
+
+    scrollCueRef.current?.classList.toggle(
+      styles.scrollCueHidden,
+      progress >= 0.96 || portfolioReached,
+    );
   }, [prefersReducedMotion]);
 
   useLayoutEffect(() => {
@@ -149,11 +156,11 @@ export function HomePage() {
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.08 && scrollCueRef.current) {
+        if (entry.isIntersecting && scrollCueRef.current) {
           scrollCueRef.current.classList.add(styles.scrollCueHidden);
         }
       },
-      { threshold: [0, 0.08, 0.15] },
+      { threshold: 0 },
     );
     io.observe(target);
     return () => io.disconnect();

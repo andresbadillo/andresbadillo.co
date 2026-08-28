@@ -483,7 +483,28 @@
 @media (max-width: 760px) {
   .heroContent {
     grid-template-columns: 1fr;
-    padding-top: 3rem;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-content: stretch;
+    align-items: stretch;
+    gap: clamp(0.5rem, 1.5lvh, 1rem);
+    padding-top: clamp(1.25rem, 4lvh, 2.35rem);
+    /* Reserva el solapamiento del divisor para que no tape la fila social. */
+    padding-bottom: clamp(3rem, 8.5lvh, 4rem);
+    text-align: center;
+  }
+
+  /* En móvil/tablet: avatar | textos | redes ocupan las tres filas del hero. */
+  .intro {
+    display: contents;
+  }
+
+  .introText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    width: 100%;
     text-align: center;
   }
 
@@ -491,8 +512,30 @@
     justify-items: center;
   }
 
+  .introSocial {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   .introSocial :global(ul) {
     justify-content: center;
+    margin-top: 0;
+  }
+
+  .avatarWrap {
+    max-width: 240px;
+    max-width: min(clamp(240px, 38vw, 300px), 32.5lvh);
+  }
+
+  .intro h1 {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+    margin-bottom: 0.65rem;
+  }
+
+  .bio {
+    font-size: clamp(1rem, 2.3vw, 1.15rem);
+    line-height: 1.55;
   }
 
   .blogGrid {
@@ -504,7 +547,7 @@
   }
 
   .scrollCue {
-    right: 1rem;
+    display: none;
   }
 
   .heroPortfolioDivider {
@@ -533,53 +576,6 @@
     margin-top: clamp(-44px, -11vw, -28px);
   }
 
-  .heroContent {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    align-content: stretch;
-    align-items: stretch;
-    gap: 1.35rem;
-    padding-top: 2.35rem;
-  }
-
-  /* Los hijos de .intro participan en la grid del hero: avatar | textos | redes */
-  .intro {
-    display: contents;
-  }
-
-  .introText {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 0;
-    width: 100%;
-    text-align: center;
-  }
-
-  .introSocial {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .introSocial :global(ul) {
-    margin-top: 0;
-  }
-
-  .avatarWrap {
-    max-width: 240px;
-  }
-
-  .intro h1 {
-    font-size: clamp(1.4rem, 7vw, 1.72rem);
-    margin-bottom: 0.65rem;
-  }
-
-  .bio {
-    font-size: 1rem;
-    line-height: 1.55;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
