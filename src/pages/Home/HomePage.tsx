@@ -106,7 +106,9 @@ export function HomePage() {
     const span = (t: number, start: number, end: number) =>
       Math.min(1, Math.max(0, (t - start) / Math.max(1e-6, end - start)));
     /* Segundo bloque listo ~0,72 del hero para leerlo antes de Selected Portfolio */
-    setIntroPhases(span(progress, 0.05, 0.2), span(progress, 0.4, 0.72));
+    const introP1 = span(progress, 0.05, 0.2);
+    const introP3 = span(progress, 0.4, 0.72);
+    setIntroPhases(introP1, introP3);
 
     const avatar = avatarWrapRef.current;
     if (avatar) {
@@ -123,11 +125,20 @@ export function HomePage() {
     const portfolioTop = portfolioSentinelRef.current?.getBoundingClientRect().top;
     const portfolioReached =
       portfolioTop !== undefined && portfolioTop <= window.innerHeight;
+    const compactViewport = window.innerWidth <= 760;
+    const scrollCue = scrollCueRef.current;
 
-    scrollCueRef.current?.classList.toggle(
-      styles.scrollCueHidden,
-      progress >= 0.96 || portfolioReached,
-    );
+    if (scrollCue) {
+      /* En móvil, el indicador se desvanece al mismo ritmo que aparece el cierre de la bio. */
+      scrollCue.style.setProperty(
+        "--scroll-cue-opacity",
+        String(compactViewport ? 1 - introP3 : 1),
+      );
+      scrollCue.classList.toggle(
+        styles.scrollCueHidden,
+        portfolioReached || (compactViewport ? introP3 >= 0.1 : progress >= 0.96),
+      );
+    }
   }, [prefersReducedMotion]);
 
   useLayoutEffect(() => {

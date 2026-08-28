@@ -201,8 +201,9 @@
   gap: 0.5rem;
   z-index: 1100;
   pointer-events: none;
+  opacity: var(--scroll-cue-opacity, 1);
   transition:
-    opacity 280ms ease,
+    opacity 600ms ease,
     visibility 280ms ease;
 }
 
@@ -544,10 +545,6 @@
 
   .row2 {
     grid-template-columns: 1fr;
-  }
-
-  .scrollCue {
-    display: none;
   }
 
   .heroPortfolioDivider {
