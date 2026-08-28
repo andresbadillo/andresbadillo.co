@@ -100,7 +100,8 @@ export function HomePage() {
     const scrollRange = Math.max(1, trackH - vh);
 
     const raw = (docY - trackTop) / scrollRange;
-    const progress = trackH >= vh * 2 ? Math.min(1, Math.max(0, raw)) : 0;
+    const hasScrollableTrack = trackH > vh + 1;
+    const progress = hasScrollableTrack ? Math.min(1, Math.max(0, raw)) : 0;
     scrollProgressRef.current = progress;
 
     const span = (t: number, start: number, end: number) =>
