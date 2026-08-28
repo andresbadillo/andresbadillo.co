@@ -126,7 +126,9 @@ export function HomePage() {
     const portfolioTop = portfolioSentinelRef.current?.getBoundingClientRect().top;
     const portfolioReached =
       portfolioTop !== undefined && portfolioTop <= window.innerHeight;
-    const compactViewport = window.innerWidth <= 760;
+    const compactViewport =
+      window.innerWidth <= 760 ||
+      (window.innerWidth > window.innerHeight && window.innerHeight <= 500);
     const scrollCue = scrollCueRef.current;
 
     if (scrollCue) {
