@@ -8,7 +8,7 @@
   align-items: center;
 }
 
-/* Misma silueta orgánica y anillo de marca que el hero del Home, sin animación. */
+/* Misma silueta orgánica que el hero del Home, sin anillo. */
 .portrait {
   position: relative;
   width: 100%;
@@ -16,16 +16,6 @@
   justify-self: center;
   border-radius: 45% 55% 50% 50% / 40% 45% 55% 60%;
   box-shadow: var(--shadow-avatar);
-}
-
-.portrait::after {
-  content: "";
-  position: absolute;
-  inset: -0.6rem;
-  border: 0.55rem solid var(--accent);
-  border-radius: inherit;
-  opacity: 0.7;
-  pointer-events: none;
 }
 
 .portrait picture {
@@ -479,8 +469,7 @@
 
   .portrait {
     max-width: 13rem;
-    justify-self: start;
-    margin-left: 0.6rem;
+    justify-self: center;
   }
 }
 
