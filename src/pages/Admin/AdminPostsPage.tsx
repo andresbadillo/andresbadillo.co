@@ -89,7 +89,7 @@ export function AdminPostsPage() {
                   <p className={styles.postMeta}>/{post.slug} · {post.published_at.slice(0, 10)}</p>
                 </div>
                 <div className={styles.rowActions}>
-                  <Link className={styles.buttonSecondary} to={`/admin/posts/${post.id}/edit`}>Editar</Link>
+                  <Link className={styles.linkAction} to={`/admin/posts/${post.id}/edit`}>Editar</Link>
                   <button
                     className={styles.buttonDanger}
                     type="button"
@@ -111,7 +111,7 @@ export function AdminPostsPage() {
           <span className={styles.statusValue}>{user?.email ?? "—"}</span>
           <span className={styles.statusLabel}>Rol</span>
           <span className={styles.statusValue}>admin</span>
-          <button className={styles.textButton} type="button" onClick={() => void logout()}>Cerrar sesión</button>
+          <button className={styles.linkAction} type="button" onClick={() => void logout()}>Cerrar sesión</button>
         </aside>
       </div>
     </section>

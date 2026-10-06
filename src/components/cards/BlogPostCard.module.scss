@@ -1,6 +1,6 @@
 .card {
   background: transparent;
-  border-radius: 0.65rem;
+  border-radius: var(--radius-post);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -44,5 +44,5 @@
 }
 
 .tag {
-  color: var(--accent);
+  color: var(--accent-text);
 }

@@ -1,0 +1,7 @@
+/**
+ * Puntos de corte (max-width). Las media queries no admiten variables CSS, así que viven aquí
+ * como variables Sass: `@use "@/styles/breakpoints" as bp;` y `@media (max-width: bp.$md)`.
+ */
+$sm: 425px; // móvil estrecho
+$md: 767px; // móvil y tablet vertical
+$lg: 900px; // tablet ancha

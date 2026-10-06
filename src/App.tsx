@@ -18,6 +18,9 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    /* Barra del navegador en móvil: mismo color que el hero (public/theme-init.js hace lo mismo al cargar). */
+    const themeColor = getComputedStyle(document.documentElement).getPropertyValue("--home-hero-bg").trim();
+    if (themeColor) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor);
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
 

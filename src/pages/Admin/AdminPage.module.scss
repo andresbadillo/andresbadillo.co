@@ -1,3 +1,5 @@
+@use "@/styles/breakpoints" as bp;
+
 .page {
   padding-top: clamp(5.5rem, 11vw, 8rem);
   padding-bottom: clamp(3rem, 7vw, 5rem);
@@ -5,8 +7,8 @@
 
 .eyebrow {
   margin: 0 0 0.65rem;
-  color: var(--accent);
-  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  color: var(--accent-text);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -16,8 +18,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .title {
@@ -29,14 +31,14 @@
 
 .subtitle {
   max-width: 42rem;
-  margin: 0.75rem 0 0;
+  margin: var(--space-3) 0 0;
   color: var(--muted);
 }
 
 .shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 14rem;
-  gap: 1.25rem;
+  gap: var(--space-5);
   align-items: start;
 }
 
@@ -61,14 +63,14 @@
 .statusRail {
   position: sticky;
   top: 5.5rem;
-  padding: 1rem;
+  padding: var(--space-4);
 }
 
 .statusLabel {
   display: block;
   margin-bottom: 0.2rem;
   color: var(--muted);
-  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -77,12 +79,12 @@
 .statusValue {
   display: block;
   overflow-wrap: anywhere;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
   font-size: 0.86rem;
 }
 
 .statusOk {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .actions,
@@ -93,52 +95,69 @@
   gap: 0.7rem;
 }
 
+/* Regla 5: lo que se pulsa es píldora; una acción secundaria es un enlace (.linkAction). */
 .button,
-.buttonSecondary,
-.buttonDanger,
-.textButton {
-  border: 1px solid var(--border);
-  border-radius: 0.35rem;
-  padding: 0.62rem 0.85rem;
+.buttonDanger {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0.62rem 1.2rem;
   font: inherit;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .button {
-  border-color: var(--accent);
   background: var(--accent);
-  color: #111;
-  font-weight: 700;
+  color: var(--on-accent);
 }
 
 .button:hover,
 .button:focus-visible {
-  color: #111;
+  color: var(--on-accent);
   filter: brightness(1.06);
 }
 
-.buttonSecondary,
-.textButton {
-  background: transparent;
-  color: var(--fg);
+.buttonDanger {
+  background: var(--danger);
+  color: var(--on-danger);
 }
 
-.buttonDanger {
-  border-color: #c45b5b;
-  background: transparent;
-  color: #e98989;
+.buttonDanger:hover,
+.buttonDanger:focus-visible {
+  color: var(--on-danger);
+  filter: brightness(1.1);
 }
 
 .button:disabled,
-.buttonSecondary:disabled,
 .buttonDanger:disabled {
   cursor: wait;
   opacity: 0.55;
 }
 
+.linkAction {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--fg);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+.linkAction:hover,
+.linkAction:focus-visible {
+  color: var(--accent-text);
+  text-decoration-color: currentColor;
+}
+
 .form {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .field,
@@ -163,7 +182,7 @@
 .select {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 0.35rem;
+  border-radius: var(--radius-input);
   background: var(--bg);
   color: var(--fg);
   padding: 0.72rem 0.78rem;
@@ -179,29 +198,29 @@
 .embedGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
   align-items: start;
 }
 
 .fieldset {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-4);
   margin: 0;
   border: 1px solid var(--border);
-  padding: 1rem;
+  padding: var(--space-4);
 }
 
 .embedCard {
   display: grid;
   gap: 0.85rem;
   border-top: 1px solid var(--border);
-  padding-top: 1rem;
+  padding-top: var(--space-4);
 }
 
 .embedTitle {
   margin: 0;
-  color: var(--accent);
-  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  color: var(--accent-text);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -210,7 +229,7 @@
 
 .codeInput {
   min-height: 6.5rem;
-  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.76rem;
   line-height: 1.55;
 }
@@ -234,11 +253,11 @@
 }
 
 .error {
-  color: #ef9292;
+  color: var(--danger-text);
 }
 
 .success {
-  color: #8fd6ad;
+  color: var(--success-text);
 }
 
 .postList {
@@ -252,9 +271,9 @@
 .postRow {
   display: grid;
   grid-template-columns: 4rem minmax(0, 1fr) auto;
-  gap: 1rem;
+  gap: var(--space-4);
   align-items: center;
-  padding: 1rem 0;
+  padding: var(--space-4) 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -263,8 +282,8 @@
 }
 
 .order {
-  color: var(--accent);
-  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  color: var(--accent-text);
+  font-family: var(--font-mono);
 }
 
 .postTitle {
@@ -278,7 +297,7 @@
   font-size: 0.78rem;
 }
 
-@media (max-width: 760px) {
+@media (max-width: bp.$md) {
   .headingRow,
   .shell {
     display: grid;

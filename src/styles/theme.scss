@@ -1,25 +1,9 @@
-:root {
-  --bg: #0f1115;
-  --fg: #eef2f6;
-  --muted: #9ba6b2;
-  --card: #171b22;
-  --border: #2b3441;
-  --accent: #f2a36b;
-  --shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-  --home-hero-bg: #0f1115;
-  --home-hero-fg: #e2e4e8;
-  --home-hero-muted: #9ea5af;
-  --home-hero-greet: #b8bec7;
-  --starfield-rgb: 242, 244, 255;
-  --home-preview-surface: #4a5a6e;
-  --home-form-input-bg: #ffffff;
-  --home-form-input-fg: #1a1a1a;
-  --toggle-track-bg: #2c323c;
-  --toggle-thumb-bg: #f0f2f7;
-  --toggle-border: #3d4552;
-  --toggle-icon-dim: rgba(240, 242, 247, 0.45);
-}
-
+/**
+ * Colores por tema. El oscuro es el de partida (:root) para que el primer pintado
+ * coincida con [data-theme="dark"]; public/theme-init.js pone data-theme antes de pintar.
+ * Los tonos de onda (--wave-shade-*) se calculan en tokens.scss a partir de estos fondos.
+ */
+:root,
 [data-theme="dark"] {
   --bg: #0f1115;
   --fg: #eef2f6;
@@ -40,6 +24,16 @@
   --toggle-thumb-bg: #f0f2f7;
   --toggle-border: #3d4552;
   --toggle-icon-dim: rgba(240, 242, 247, 0.45);
+  --toggle-shadow-track: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  --toggle-shadow-thumb: 0 1px 4px rgba(0, 0, 0, 0.18);
+  --accent-text: #f2a36b;
+  --on-accent: #111111;
+  --accent-bars: rgba(242, 163, 107, 0.35);
+  --danger: #a83f3f;
+  --on-danger: #ffffff;
+  --danger-text: #ef9292;
+  --success-text: #8fd6ad;
+  --embed-surface: #ffffff;
 }
 
 [data-theme="light"] {
@@ -62,13 +56,14 @@
   --toggle-thumb-bg: #ffffff;
   --toggle-border: #cbd5e1;
   --toggle-icon-dim: rgba(31, 35, 41, 0.35);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+  --toggle-shadow-track: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  --toggle-shadow-thumb: 0 1px 4px rgba(0, 0, 0, 0.18);
+  --accent-text: #a34f1f;
+  --on-accent: #111111;
+  --accent-bars: rgba(242, 163, 107, 0.35);
+  --danger: #b23b3b;
+  --on-danger: #ffffff;
+  --danger-text: #a32f2f;
+  --success-text: #1f7a4a;
+  --embed-surface: #ffffff;
 }

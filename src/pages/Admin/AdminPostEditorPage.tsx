@@ -258,7 +258,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
         <p className={styles.eyebrow}>Consola editorial / error</p>
         <h1 className={styles.title}>Post no disponible</h1>
         <p className={styles.error} role="alert">{requestError}</p>
-        <Link className={styles.buttonSecondary} to="/admin/posts">Volver a posts</Link>
+        <Link className={styles.linkAction} to="/admin/posts">Volver a posts</Link>
       </section>
     );
   }
@@ -274,7 +274,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
           <p className={styles.eyebrow}>Consola editorial / {mode === "create" ? "nuevo" : "edición"}</p>
           <h1 className={styles.title}>{mode === "create" ? "Crear publicación" : "Editar publicación"}</h1>
         </div>
-        <Link className={styles.buttonSecondary} to="/admin/posts">Volver a posts</Link>
+        <Link className={styles.linkAction} to="/admin/posts">Volver a posts</Link>
       </div>
 
       <div className={styles.panel}>
@@ -394,7 +394,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
             <button className={styles.button} type="submit" disabled={saving}>
               {saving ? "Guardando…" : "Guardar cambios"}
             </button>
-            <Link className={styles.buttonSecondary} to="/admin/posts">Cancelar</Link>
+            <Link className={styles.linkAction} to="/admin/posts">Cancelar</Link>
           </div>
         </form>
       </div>

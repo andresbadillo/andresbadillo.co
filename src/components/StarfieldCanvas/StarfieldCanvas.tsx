@@ -216,6 +216,11 @@ export function StarfieldCanvas({
     let heightCss = 0;
     /** Máximo radio según ancho (móvil estrecho = estrellas más pequeñas). */
     let starRadiusMax = STAR_RADIUS_MAX_DESKTOP;
+    /* Colores del tema en caché: leer getComputedStyle en cada frame fuerza un recálculo de estilos
+       mientras se hace scroll. Se refresca al cambiar data-theme y al redimensionar. */
+    let palette = readStarfieldPalette();
+    /* Fuera de pantalla el bucle se detiene (el hero queda atrás tras 200lvh de scroll). */
+    let onScreen = true;
 
     const onPointerMove = (event: PointerEvent) => {
       const rect = parent.getBoundingClientRect();
@@ -232,7 +237,7 @@ export function StarfieldCanvas({
       const w = widthCss;
       const h = heightCss;
       if (w < 2 || h < 2) return;
-      const { bg, starRgb } = readStarfieldPalette();
+      const { bg, starRgb } = palette;
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
       const stars = starsRef.current;
@@ -253,6 +258,10 @@ export function StarfieldCanvas({
 
     /** Bucle principal: integra posición/velocidad, atrae hacia el cluster según scroll, dibuja. */
     const loop = (now: number) => {
+      if (!onScreen) {
+        frameRef.current = 0;
+        return;
+      }
       const w = widthCss;
       const h = heightCss;
       if (w < 2 || h < 2) {
@@ -280,7 +289,7 @@ export function StarfieldCanvas({
       /** Al bajar scroll las estrellas se encogen (hasta ~30 % del radio base). */
       const starSizeMul = 1 - 0.7 * p;
 
-      const { bg: skyBg, starRgb } = readStarfieldPalette();
+      const { bg: skyBg, starRgb } = palette;
       ctx.fillStyle = skyBg;
       ctx.fillRect(0, 0, w, h);
 
@@ -389,6 +398,7 @@ export function StarfieldCanvas({
       canvas.style.width = `${widthCss}px`;
       canvas.style.height = `${heightCss}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      palette = readStarfieldPalette();
       starsRef.current = makeStars(widthCss, heightCss);
       lastTimeRef.current = performance.now();
       if (reducedMotion) drawStatic();
@@ -401,9 +411,19 @@ export function StarfieldCanvas({
 
     /* Tema claro/oscuro: sin animación hay que repintar para leer de nuevo las variables CSS. */
     const themeMo = new MutationObserver(() => {
+      palette = readStarfieldPalette();
       if (reducedMotion) drawStatic();
     });
     themeMo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+    const visibilityIo = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen && !reducedMotion && !frameRef.current) {
+        lastTimeRef.current = performance.now();
+        frameRef.current = requestAnimationFrame(loop);
+      }
+    });
+    visibilityIo.observe(parent);
 
     if (!reducedMotion) {
       lastTimeRef.current = performance.now();
@@ -412,9 +432,11 @@ export function StarfieldCanvas({
 
     return () => {
       ro.disconnect();
+      visibilityIo.disconnect();
       themeMo.disconnect();
       parent.removeEventListener("pointermove", onPointerMove);
       cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
     };
     /* Refs del padre son estables; el efecto solo monta una vez el canvas y el rAF. */
     // eslint-disable-next-line react-hooks/exhaustive-deps

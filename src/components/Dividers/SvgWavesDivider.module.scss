@@ -1,3 +1,5 @@
+@use "@/styles/breakpoints" as bp;
+
 .wrap {
   position: relative;
   width: 100%;
@@ -9,7 +11,7 @@
   /* Continúa el portfolio (--bg); la onda frontal pinta hacia el blog (--home-hero-bg) */
   background: var(--bg);
   isolation: isolate;
-  z-index: 3;
+  z-index: var(--z-divider);
 }
 
 .waveMain {
@@ -31,7 +33,7 @@
   top: 0;
   width: 150%;
   height: 100%;
-  fill: color-mix(in srgb, var(--bg) 72%, #000);
+  fill: var(--wave-shade-bg);
   will-change: transform;
   animation: svgWavesDividerSub 5.75s ease-in-out infinite alternate;
   z-index: 0;
@@ -56,13 +58,13 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: bp.$md) {
   .wrap {
     margin-bottom: -2px;
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: bp.$sm) {
   .wrap {
     height: clamp(94px, 23vw, 126px);
     margin-top: clamp(-44px, -11vw, -28px);

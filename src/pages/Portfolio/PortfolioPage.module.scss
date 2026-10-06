@@ -1,6 +1,6 @@
 /* padding-top en pageLayout.pageSection; aquí solo el inferior respecto al CanvasBarsDivider */
 .section {
-  padding-bottom: calc(max(clamp(3rem, 8vw, 5rem), clamp(2.25rem, 5vw, 4rem)) * 0.5);
+  padding-bottom: calc(max(clamp(var(--section-min), 8vw, var(--section-max)), clamp(2.25rem, 5vw, 4rem)) * 0.5);
 }
 
 .sectionTitle {

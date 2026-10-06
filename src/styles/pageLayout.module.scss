@@ -5,7 +5,7 @@
 
 /* Mismo margen superior que la sección de Portfolio / bloques de Home antes del título */
 .pageSection {
-  padding-top: clamp(3rem, 8vw, 5rem);
+  padding-top: clamp(var(--section-min), 8vw, var(--section-max));
 }
 
 /* h1 de páginas internas (Blog, About, Contact…); alineado con .sectionTitle de Home/Portfolio */

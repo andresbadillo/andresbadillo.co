@@ -127,7 +127,7 @@ export function HomePage() {
     const portfolioReached =
       portfolioTop !== undefined && portfolioTop <= window.innerHeight;
     const compactViewport =
-      window.innerWidth <= 760 ||
+      window.innerWidth <= 767 /* bp.$md */ ||
       (window.innerWidth > window.innerHeight && window.innerHeight <= 500);
     const scrollCue = scrollCueRef.current;
 
@@ -146,7 +146,16 @@ export function HomePage() {
 
   useLayoutEffect(() => {
     syncScrollDrivenUi();
-    window.addEventListener("scroll", syncScrollDrivenUi, { passive: true });
+    /* Un solo cálculo por frame: el scroll puede disparar varios eventos entre dos pintados. */
+    let scrollFrame = 0;
+    const onScroll = () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0;
+        syncScrollDrivenUi();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", syncScrollDrivenUi);
     const ro = new ResizeObserver(syncScrollDrivenUi);
     const track = heroTrackRef.current;
@@ -158,7 +167,8 @@ export function HomePage() {
     if (avatarEl) ro.observe(avatarEl);
     if (introEl) ro.observe(introEl);
     return () => {
-      window.removeEventListener("scroll", syncScrollDrivenUi);
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(scrollFrame);
       window.removeEventListener("resize", syncScrollDrivenUi);
       ro.disconnect();
     };

@@ -24,6 +24,15 @@ export function CanvasBarsDivider({
     if (!ctx) return;
     let raf = 0;
     let t = 0;
+    /* Color de las barras: token --accent-bars (theme.scss); se vuelve a leer al cambiar de tema. */
+    const readBarColor = () =>
+      getComputedStyle(document.documentElement).getPropertyValue("--accent-bars").trim() ||
+      "transparent";
+    let barColor = readBarColor();
+    const themeMo = new MutationObserver(() => {
+      barColor = readBarColor();
+    });
+    themeMo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
     const resize = () => {
       const dpr = window.devicePixelRatio;
@@ -34,7 +43,13 @@ export function CanvasBarsDivider({
     resize();
     window.addEventListener("resize", resize);
 
+    /* Solo se anima mientras está en pantalla. */
+    let onScreen = false;
     const draw = () => {
+      if (!onScreen) {
+        raf = 0;
+        return;
+      }
       t += 0.03;
       ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
       const bars = 80;
@@ -44,17 +59,23 @@ export function CanvasBarsDivider({
         const dist = Math.abs(mouseX.current - x) / canvas.clientWidth;
         const lift = Math.max(0, 1 - dist * 4) * 26;
         const h = 15 + Math.sin(t + i * 0.2) * 12 + lift;
-        ctx.fillStyle = "rgba(242,163,107,0.35)";
+        ctx.fillStyle = barColor;
         ctx.fillRect(x, BAR_MAX_PX - h, barWidth - 1, h);
         ctx.fillRect(x, BAR_MAX_PX, barWidth - 1, h);
       }
       raf = requestAnimationFrame(draw);
     };
-    raf = requestAnimationFrame(draw);
+    const visibilityIo = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen && !raf) raf = requestAnimationFrame(draw);
+    });
+    visibilityIo.observe(canvas);
 
     return () => {
+      visibilityIo.disconnect();
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      themeMo.disconnect();
     };
   }, []);
 

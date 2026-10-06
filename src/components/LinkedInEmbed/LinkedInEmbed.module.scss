@@ -3,7 +3,7 @@
   width: 100%;
   max-width: 504px;
   margin-inline: auto;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-image);
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--bg);
@@ -19,7 +19,7 @@
 }
 
 .surfaceWhite {
-  background: #fff;
+  background: var(--embed-surface);
 }
 
 .iframe {

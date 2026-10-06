@@ -24,7 +24,7 @@ export function AdminRoute() {
         <p className={styles.eyebrow}>Área privada / permisos</p>
         <h1 className={styles.title}>Acceso restringido</h1>
         <p>La cuenta autenticada no tiene permisos de administración.</p>
-        <button className={styles.buttonSecondary} type="button" onClick={() => void signOut()}>
+        <button className={styles.linkAction} type="button" onClick={() => void signOut()}>
           Cerrar sesión
         </button>
       </section>

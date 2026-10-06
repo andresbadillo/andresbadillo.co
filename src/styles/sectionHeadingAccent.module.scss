@@ -18,7 +18,7 @@
     bottom: 0;
     height: 2px;
     background: var(--accent);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     transform: scaleX(0);
     transform-origin: right center;
     transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);

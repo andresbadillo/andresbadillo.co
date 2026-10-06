@@ -1,5 +1,5 @@
 .main {
-  padding-top: 84px;
+  padding-top: var(--header-offset);
 }
 
 .footer {
@@ -35,7 +35,7 @@
   height: 2.1rem;
   padding: 0;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,7 +64,7 @@
 .backToTop:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .backToTopIcon {
@@ -75,7 +75,7 @@
 
 .accentName {
   position: relative;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .srOnly {

@@ -9,6 +9,21 @@
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--fg);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-input);
   padding: 0.7rem;
+}
+
+/* Mismo botón que el formulario de la home (.send en HomePage.module.scss) */
+.submit {
+  justify-self: start;
+  margin-top: 0.25rem;
+  padding: 0.55rem 1.75rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
 }

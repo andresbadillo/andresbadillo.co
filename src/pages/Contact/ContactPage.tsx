@@ -32,7 +32,9 @@ export function ContactPage() {
           <input id="email" className={styles.input} name="email" type="email" required />
           <label htmlFor="message">Message</label>
           <textarea id="message" className={styles.textarea} name="message" rows={6} required />
-          <button type="submit">Send</button>
+          <button type="submit" className={styles.submit}>
+            Send
+          </button>
         </form>
         <p role="status" aria-live="polite">
           {status}

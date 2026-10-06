@@ -1,7 +1,7 @@
 .card {
   border: 1px solid var(--border);
   background: var(--card);
-  border-radius: 0.8rem;
+  border-radius: var(--radius-card);
   overflow: hidden;
   box-shadow: var(--shadow);
 }

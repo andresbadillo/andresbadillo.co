@@ -6,7 +6,7 @@ $curtain-ms: 320ms;
   inset: 0;
   background: var(--bg);
   pointer-events: none;
-  z-index: 1200;
+  z-index: var(--z-curtain);
 }
 
 .overlayTb {
@@ -27,7 +27,7 @@ $curtain-ms: 320ms;
   background: var(--bg);
   opacity: 0;
   pointer-events: none;
-  z-index: 1200;
+  z-index: var(--z-curtain);
   transform: none;
 }
 

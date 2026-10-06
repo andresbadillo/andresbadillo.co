@@ -15,7 +15,7 @@
 }
 
 .tag {
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0.2rem 0.7rem;
   font-size: 0.8rem;
 }
