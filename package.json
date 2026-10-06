@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node ./node_modules/typescript/bin/tsc --noEmit && node ./node_modules/typescript/bin/tsc --noEmit -p tsconfig.api.json && node ./node_modules/vite/bin/vite.js build",
+    "build": "node ./node_modules/typescript/bin/tsc --noEmit && node ./node_modules/typescript/bin/tsc --noEmit -p tsconfig.api.json && node ./node_modules/vite/bin/vite.js build && node scripts/generate-sitemap.mjs",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier . --write",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.api.json",
     "test": "vitest",
     "test:run": "vitest run",
+    "images": "node scripts/optimize-images.mjs",
     "check:generated": "node scripts/check-generated.mjs",
     "security:audit": "npm audit --audit-level=low",
     "verify": "npm run check:generated && npm run typecheck && npm run lint && npm run test:run && npm run build && npm run security:audit"
@@ -40,6 +41,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.5.3",
     "sass": "^1.86.3",
+    "sharp": "^0.35.5",
     "supabase": "^2.116.0",
     "typescript": "^5.8.3",
     "vite": "^8.2.2",

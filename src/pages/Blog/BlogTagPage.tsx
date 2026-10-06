@@ -24,7 +24,11 @@ export function BlogTagPage() {
   return (
     <>
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title={`Blog tag ${currentTag} — Demo`} description="Filtrado de artículos por etiqueta." />
+        <Seo
+          title={`Blog: ${currentTag} — Andres Badillo`}
+          description={`Artículos de Andres Badillo con la etiqueta ${currentTag}.`}
+          noindex={!loading && !error && !isKnownTag}
+        />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Blog</span>
           {" / "}

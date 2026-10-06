@@ -7,7 +7,8 @@ import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { usePosts } from "@/context/PostsContext";
 import { projects } from "@/data/projects";
-import avatarPlaceholder from "@/assets/placeholders/avatar.png";
+import avatarAvif from "@/assets/avatar/avatar-600.avif";
+import avatarWebp from "@/assets/avatar/avatar-600.webp";
 import { useContactForm } from "@/hooks/useContactForm";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
@@ -192,7 +193,10 @@ export function HomePage() {
 
   return (
     <div className={styles.home}>
-      <Seo title="Home — Andres Badillo" description="Home de portfolio minimalista con arte generativo." />
+      <Seo
+        title="Andres Badillo — Product Manager, Data Analyst y Frontend Developer"
+        description="Portfolio de Andres Badillo: MBA, Product Manager, Data Analyst y Frontend Developer. Proyectos, artículos y contacto."
+      />
       <div
         ref={heroTrackRef}
         className={clsx(styles.heroTrack, prefersReducedMotion && styles.heroTrackReduced)}
@@ -211,7 +215,20 @@ export function HomePage() {
         <div className={styles.heroMotion}>
           <div className={styles.heroContent}>
             <div ref={avatarWrapRef} className={styles.avatarWrap}>
-              <img src={avatarPlaceholder} className={styles.avatar} alt="Retrato de Andrés Badillo" />
+              {/* Generado con `npm run images` (scripts/optimize-images.mjs); es la imagen principal del hero. */}
+              <picture>
+                <source srcSet={avatarAvif} type="image/avif" />
+                <img
+                  src={avatarWebp}
+                  className={styles.avatar}
+                  alt="Retrato de Andrés Badillo"
+                  width={600}
+                  height={600}
+                  decoding="async"
+                  /* React 18 no conoce fetchPriority (llega en React 19): se pasa el atributo HTML tal cual. */
+                  {...{ fetchpriority: "high" }}
+                />
+              </picture>
             </div>
             <div className={styles.intro}>
               <div className={styles.introText}>

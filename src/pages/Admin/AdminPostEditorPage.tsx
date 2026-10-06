@@ -254,7 +254,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
   if (!postAvailable) {
     return (
       <section className={`container ${styles.page}`}>
-        <Seo title="Post no encontrado — Andres Badillo" description="El post solicitado no existe." />
+        <Seo title="Post no encontrado — Andres Badillo" description="El post solicitado no existe." noindex />
         <p className={styles.eyebrow}>Consola editorial / error</p>
         <h1 className={styles.title}>Post no disponible</h1>
         <p className={styles.error} role="alert">{requestError}</p>
@@ -268,6 +268,7 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
       <Seo
         title={`${mode === "create" ? "Crear" : "Editar"} post — Andres Badillo`}
         description="Editor privado de publicaciones."
+        noindex
       />
       <div className={styles.headingRow}>
         <div>

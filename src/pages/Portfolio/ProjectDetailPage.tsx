@@ -11,6 +11,7 @@ export function ProjectDetailPage() {
   if (!project) {
     return (
       <section className="container">
+        <Seo title="Proyecto no encontrado — Andres Badillo" description="El proyecto solicitado no existe." noindex />
         <h1>Proyecto no encontrado</h1>
         <TransitionLink to="/portfolio">Back to portfolio</TransitionLink>
       </section>
@@ -19,7 +20,7 @@ export function ProjectDetailPage() {
 
   return (
     <article className={`container ${styles.wrap}`}>
-      <Seo title={`${project.title} — Proyecto`} description={project.excerpt} />
+      <Seo title={`${project.title} — Portfolio de Andres Badillo`} description={project.excerpt} />
       <h1>{project.title}</h1>
       <p>{project.excerpt}</p>
       {project.heroImage && <img className={styles.image} src={project.heroImage} alt={`Portada de ${project.title}`} />}

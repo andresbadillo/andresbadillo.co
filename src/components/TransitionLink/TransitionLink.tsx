@@ -6,6 +6,8 @@ interface TransitionLinkProps {
   to: string;
   className?: string;
   ariaLabel?: string;
+  /** "page" en el enlace de la página actual (navegación). */
+  ariaCurrent?: "page";
   onClick?: () => void;
 }
 
@@ -13,6 +15,7 @@ export function TransitionLink({
   to,
   className,
   ariaLabel,
+  ariaCurrent,
   onClick,
   children,
 }: PropsWithChildren<TransitionLinkProps>) {
@@ -30,7 +33,7 @@ export function TransitionLink({
   };
 
   return (
-    <a href={to} onClick={handleClick} className={className} aria-label={ariaLabel}>
+    <a href={to} onClick={handleClick} className={className} aria-label={ariaLabel} aria-current={ariaCurrent}>
       {children}
     </a>
   );

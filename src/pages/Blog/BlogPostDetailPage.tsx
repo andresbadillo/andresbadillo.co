@@ -16,7 +16,7 @@ export function BlogPostDetailPage() {
   if (error) {
     return (
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Error — Blog" description="No se pudo cargar el artículo." />
+        <Seo title="Error — Blog de Andres Badillo" description="No se pudo cargar el artículo." noindex />
         <h1 className={styles.title}>Blog</h1>
         <p role="alert">No se pudo cargar el blog. {error.message}</p>
         <TransitionLink to="/blog">Volver al blog</TransitionLink>
@@ -27,7 +27,7 @@ export function BlogPostDetailPage() {
   if (loading) {
     return (
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Cargando — Blog" description="Cargando artículo…" />
+        <Seo title="Blog — Andres Badillo" description="Cargando artículo…" />
         <h1 className={styles.title}>Blog</h1>
         <p aria-live="polite">Cargando artículo…</p>
         <TransitionLink to="/blog">Volver al blog</TransitionLink>
@@ -38,7 +38,7 @@ export function BlogPostDetailPage() {
   if (!post) {
     return (
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Artículo no encontrado — Blog" description="La entrada solicitada no existe." />
+        <Seo title="Artículo no encontrado — Andres Badillo" description="La entrada solicitada no existe." noindex />
         <h1 className={styles.title}>Blog</h1>
         <p>Artículo no encontrado.</p>
         <TransitionLink to="/blog">Volver al blog</TransitionLink>
@@ -51,7 +51,7 @@ export function BlogPostDetailPage() {
   return (
     <>
       <article className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock, styles.article)}>
-        <Seo title={`${post.title} — Blog`} description={post.excerpt} />
+        <Seo title={`${post.title} — Andres Badillo`} description={post.excerpt} type="article" />
         <header className={styles.header}>
           <h1 className={styles.title}>{post.title}</h1>
           <time className={styles.date} dateTime={post.date}>

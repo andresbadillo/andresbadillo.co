@@ -32,7 +32,10 @@ export function ContactPage() {
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Contact</span>
         </h1>
-        <p>Si quieres conversar sobre producto y frontend, escríbeme.</p>
+        <p>
+          Feel free to contact me at <strong>r.andres.badillo@gmail.com</strong> or drop me a message using the contact
+          form below:
+        </p>
         <form className={styles.form} onSubmit={contactForm.onSubmit} noValidate>
           {/* Trampa para bots: fuera de pantalla e ignorada por lectores de pantalla y teclado. */}
           <div className={styles.honeypot} aria-hidden="true">

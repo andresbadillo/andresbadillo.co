@@ -1,5 +1,11 @@
 export const siteBrandShort = "AB";
 
+/** Dominio canónico (sin www): canonical, og:url, sitemap y robots.txt apuntan aquí. */
+export const siteUrl = "https://andresbadillo.co";
+export const siteName = "Andres Badillo";
+/** Imagen de previsualización (1200×630), generada con `npm run images`. */
+export const siteOgImage = `${siteUrl}/og-image.png`;
+
 export const navItems = [
   { label: "Home", to: "/" },
   { label: "Portfolio", to: "/portfolio" },

@@ -42,7 +42,7 @@ export function AdminLoginPage() {
 
   return (
     <section className={`container ${styles.page}`}>
-      <Seo title="Admin — Andres Badillo" description="Acceso privado al editor del blog." />
+      <Seo title="Admin — Andres Badillo" description="Acceso privado al editor del blog." noindex />
       <p className={styles.eyebrow}>Área privada / autenticación</p>
       <h1 className={styles.title}>Consola editorial</h1>
       <p className={styles.subtitle}>Acceso exclusivo para cuentas creadas y autorizadas en Supabase.</p>

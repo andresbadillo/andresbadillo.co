@@ -18,7 +18,7 @@ export function BlogPage() {
   return (
     <>
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Blog — Andres Badillo" description="Artículos de linkedIn publicados." />
+        <Seo title="Blog — Andres Badillo" description="Artículos de Andres Badillo sobre IA, datos, producto y liderazgo, publicados en LinkedIn." />
         <h1 ref={headingRef} className={pageLayout.pageHeading}>
           <span className={headingAccent.sectionAccent}>Blog</span>
         </h1>

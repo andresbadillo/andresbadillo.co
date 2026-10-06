@@ -69,7 +69,7 @@ export function AdminPostsPage() {
 
   return (
     <section className={`container ${styles.page}`}>
-      <Seo title="Posts admin — Andres Badillo" description="Administración privada de publicaciones." />
+      <Seo title="Posts admin — Andres Badillo" description="Administración privada de publicaciones." noindex />
       <div className={styles.headingRow}>
         <div>
           <p className={styles.eyebrow}>Consola editorial / posts</p>

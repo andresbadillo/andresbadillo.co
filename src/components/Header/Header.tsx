@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useLocation } from "react-router-dom";
 import { navItems, siteBrandShort } from "@/data/site";
 import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
@@ -23,6 +23,8 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
   const location = useLocation();
+  const navRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -57,6 +59,41 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
     };
   }, [open]);
 
+  /* Menú móvil abierto: foco en el primer enlace, Tab no sale del menú y Escape lo cierra. */
+  useEffect(() => {
+    if (!open) return;
+    const menuButton = menuButtonRef.current;
+    const focusables = () => [
+      ...(navRef.current?.querySelectorAll<HTMLElement>("a[href]") ?? []),
+      ...(menuButton ? [menuButton] : []),
+    ];
+    focusables()[0]?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        menuButton?.focus();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (event.shiftKey && (active === first || !items.includes(active as HTMLElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || !items.includes(active as HTMLElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   return (
     <header className={clsx(styles.header, !headerVisible && styles.headerHidden)}>
       <div className={clsx("container", styles.inner)}>
@@ -66,6 +103,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
           <span className={styles.logoDot}>{'/>'}</span>
         </TransitionLink>
         <nav
+          ref={navRef}
           className={clsx(styles.nav, open && styles.open)}
           aria-label="Navegación principal"
           onClick={(e) => {
@@ -85,6 +123,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
                 <TransitionLink
                   to={item.to}
                   className={clsx(styles.navLink, isNavActive(location.pathname, item.to) && styles.navActive)}
+                  ariaCurrent={isNavActive(location.pathname, item.to) ? "page" : undefined}
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
@@ -98,6 +137,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
         </div>
         <div className={styles.actions}>
           <button
+            ref={menuButtonRef}
             type="button"
             className={clsx(styles.menuButton, open && styles.menuButtonOpen)}
             aria-label={open ? "Cerrar menú" : "Abrir menú"}

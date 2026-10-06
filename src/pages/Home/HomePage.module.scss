@@ -118,10 +118,18 @@
   }
 }
 
+/* <picture> transmite la silueta orgánica al <img> (que usa border-radius: inherit). */
+.avatarWrap > picture {
+  display: block;
+  border-radius: inherit;
+}
+
 .avatar {
   position: relative;
   z-index: 1;
   width: 100%;
+  /* Los atributos width/height del <img> solo reservan espacio; la proporción la da aspect-ratio. */
+  height: auto;
   display: block;
   border-radius: inherit;
   object-fit: cover;
