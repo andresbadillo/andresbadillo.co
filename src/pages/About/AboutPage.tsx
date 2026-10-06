@@ -158,12 +158,16 @@ export function AboutPage() {
               <li key={stage.title} className={styles.stage}>
                 <span className={styles.stageNum}>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{stage.title}</h3>
-                <ul className={styles.stageKey}>
+                <ul className={styles.stageTools}>
                   {stage.key.map((item) => (
+                    <li key={item} className={styles.toolKey}>
+                      {item}
+                    </li>
+                  ))}
+                  {stage.others.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <p className={styles.stageOthers}>{stage.others.join(" · ")}</p>
               </li>
             ))}
           </ol>
