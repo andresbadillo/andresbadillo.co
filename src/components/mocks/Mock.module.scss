@@ -1,0 +1,665 @@
+/**
+ * Maquetas de interfaz. Se dibujan sobre un lienzo fijo de 720×450 que MockFrame escala al ancho
+ * disponible, así que aquí los tamaños son del lienzo (px) y no responden a media queries.
+ * Todo color, radio y sombra sale de los tokens del sitio: las maquetas siguen el tema solas.
+ */
+.host {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 720 / 450;
+  overflow: hidden;
+  border-radius: var(--radius-image);
+  background: var(--card);
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 720px;
+  height: 450px;
+  transform-origin: top left;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  user-select: none;
+  pointer-events: none;
+}
+
+.chrome {
+  flex: none;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  background: var(--bg);
+}
+
+.chromeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.chromeUrl {
+  margin-left: 10px;
+  padding: 2px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* ───────── Estructura ───────── */
+
+.side {
+  flex: none;
+  width: 148px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg);
+}
+
+.sideBrand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 6px 12px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.sideBrand::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.sideItem {
+  padding: 6px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.sideItemActive {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.sideFoot {
+  margin-top: auto;
+  padding: 6px;
+  color: var(--muted);
+  font-size: 9.5px;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.sub {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-post);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.cardTitle {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ───────── Indicadores y controles ───────── */
+
+.kpi {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  border-radius: var(--radius-post);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.kpiLabel {
+  color: var(--muted);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kpiValue {
+  margin-top: 2px;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpiAccent .kpiValue {
+  color: var(--accent-text);
+}
+
+.kpiHint {
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.chip {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--muted) 16%, transparent);
+  color: var(--muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.toneOk {
+  background: color-mix(in srgb, var(--success-text) 16%, transparent);
+  color: var(--success-text);
+}
+
+.toneBad {
+  background: color-mix(in srgb, var(--danger-text) 16%, transparent);
+  color: var(--danger-text);
+}
+
+.toneAccent {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-text);
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}
+
+.fieldLabel {
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fieldBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 5px 9px;
+  border-radius: var(--radius-input);
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.fieldBox::after {
+  content: "";
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: translateY(-1px) rotate(45deg);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.link {
+  color: var(--accent-text);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.banner {
+  padding: 7px 12px;
+  border-radius: var(--radius-input);
+  background: color-mix(in srgb, var(--success-text) 14%, transparent);
+  color: var(--success-text);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.bannerWarn {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-text);
+}
+
+.progress {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--muted) 22%, transparent);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+/* ───────── Tablas ───────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th {
+  padding: 4px 8px;
+  text-align: left;
+  color: var(--muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 4px 8px;
+  border-top: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.right {
+  text-align: right !important;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.strong {
+  font-weight: 600;
+}
+
+/* ───────── Gráficos ───────── */
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.axisText {
+  fill: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 9px;
+}
+
+.lineAccent {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.lineMuted {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.lineFg {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.dotAccent {
+  fill: var(--accent);
+}
+
+.areaAccent {
+  fill: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.barAccent {
+  fill: var(--accent);
+}
+
+.barMuted {
+  fill: color-mix(in srgb, var(--muted) 45%, transparent);
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.swatch {
+  width: 10px;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--muted);
+}
+
+.swatchAccent {
+  background: var(--accent);
+}
+
+.heat {
+  display: grid;
+  gap: 2px;
+}
+
+.heatCell {
+  height: 11px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent) var(--heat, 0%), color-mix(in srgb, var(--muted) 12%, transparent));
+}
+
+.heatLabel {
+  color: var(--muted);
+  font-size: 8.5px;
+  line-height: 11px;
+  text-align: right;
+  padding-right: 4px;
+}
+
+.heatHead {
+  color: var(--muted);
+  font-size: 8.5px;
+  text-align: center;
+}
+
+/* ───────── Pasos y registros ───────── */
+
+.steps {
+  display: flex;
+  gap: 8px;
+}
+
+.step {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: var(--radius-post);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.stepActive {
+  border-color: var(--accent);
+}
+
+.stepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--muted) 22%, transparent);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.stepDone .stepNum {
+  background: var(--success-text);
+  color: var(--bg);
+}
+
+.stepActive .stepNum {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.stepName {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stepNote {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 9.5px;
+}
+
+.log {
+  padding: 10px 12px;
+  border-radius: var(--radius-post);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.65;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.logTime {
+  color: var(--muted);
+}
+
+.logOk {
+  color: var(--success-text);
+}
+
+.logBad {
+  color: var(--danger-text);
+}
+
+.logAccent {
+  color: var(--accent-text);
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-top: 1px solid var(--border);
+  font-size: 10.5px;
+}
+
+.listRow:first-of-type {
+  border-top: 0;
+}
+
+.check {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1.5px solid var(--border);
+}
+
+.checkOn {
+  background: var(--accent);
+  border-color: var(--accent);
+  position: relative;
+}
+
+.checkOn::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 3px;
+  height: 7px;
+  border-right: 1.5px solid var(--on-accent);
+  border-bottom: 1.5px solid var(--on-accent);
+  transform: rotate(40deg);
+}
+
+.sheet {
+  border-radius: var(--radius-input);
+  background: var(--card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.sheetHead {
+  padding: 4px 8px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent-text);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.code {
+  padding: 9px 12px;
+  border-radius: var(--radius-post);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  white-space: pre;
+  overflow: hidden;
+}
+
+.codeKey {
+  color: var(--accent-text);
+}
+
+.codeOk {
+  color: var(--success-text);
+}
+
+.bigNumber {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-text);
+}
+
+.scoreWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scoreLabel {
+  width: 82px;
+  flex: none;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.scoreBar {
+  flex: none;
+  width: 70px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--muted) 22%, transparent);
+  overflow: hidden;
+}
+
+.scoreFill {
+  height: 100%;
+  background: var(--accent);
+}

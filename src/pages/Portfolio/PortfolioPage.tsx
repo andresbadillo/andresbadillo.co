@@ -24,7 +24,7 @@ export function PortfolioPage() {
           <span className={headingAccent.sectionAccent}>Portfolio</span>
           Projects
         </h1>
-        <p className={styles.lead}>A curated selection of mostly personal and publicly released projects. Some professional work is not shown due to NDAs.</p>
+        <p className={styles.lead}>A curated selection of personal projects and professional work. Employer projects are anonymized, and their screens are mockups with fictional data.</p>
         {projects.map((project, index) => (
           <HomeProjectRow key={project.slug} project={project} reversed={index % 2 === 0} />
         ))}
