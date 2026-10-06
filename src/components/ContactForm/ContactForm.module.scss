@@ -1,0 +1,52 @@
+@use "@/styles/breakpoints" as bp;
+
+/* Disposición del formulario de contacto (home y /contact). Los campos y el botón están en
+   src/styles/formControls.module.scss, compartidos con el login del admin. */
+
+.lead {
+  color: var(--muted);
+  margin: 0 0 1.25rem;
+  font-size: 0.98rem;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  max-width: 720px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* Campo trampa para bots: fuera de pantalla (display: none lo detectan algunos bots). */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.status {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.statusError {
+  color: var(--danger-text);
+}
+
+@media (max-width: bp.$md) {
+  .row2 {
+    grid-template-columns: 1fr;
+  }
+}

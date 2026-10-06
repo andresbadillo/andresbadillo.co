@@ -1,0 +1,57 @@
+/**
+ * Controles de formulario públicos (contacto) y del login del admin: campos blancos en los dos
+ * temas (--home-form-input-*), etiqueta solo para lectores de pantalla y botón píldora.
+ */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: none;
+  background: var(--home-form-input-bg);
+  color: var(--home-form-input-fg);
+  border-radius: var(--radius-input);
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+}
+
+.textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  margin-top: 0.25rem;
+  padding: 0.55rem 1.75rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.submit:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.fieldError {
+  margin: var(--space-1) 0 0;
+  font-size: 0.8rem;
+  color: var(--danger-text);
+}

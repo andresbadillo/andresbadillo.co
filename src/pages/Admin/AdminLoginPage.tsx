@@ -3,6 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import controls from "@/styles/formControls.module.scss";
 import styles from "./AdminPage.module.scss";
 
 export function AdminLoginPage() {
@@ -45,47 +46,54 @@ export function AdminLoginPage() {
       <Seo title="Admin — Andres Badillo" description="Acceso privado al editor del blog." noindex />
       <p className={styles.eyebrow}>Área privada / autenticación</p>
       <h1 className={styles.title}>Consola editorial</h1>
-      <p className={styles.subtitle}>Acceso exclusivo para cuentas creadas y autorizadas en Supabase.</p>
+      <p className={styles.subtitle}>Acceso exclusivo para cuentas autorizadas.</p>
       {inactivityTimedOut ? (
         <p className={styles.error} role="status">
           La sesión se cerró tras 15 minutos de inactividad.
         </p>
       ) : null}
 
-      <div className={styles.loginPanel}>
-        <form className={styles.form} onSubmit={(event) => void onSubmit(event)}>
-          <div className={styles.field}>
-            <label htmlFor="admin-email">Email</label>
-            <input
-              id="admin-email"
-              className={styles.input}
-              type="email"
-              autoComplete="username"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="admin-password">Contraseña</label>
-            <input
-              id="admin-password"
-              className={styles.input}
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </div>
-          {error ? <p className={styles.error} role="alert">{error}</p> : null}
-          <div className={styles.actions}>
-            <button className={styles.button} type="submit" disabled={submitting}>
-              {submitting ? "Verificando…" : "Iniciar sesión"}
-            </button>
-          </div>
-        </form>
-      </div>
+      {/* Mismos controles que el formulario de contacto (src/styles/formControls.module.scss). */}
+      <form className={styles.loginForm} onSubmit={(event) => void onSubmit(event)}>
+        <div className={styles.field}>
+          <label className={controls.srOnly} htmlFor="admin-email">
+            Email
+          </label>
+          <input
+            id="admin-email"
+            className={controls.input}
+            type="email"
+            autoComplete="username"
+            placeholder="Email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </div>
+        <div className={styles.field}>
+          <label className={controls.srOnly} htmlFor="admin-password">
+            Contraseña
+          </label>
+          <input
+            id="admin-password"
+            className={controls.input}
+            type="password"
+            autoComplete="current-password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+        </div>
+        {error ? (
+          <p className={controls.fieldError} role="alert">
+            {error}
+          </p>
+        ) : null}
+        <button className={controls.submit} type="submit" disabled={submitting}>
+          {submitting ? "Verificando…" : "Iniciar sesión"}
+        </button>
+      </form>
     </section>
   );
 }

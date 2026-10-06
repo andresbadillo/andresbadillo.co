@@ -43,21 +43,22 @@
 }
 
 .panel,
-.statusRail,
-.loginPanel {
+.statusRail {
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--card) 88%, transparent);
   box-shadow: var(--shadow);
 }
 
-.panel,
-.loginPanel {
+.panel {
   padding: clamp(1.15rem, 3vw, 2rem);
 }
 
-.loginPanel {
+/* Login: sin tarjeta, igual que el formulario de contacto. */
+.loginForm {
+  display: grid;
+  gap: var(--space-4);
   width: min(31rem, 100%);
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
 }
 
 .statusRail {
