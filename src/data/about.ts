@@ -14,6 +14,8 @@ export interface AboutChapter {
   title: string;
   text: string;
   proof: string[];
+  /** Pieza visual opcional debajo del texto del capítulo. */
+  visual?: "automation";
 }
 
 export interface AboutPrinciple {
@@ -74,6 +76,7 @@ export const aboutChapters: AboutChapter[] = [
     title: "Where Excel became software",
     text: "Tariffs, regulation and hourly energy data kept ending up in spreadsheets, so I started turning them into tools: a tariff comparison app, an automated settlement for self-generators, regulatory data pipelines. Python and the Microsoft Power Platform now take over work that cost the team up to 10 hours a week, and the competitive-intelligence apps save the sales team up to 2 hours a day.",
     proof: ["comparador-tarifas-energia", "liquidacion-agpe", "pipeline-aenc-tfroc"],
+    visual: "automation",
   },
   {
     period: "Today",

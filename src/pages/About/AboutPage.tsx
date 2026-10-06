@@ -1,3 +1,4 @@
+import { AutomationFlow } from "@/components/AutomationFlow/AutomationFlow";
 import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
@@ -111,6 +112,7 @@ export function AboutPage() {
                 <div className={styles.chapterBody}>
                   <h3>{chapter.title}</h3>
                   <p>{chapter.text}</p>
+                  {chapter.visual === "automation" ? <AutomationFlow /> : null}
                   {chapter.proof.length > 0 ? (
                     <p className={styles.proof}>
                       <span>See it in practice</span>

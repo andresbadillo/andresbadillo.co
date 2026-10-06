@@ -1,0 +1,250 @@
+@use "@/styles/breakpoints" as bp;
+
+/* Ciclo de 6 s. Todo se anima con transform y opacity (compositor, sin recalcular el diseño). */
+$cycle: 6s;
+
+.root {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.wide,
+.tall {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.wide {
+  max-width: 680px;
+}
+
+.tall {
+  display: none;
+  max-width: 300px;
+}
+
+.root text {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--muted);
+}
+
+.root .strong {
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.file {
+  fill: var(--card);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.line {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.dot,
+.bar {
+  fill: var(--accent);
+}
+
+.nodeBox {
+  fill: var(--card);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.check {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Estado base = estado final: así se ve con reduced motion y antes de que arranque. */
+.dot {
+  opacity: 0;
+}
+
+.inWide,
+.inTall {
+  animation: flowInWide $cycle ease-in-out infinite;
+}
+
+.inTall {
+  animation-name: flowInTall;
+}
+
+.outWide {
+  animation: flowOutWide $cycle ease-in-out infinite;
+}
+
+.outTall {
+  animation: flowOutTall $cycle ease-in-out infinite;
+}
+
+.node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: flowPulse $cycle ease-in-out infinite;
+}
+
+.bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: flowGrow $cycle ease-out infinite;
+}
+
+.check {
+  animation: flowCheck $cycle ease-in-out infinite;
+}
+
+.paused * {
+  animation-play-state: paused;
+}
+
+@keyframes flowInWide {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  4% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 1;
+    transform: translate(95px, var(--dy));
+  }
+  31%,
+  100% {
+    opacity: 0;
+    transform: translate(95px, var(--dy));
+  }
+}
+
+@keyframes flowInTall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  4% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 1;
+    transform: translate(var(--dx), 100px);
+  }
+  31%,
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), 100px);
+  }
+}
+
+@keyframes flowOutWide {
+  0%,
+  38% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  41% {
+    opacity: 1;
+  }
+  56% {
+    opacity: 1;
+    transform: translateX(90px);
+  }
+  58%,
+  100% {
+    opacity: 0;
+    transform: translateX(90px);
+  }
+}
+
+@keyframes flowOutTall {
+  0%,
+  38% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  41% {
+    opacity: 1;
+  }
+  56% {
+    opacity: 1;
+    transform: translateY(55px);
+  }
+  58%,
+  100% {
+    opacity: 0;
+    transform: translateY(55px);
+  }
+}
+
+@keyframes flowPulse {
+  0%,
+  28% {
+    transform: scale(1);
+  }
+  34% {
+    transform: scale(1.06);
+  }
+  42%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes flowGrow {
+  0%,
+  54% {
+    transform: scaleY(0.05);
+  }
+  68%,
+  92% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.05);
+  }
+}
+
+@keyframes flowCheck {
+  0%,
+  66% {
+    opacity: 0;
+  }
+  72%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root * {
+    animation: none !important;
+  }
+}
+
+@media (max-width: bp.$md) {
+  .wide {
+    display: none;
+  }
+
+  .tall {
+    display: block;
+  }
+}
