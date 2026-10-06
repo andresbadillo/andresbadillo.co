@@ -40,7 +40,7 @@ export function BlogTagPage() {
             </TransitionLink>
           ))}
         </div>
-        {!isKnownTag && <p>Etiqueta no reconocida, mostrando coincidencias vacías.</p>}
+        {!loading && !error && !isKnownTag && <p>Etiqueta no reconocida, mostrando coincidencias vacías.</p>}
         <div className={styles.grid}>
           {!loading &&
             !error &&

@@ -1,3 +1,4 @@
+import { lazy, Suspense, type ReactNode } from "react";
 import { Route, Routes } from "react-router-dom";
 import { HomePage } from "@/pages/Home/HomePage";
 import { PortfolioPage } from "@/pages/Portfolio/PortfolioPage";
@@ -10,9 +11,32 @@ import { ContactPage } from "@/pages/Contact/ContactPage";
 import { PrivacyPolicyPage } from "@/pages/Legal/PrivacyPolicyPage";
 import { NotFoundPage } from "@/pages/NotFound/NotFoundPage";
 import { AdminRoute } from "@/components/AdminRoute/AdminRoute";
-import { AdminLoginPage } from "@/pages/Admin/AdminLoginPage";
-import { AdminPostsPage } from "@/pages/Admin/AdminPostsPage";
-import { AdminPostEditorPage } from "@/pages/Admin/AdminPostEditorPage";
+import adminStyles from "@/pages/Admin/AdminPage.module.scss";
+
+/* El admin se descarga aparte: quien visita el sitio público no carga su código. */
+const AdminLoginPage = lazy(() =>
+  import("@/pages/Admin/AdminLoginPage").then((m) => ({ default: m.AdminLoginPage })),
+);
+const AdminPostsPage = lazy(() =>
+  import("@/pages/Admin/AdminPostsPage").then((m) => ({ default: m.AdminPostsPage })),
+);
+const AdminPostEditorPage = lazy(() =>
+  import("@/pages/Admin/AdminPostEditorPage").then((m) => ({ default: m.AdminPostEditorPage })),
+);
+
+function AdminChunk({ children }: { children: ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <section className={`container ${adminStyles.page}`} aria-live="polite">
+          Cargando consola…
+        </section>
+      }
+    >
+      {children}
+    </Suspense>
+  );
+}
 
 export function AppRouter() {
   return (
@@ -26,12 +50,12 @@ export function AppRouter() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin/login" element={<AdminChunk><AdminLoginPage /></AdminChunk>} />
       <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminPostsPage />} />
-        <Route path="/admin/posts" element={<AdminPostsPage />} />
-        <Route path="/admin/posts/new" element={<AdminPostEditorPage mode="create" />} />
-        <Route path="/admin/posts/:id/edit" element={<AdminPostEditorPage mode="edit" />} />
+        <Route path="/admin" element={<AdminChunk><AdminPostsPage /></AdminChunk>} />
+        <Route path="/admin/posts" element={<AdminChunk><AdminPostsPage /></AdminChunk>} />
+        <Route path="/admin/posts/new" element={<AdminChunk><AdminPostEditorPage mode="create" /></AdminChunk>} />
+        <Route path="/admin/posts/:id/edit" element={<AdminChunk><AdminPostEditorPage mode="edit" /></AdminChunk>} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

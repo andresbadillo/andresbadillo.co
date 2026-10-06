@@ -20,6 +20,8 @@ export function TransitionLink({
   const { startTransition } = useCurtain();
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    /* Ctrl/Cmd/Shift/Alt + clic o botón no principal: que el navegador abra la pestaña o ventana. */
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     startTransition(() => {
       onClick?.();

@@ -46,8 +46,13 @@ export function AdminPostsPage() {
     setBusyId(post.id);
     setMessage("");
     setError("");
-    const { error: deleteError } = await supabase.from("posts").delete().eq("id", post.id);
-    if (deleteError) {
+    /* RLS no da error si bloquea el borrado: devuelve 0 filas. Se pide la fila borrada para comprobarlo. */
+    const { data: deleted, error: deleteError } = await supabase
+      .from("posts")
+      .delete()
+      .eq("id", post.id)
+      .select("id");
+    if (deleteError || !deleted || deleted.length === 0) {
       setError("No se pudo eliminar el post. Verifica la sesión y las políticas RLS.");
     } else {
       setMessage("Post eliminado.");
