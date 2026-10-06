@@ -193,8 +193,8 @@ export function HomePage() {
   return (
     <div className={styles.home}>
       <Seo
-        title="Andres Badillo — Product Manager, Data Analyst y Frontend Developer"
-        description="Portfolio de Andres Badillo: MBA, Product Manager, Data Analyst y Frontend Developer. Proyectos, artículos y contacto."
+        title="Andres Badillo — Product Manager & Automation Expert"
+        description="Andres Badillo's portfolio: MBA, Product Manager, Data Analyst & Automation Expert. Projects, articles and contact."
       />
       <div
         ref={heroTrackRef}
@@ -238,7 +238,7 @@ export function HomePage() {
                 <div ref={introRevealRef} className={styles.introReveal}>
                   <p className={clsx(styles.bio, styles.bioLine, styles.bioLine1)}>
                     MBA, Product Manager, Project Manager,<br />
-                    Data Analyst, Data Science, Frontend Developer.
+                    Data Science/Analyst, BI & Automation Expert.
                   </p>
                   <p className={clsx(styles.bio, styles.bioLine, styles.bioLine3)}>
                     Turning complexity into software, data, and decisions that drive impact.
