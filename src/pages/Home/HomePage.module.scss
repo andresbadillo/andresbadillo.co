@@ -471,10 +471,34 @@
   font-size: 0.95rem;
 }
 
+.send:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.fieldError {
+  margin: var(--space-1) 0 0;
+  font-size: 0.8rem;
+  color: var(--danger-text);
+}
+
+/* Campo trampa para bots: fuera de pantalla (display: none lo detectan algunos bots). */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .formNote {
   margin: 1rem 0 0;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.formNoteError {
+  color: var(--danger-text);
 }
 
 @media (max-width: bp.$lg) {

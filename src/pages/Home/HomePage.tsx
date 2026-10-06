@@ -8,12 +8,12 @@ import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { usePosts } from "@/context/PostsContext";
 import { projects } from "@/data/projects";
 import avatarPlaceholder from "@/assets/placeholders/avatar.png";
+import { useContactForm } from "@/hooks/useContactForm";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import { HomeProjectRow } from "@/pages/Home/HomeProjectRow";
 import headingAccent from "@/styles/sectionHeadingAccent.module.scss";
 import clsx from "clsx";
 import {
-  type FormEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -24,7 +24,7 @@ import styles from "./HomePage.module.scss";
 
 export function HomePage() {
   const { posts, loading: postsLoading, error: postsError } = usePosts();
-  const [formStatus, setFormStatus] = useState("");
+  const contactForm = useContactForm();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const scrollProgressRef = useRef(0);
@@ -190,11 +190,6 @@ export function HomePage() {
     return () => io.disconnect();
   }, [prefersReducedMotion]);
 
-  const onSubmitHomeContact = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormStatus("Mensaje de prueba registrado. Para envío real, conecta un backend.");
-  };
-
   return (
     <div className={styles.home}>
       <Seo title="Home — Andres Badillo" description="Home de portfolio minimalista con arte generativo." />
@@ -335,7 +330,12 @@ export function HomePage() {
             <p className={styles.contactLead}>
               Feel free to contact me at <strong>r.andres.badillo@gmail.com</strong> or drop me a message using the contact form below:
             </p>
-            <form className={styles.form} onSubmit={onSubmitHomeContact}>
+            <form className={styles.form} onSubmit={contactForm.onSubmit} noValidate>
+              {/* Trampa para bots: fuera de pantalla e ignorada por lectores de pantalla y teclado. */}
+              <div className={styles.honeypot} aria-hidden="true">
+                <label htmlFor="home-contact-website">Website</label>
+                <input id="home-contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
               <div className={styles.row2}>
                 <div className={styles.field}>
                   <label className={styles.srOnly} htmlFor="home-contact-name">
@@ -348,7 +348,14 @@ export function HomePage() {
                     autoComplete="name"
                     placeholder="Name"
                     required
+                    aria-invalid={contactForm.errors.name ? true : undefined}
+                    aria-describedby={contactForm.errors.name ? "home-contact-name-error" : undefined}
                   />
+                  {contactForm.errors.name && (
+                    <p id="home-contact-name-error" className={styles.fieldError}>
+                      {contactForm.errors.name}
+                    </p>
+                  )}
                 </div>
                 <div className={styles.field}>
                   <label className={styles.srOnly} htmlFor="home-contact-email">
@@ -362,7 +369,14 @@ export function HomePage() {
                     autoComplete="email"
                     placeholder="Email"
                     required
+                    aria-invalid={contactForm.errors.email ? true : undefined}
+                    aria-describedby={contactForm.errors.email ? "home-contact-email-error" : undefined}
                   />
+                  {contactForm.errors.email && (
+                    <p id="home-contact-email-error" className={styles.fieldError}>
+                      {contactForm.errors.email}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className={styles.field}>
@@ -376,14 +390,25 @@ export function HomePage() {
                   rows={6}
                   placeholder="Message"
                   required
+                  aria-invalid={contactForm.errors.message ? true : undefined}
+                  aria-describedby={contactForm.errors.message ? "home-contact-message-error" : undefined}
                 />
+                {contactForm.errors.message && (
+                  <p id="home-contact-message-error" className={styles.fieldError}>
+                    {contactForm.errors.message}
+                  </p>
+                )}
               </div>
-              <button type="submit" className={styles.send}>
-                Send
+              <button type="submit" className={styles.send} disabled={contactForm.sending}>
+                {contactForm.sending ? "Sending…" : "Send"}
               </button>
             </form>
-            <p role="status" aria-live="polite" className={styles.formNote}>
-              {formStatus}
+            <p
+              role="status"
+              aria-live="polite"
+              className={clsx(styles.formNote, contactForm.status === "error" && styles.formNoteError)}
+            >
+              {contactForm.statusMessage}
             </p>
           </section>
         </div>

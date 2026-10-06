@@ -26,6 +26,19 @@ npm run security:audit
 npm run verify
 ```
 
+## Formulario de contacto
+
+Los formularios de la home y de `/contact` envían a `api/contact.ts`, una función de Vercel que valida el mensaje (`src/lib/contactMessage.ts`, las mismas reglas que en el navegador) y lo manda por correo con [Resend](https://resend.com). La respuesta llega con «Responder a» = email del visitante.
+
+1. Crea una cuenta en Resend con el correo que recibirá los mensajes y genera una API key con permiso de envío.
+2. En Vercel → Project → Settings → Environment Variables (Production y Preview):
+   - `RESEND_API_KEY`: la clave de Resend.
+   - `CONTACT_TO_EMAIL`: el buzón que recibe los mensajes.
+   - `CONTACT_FROM_EMAIL` (opcional): remitente con dominio verificado en Resend. Sin dominio verificado, se usa `onboarding@resend.dev`, que solo puede enviar al correo de tu propia cuenta de Resend.
+3. Estas variables no llevan prefijo `VITE_`: solo existen en el servidor.
+
+`npm run dev` no ejecuta las funciones de `api/`. Para probar el envío en local usa `npx vercel dev` (con las variables en `.env.local`) o un deploy de preview. Antispam: campo trampa oculto y tiempo mínimo de 3 s entre mostrar y enviar el formulario; a los bots se les responde 200 sin enviar nada.
+
 ## Seguridad, Supabase y panel administrativo
 
 - El blog mantiene lectura pública mediante RLS.
@@ -62,8 +75,6 @@ npx supabase db reset --local
 npx supabase test db --local supabase/tests/posts_rls.sql
 npx supabase db advisors --local --type security --level warn --fail-on error
 ```
-
-### Variables de entorno
 
 ### Variables de entorno
 

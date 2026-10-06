@@ -27,3 +27,31 @@
   cursor: pointer;
   font-size: 0.95rem;
 }
+
+.submit:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.fieldError {
+  margin: calc(-1 * var(--space-1)) 0 0;
+  font-size: 0.8rem;
+  color: var(--danger-text);
+}
+
+/* Campo trampa para bots: fuera de pantalla (display: none lo detectan algunos bots). */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.status {
+  color: var(--muted);
+}
+
+.statusError {
+  color: var(--danger-text);
+}
