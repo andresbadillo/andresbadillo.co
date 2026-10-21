@@ -2,6 +2,7 @@ import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Seo } from "@/components/Seo/Seo";
 import { LinkedInEmbed } from "@/components/LinkedInEmbed/LinkedInEmbed";
 import { usePosts } from "@/context/PostsContext";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { useParams } from "react-router-dom";
 import pageLayout from "@/styles/pageLayout.module.scss";
@@ -9,6 +10,7 @@ import clsx from "clsx";
 import styles from "./BlogPostDetailPage.module.scss";
 
 export function BlogPostDetailPage() {
+  const { t } = useLocale();
   const { slug = "" } = useParams();
   const { getPostBySlug, loading, error } = usePosts();
   const post = getPostBySlug(slug);
@@ -16,10 +18,10 @@ export function BlogPostDetailPage() {
   if (error) {
     return (
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Error — Blog de Andres Badillo" description="No se pudo cargar el artículo." noindex />
+        <Seo title={t("seoPostErrorTitle")} description={t("seoPostErrorDescription")} noindex />
         <h1 className={styles.title}>Blog</h1>
-        <p role="alert">No se pudo cargar el blog. {error.message}</p>
-        <TransitionLink to="/blog">Volver al blog</TransitionLink>
+        <p role="alert">{t("blogError")} {error.message}</p>
+        <TransitionLink to="/blog">{t("backToBlog")}</TransitionLink>
       </section>
     );
   }
@@ -27,10 +29,10 @@ export function BlogPostDetailPage() {
   if (loading) {
     return (
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Blog — Andres Badillo" description="Cargando artículo…" />
+        <Seo title={t("seoPostLoadingTitle")} description={t("seoPostLoadingDescription")} />
         <h1 className={styles.title}>Blog</h1>
-        <p aria-live="polite">Cargando artículo…</p>
-        <TransitionLink to="/blog">Volver al blog</TransitionLink>
+        <p aria-live="polite">{t("postLoading")}</p>
+        <TransitionLink to="/blog">{t("backToBlog")}</TransitionLink>
       </section>
     );
   }
@@ -38,15 +40,15 @@ export function BlogPostDetailPage() {
   if (!post) {
     return (
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title="Artículo no encontrado — Andres Badillo" description="La entrada solicitada no existe." noindex />
+        <Seo title={t("seoPostMissingTitle")} description={t("seoPostMissingDescription")} noindex />
         <h1 className={styles.title}>Blog</h1>
-        <p>Artículo no encontrado.</p>
-        <TransitionLink to="/blog">Volver al blog</TransitionLink>
+        <p>{t("postMissing")}</p>
+        <TransitionLink to="/blog">{t("backToBlog")}</TransitionLink>
       </section>
     );
   }
 
-  const iframeTitle = `Publicación de LinkedIn: ${post.title}`;
+  const iframeTitle = t("linkedinIframeTitle", { title: post.title });
 
   return (
     <>
@@ -58,9 +60,9 @@ export function BlogPostDetailPage() {
             {post.date}
           </time>
           <p className={styles.tags}>
-            {post.tags.map((t) => (
-              <span key={t} className={styles.tag}>
-                {t.toUpperCase()}
+            {post.tags.map((item) => (
+              <span key={item.slug} className={styles.tag}>
+                {item.label.toUpperCase()}
               </span>
             ))}
           </p>
@@ -73,7 +75,7 @@ export function BlogPostDetailPage() {
         )}
 
         <TransitionLink to="/blog" className={styles.back}>
-          Volver al blog
+          {t("backToBlog")}
         </TransitionLink>
       </article>
       <CanvasBarsDivider topBackground="var(--bg)" bottomBackground="var(--home-hero-bg)" />

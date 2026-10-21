@@ -23,6 +23,12 @@ const AdminPostsPage = lazy(() =>
 const AdminPostEditorPage = lazy(() =>
   import("@/pages/Admin/AdminPostEditorPage").then((m) => ({ default: m.AdminPostEditorPage })),
 );
+const AdminProjectsPage = lazy(() =>
+  import("@/pages/Admin/AdminProjectsPage").then((m) => ({ default: m.AdminProjectsPage })),
+);
+const AdminProjectEditorPage = lazy(() =>
+  import("@/pages/Admin/AdminProjectEditorPage").then((m) => ({ default: m.AdminProjectEditorPage })),
+);
 
 function AdminChunk({ children }: { children: ReactNode }) {
   return (
@@ -56,6 +62,9 @@ export function AppRouter() {
         <Route path="/admin/posts" element={<AdminChunk><AdminPostsPage /></AdminChunk>} />
         <Route path="/admin/posts/new" element={<AdminChunk><AdminPostEditorPage mode="create" /></AdminChunk>} />
         <Route path="/admin/posts/:id/edit" element={<AdminChunk><AdminPostEditorPage mode="edit" /></AdminChunk>} />
+        <Route path="/admin/projects" element={<AdminChunk><AdminProjectsPage /></AdminChunk>} />
+        <Route path="/admin/projects/new" element={<AdminChunk><AdminProjectEditorPage mode="create" /></AdminChunk>} />
+        <Route path="/admin/projects/:id/edit" element={<AdminChunk><AdminProjectEditorPage mode="edit" /></AdminChunk>} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

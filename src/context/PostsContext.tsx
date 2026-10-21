@@ -1,12 +1,13 @@
 import { supabase } from "@/lib/supabaseClient";
 import type { Post } from "@/data/posts";
-import { buildAvailableTags, rowToPost } from "@/data/postMapper";
+import { buildAvailableTags, rowToPost, type TagLink } from "@/data/postMapper";
+import { useLocale } from "@/i18n/LocaleProvider";
 import type { PostRow } from "@/types/database";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 interface PostsContextValue {
   posts: Post[];
-  availableTags: string[];
+  availableTags: TagLink[];
   loading: boolean;
   error: Error | null;
   getPostBySlug: (slug: string) => Post | undefined;
@@ -23,7 +24,11 @@ const PostsContext = createContext<PostsContextValue | null>(null);
  * 2) Mapea filas SQL (`PostRow`) al modelo de UI (`Post`).
  * 3) Expone estado de carga/error y helpers de consumo.
  */
+const POST_COLUMNS =
+  "id, slug, title_es, title_en, excerpt_es, excerpt_en, published_at, featured, tags, cover_key, linkedin_embed, display_order";
+
 export function PostsProvider({ children }: { children: ReactNode }) {
+  const { locale } = useLocale();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -32,12 +37,9 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     void (async () => {
-      // Lectura principal de DB: solo columnas necesarias para la UI.
       const { data, error: qError } = await supabase
         .from("posts")
-        .select(
-          "id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order",
-        )
+        .select(POST_COLUMNS)
         // Orden estable para controlar el listado desde DB.
         .order("display_order", { ascending: true });
       if (qError) {
@@ -48,10 +50,10 @@ export function PostsProvider({ children }: { children: ReactNode }) {
       }
       const rows = (data ?? []) as PostRow[];
       // Adaptación de shape DB -> shape de dominio/UI.
-      setPosts(rows.map(rowToPost));
+      setPosts(rows.map((row) => rowToPost(row, locale)));
       setLoading(false);
     })();
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     load();

@@ -1,15 +1,15 @@
+import { useLocale } from "@/i18n/LocaleProvider";
 import { useRef, useState, type FormEvent } from "react";
 import { validateContactInput, type ContactValidationErrors } from "@/lib/contactMessage";
 
 export type ContactFormStatus = "idle" | "sending" | "sent" | "error";
-
-const FALLBACK_EMAIL = "r.andres.badillo@gmail.com";
 
 /**
  * Estado y envío del formulario de contacto (home y /contact). Valida en el navegador con las
  * mismas reglas que api/contact.ts y envía a esa función.
  */
 export function useContactForm() {
+  const { t } = useLocale();
   const [status, setStatus] = useState<ContactFormStatus>("idle");
   const [statusMessage, setStatusMessage] = useState("");
   const [errors, setErrors] = useState<ContactValidationErrors>({});
@@ -40,7 +40,7 @@ export function useContactForm() {
 
     setErrors({});
     setStatus("sending");
-    setStatusMessage("Sending…");
+    setStatusMessage(t("contactSending"));
 
     try {
       const response = await fetch("/api/contact", {
@@ -62,10 +62,10 @@ export function useContactForm() {
       form.reset();
       shownAtRef.current = performance.now();
       setStatus("sent");
-      setStatusMessage("Message sent. I'll get back to you soon.");
+      setStatusMessage(t("contactSent"));
     } catch {
       setStatus("error");
-      setStatusMessage(`The message could not be sent. Please email me at ${FALLBACK_EMAIL}.`);
+      setStatusMessage(t("contactSendError"));
     }
   };
 

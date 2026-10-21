@@ -16,8 +16,10 @@ import {
   aboutTagline,
   aboutToolsIntro,
 } from "@/data/about";
-import type { AboutBand } from "@/data/about";
-import { projects } from "@/data/projects";
+import type { AboutBand, LocalizedText } from "@/data/about";
+import { useProjects } from "@/context/ProjectsContext";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { pickLocalized } from "@/i18n/locale";
 import { socialLinks } from "@/data/site";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
 import avatarAvif from "@/assets/avatar/avatar-600.avif";
@@ -40,19 +42,19 @@ function SectionTitle({ id, accent, children }: { id: string; accent: string; ch
   );
 }
 
-function Band({ band }: { band: AboutBand }) {
+function Band({ band, text }: { band: AboutBand; text: (value: LocalizedText) => string }) {
   return (
     <p className={styles.band}>
-      <span className={styles.bandLabel}>{band.label}</span>
+      <span className={styles.bandLabel}>{text(band.label)}</span>
       <span>
-        {band.lead ? `${band.lead} ` : null}
+        {band.lead ? `${text(band.lead)} ` : null}
         {band.key.map((item, index) => (
           <span key={item}>
             {index > 0 ? " · " : ""}
             <strong>{item}</strong>
           </span>
         ))}
-        {band.others.map((item) => ` · ${item}`).join("")}
+        {band.others.map((item) => ` · ${text(item)}`).join("")}
       </span>
     </p>
   );
@@ -62,31 +64,32 @@ const linkedIn = socialLinks.find((link) => link.label === "LinkedIn");
 const gitHub = socialLinks.find((link) => link.label === "GitHub");
 
 export function AboutPage() {
+  const { locale, t } = useLocale();
+  const { getProjectBySlug } = useProjects();
+  const text = (value: LocalizedText) => pickLocalized(locale, value.es, value.en);
+  const intro = aboutIntro.es.map((paragraph, index) => pickLocalized(locale, paragraph, aboutIntro.en[index]));
   const headingRef = useRef<HTMLHeadingElement>(null);
   useHeadingAccentReveal(headingRef);
 
   return (
     <>
       <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)} aria-labelledby="about-heading">
-        <Seo
-          title="About — Andres Badillo"
-          description="Electronic engineer and MBA candidate with 14+ years in energy and technology, building software, data and automation where operations meet code."
-        />
+        <Seo title={t("seoAboutTitle")} description={t("seoAboutDescription")} />
         <h1 ref={headingRef} id="about-heading" className={pageLayout.pageHeading}>
-          <span className={headingAccent.sectionAccent}>About</span>
-          me
+          <span className={headingAccent.sectionAccent}>{t("aboutAccent")}</span>
+          {` ${t("aboutRest")}`}
         </h1>
 
         <div className={styles.intro}>
           <div className={styles.portrait}>
             <picture>
               <source srcSet={avatarAvif} type="image/avif" />
-              <img src={avatarWebp} className={styles.avatar} alt="Portrait of Andrés Badillo" width={600} height={600} decoding="async" />
+              <img src={avatarWebp} className={styles.avatar} alt={t("aboutPortraitAlt")} width={600} height={600} decoding="async" />
             </picture>
           </div>
           <div className={styles.introCopy}>
-            <p className={styles.tagline}>{aboutTagline}</p>
-            {aboutIntro.map((paragraph) => (
+            <p className={styles.tagline}>{text(aboutTagline)}</p>
+            {intro.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
@@ -94,30 +97,30 @@ export function AboutPage() {
 
         <ul className={styles.stats}>
           {aboutStats.map((stat) => (
-            <li key={stat.label}>
-              <strong>{stat.value}</strong>
-              <span>{stat.label}</span>
+            <li key={stat.value.en}>
+              <strong>{text(stat.value)}</strong>
+              <span>{text(stat.label)}</span>
             </li>
           ))}
         </ul>
 
         <section className={styles.block} aria-labelledby="about-story">
-          <SectionTitle id="about-story" accent="My">
-            story in four chapters
+          <SectionTitle id="about-story" accent={t("aboutStoryAccent")}>
+            {` ${t("aboutStoryRest")}`}
           </SectionTitle>
           <ol className={styles.chapters}>
             {aboutChapters.map((chapter) => (
-              <li key={chapter.title} className={styles.chapter}>
-                <span className={styles.period}>{chapter.period}</span>
+              <li key={chapter.title.en} className={styles.chapter}>
+                <span className={styles.period}>{text(chapter.period)}</span>
                 <div className={styles.chapterBody}>
-                  <h3>{chapter.title}</h3>
-                  <p>{chapter.text}</p>
+                  <h3>{text(chapter.title)}</h3>
+                  <p>{text(chapter.text)}</p>
                   {chapter.visual === "automation" ? <AutomationFlow /> : null}
                   {chapter.proof.length > 0 ? (
                     <p className={styles.proof}>
-                      <span>See it in practice</span>
+                      <span>{t("aboutProof")}</span>
                       {chapter.proof.map((slug) => {
-                        const project = projects.find((item) => item.slug === slug);
+                        const project = getProjectBySlug(slug);
                         return project ? (
                           <TransitionLink key={slug} to={`/portfolio/${slug}`} className={styles.proofLink}>
                             {project.title}
@@ -133,31 +136,31 @@ export function AboutPage() {
         </section>
 
         <section className={styles.block} aria-labelledby="about-think">
-          <SectionTitle id="about-think" accent="How">
-            I think
+          <SectionTitle id="about-think" accent={t("aboutThinkAccent")}>
+            {` ${t("aboutThinkRest")}`}
           </SectionTitle>
           <div className={styles.principles}>
             {aboutPrinciples.map((principle, index) => (
-              <article key={principle.title} className={styles.principle}>
+              <article key={principle.title.en} className={styles.principle}>
                 <span className={styles.principleNum}>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{principle.title}</h3>
-                <p>{principle.text}</p>
+                <h3>{text(principle.title)}</h3>
+                <p>{text(principle.text)}</p>
               </article>
             ))}
           </div>
         </section>
 
         <section className={styles.block} aria-labelledby="about-tools">
-          <SectionTitle id="about-tools" accent="Tools">
-            I use
+          <SectionTitle id="about-tools" accent={t("aboutToolsAccent")}>
+            {` ${t("aboutToolsRest")}`}
           </SectionTitle>
-          <p className={styles.toolsIntro}>{aboutToolsIntro}</p>
-          <Band band={aboutManagement} />
+          <p className={styles.toolsIntro}>{text(aboutToolsIntro)}</p>
+          <Band band={aboutManagement} text={text} />
           <ol className={styles.stages}>
             {aboutStages.map((stage, index) => (
-              <li key={stage.title} className={styles.stage}>
+              <li key={stage.title.en} className={styles.stage}>
                 <span className={styles.stageNum}>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{stage.title}</h3>
+                <h3>{text(stage.title)}</h3>
                 <ul className={styles.stageTools}>
                   {stage.key.map((item) => (
                     <li key={item} className={styles.toolKey}>
@@ -171,19 +174,19 @@ export function AboutPage() {
               </li>
             ))}
           </ol>
-          <Band band={aboutAi} />
+          <Band band={aboutAi} text={text} />
         </section>
 
         <section className={styles.block} aria-labelledby="about-education">
-          <SectionTitle id="about-education" accent="Education">
-            and languages
+          <SectionTitle id="about-education" accent={t("aboutEducationAccent")}>
+            {` ${t("aboutEducationRest")}`}
           </SectionTitle>
           <ul className={styles.education}>
             {aboutEducation.map((item) => (
-              <li key={item.title}>
-                <span className={styles.period}>{item.period}</span>
+              <li key={item.title.en}>
+                <span className={styles.period}>{text(item.period)}</span>
                 <div>
-                  <strong>{item.title}</strong>
+                  <strong>{text(item.title)}</strong>
                   <span>{item.place}</span>
                 </div>
               </li>
@@ -191,27 +194,27 @@ export function AboutPage() {
           </ul>
           <ul className={styles.languages}>
             {aboutLanguages.map((language) => (
-              <li key={language.value}>
-                <strong>{language.value}</strong>
-                <span>{language.label}</span>
+              <li key={language.value.en}>
+                <strong>{text(language.value)}</strong>
+                <span>{text(language.label)}</span>
               </li>
             ))}
           </ul>
         </section>
 
         <section className={styles.block} aria-labelledby="about-beyond">
-          <SectionTitle id="about-beyond" accent="Beyond">
-            the keyboard
+          <SectionTitle id="about-beyond" accent={t("aboutBeyondAccent")}>
+            {` ${t("aboutBeyondRest")}`}
           </SectionTitle>
-          <p className={styles.beyond}>{aboutBeyond}</p>
+          <p className={styles.beyond}>{text(aboutBeyond)}</p>
         </section>
 
         <section className={styles.closing} aria-labelledby="about-closing">
-          <h2 id="about-closing">Have a process worth improving?</h2>
-          <p>I&apos;m happy to talk about data, automation or a product that needs someone who understands the operation.</p>
+          <h2 id="about-closing">{t("aboutClosingTitle")}</h2>
+          <p>{t("aboutClosingText")}</p>
           <div className={styles.actions}>
             <TransitionLink to="/contact" className={styles.cta}>
-              Get in touch
+              {t("aboutCta")}
             </TransitionLink>
             {linkedIn ? (
               <a href={linkedIn.href} className={styles.textLink} target="_blank" rel="noopener noreferrer">

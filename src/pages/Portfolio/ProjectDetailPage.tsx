@@ -2,7 +2,10 @@ import { CanvasBarsDivider } from "@/components/Dividers/CanvasBarsDivider";
 import { Mock } from "@/components/mocks";
 import { Seo } from "@/components/Seo/Seo";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
-import { projects, type Project } from "@/data/projects";
+import { useProjects } from "@/context/ProjectsContext";
+import type { Project } from "@/data/projectModel";
+import { useLocale } from "@/i18n/LocaleProvider";
+import type { MessageKey } from "@/data/ui";
 import pageLayout from "@/styles/pageLayout.module.scss";
 import clsx from "clsx";
 import { useEffect, useState, type ReactNode } from "react";
@@ -10,14 +13,14 @@ import { useParams } from "react-router-dom";
 import styles from "./ProjectDetailPage.module.scss";
 
 const sections = [
-  { id: "resumen", label: "Resumen" },
-  { id: "contexto", label: "Contexto" },
-  { id: "retos", label: "Retos técnicos" },
-  { id: "arquitectura", label: "Arquitectura" },
-  { id: "funciones", label: "Funcionalidades" },
-  { id: "interfaz", label: "Interfaz" },
-  { id: "impacto", label: "Impacto" },
-] as const;
+  { id: "resumen", labelKey: "sectionSummary" },
+  { id: "contexto", labelKey: "sectionContext" },
+  { id: "retos", labelKey: "sectionChallenges" },
+  { id: "arquitectura", labelKey: "sectionArchitecture" },
+  { id: "funciones", labelKey: "sectionFeatures" },
+  { id: "interfaz", labelKey: "sectionInterface" },
+  { id: "impacto", labelKey: "sectionImpact" },
+] as const satisfies ReadonlyArray<{ id: string; labelKey: MessageKey }>;
 
 function SectionHead({ index, id, children }: { index: number; id: string; children: ReactNode }) {
   return (
@@ -52,28 +55,30 @@ function useActiveSection(): string {
 }
 
 function NotFound() {
+  const { t } = useLocale();
   return (
     <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-      <Seo title="Proyecto no encontrado — Andres Badillo" description="El proyecto solicitado no existe." noindex />
-      <h1 className={styles.title}>Proyecto no encontrado</h1>
+      <Seo title={t("seoProjectMissingTitle")} description={t("seoProjectMissingDescription")} noindex />
+      <h1 className={styles.title}>{t("projectMissing")}</h1>
       <TransitionLink to="/portfolio" className={styles.back}>
-        Back to portfolio
+        {t("backToPortfolio")}
       </TransitionLink>
     </section>
   );
 }
 
 function ProjectDetail({ project, next }: { project: Project; next: Project }) {
+  const { t } = useLocale();
   const active = useActiveSection();
   const meta = [project.date, ...project.tags.map((tag) => tag.toUpperCase())].join(" | ");
 
   return (
     <>
       <article className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
-        <Seo title={`${project.title} — Portfolio de Andres Badillo`} description={project.excerpt} />
+        <Seo title={`${project.title} — ${t("portfolioAccent")} — Andres Badillo`} description={project.excerpt} />
 
         <TransitionLink to="/portfolio" className={styles.back}>
-          ← Portfolio
+          {t("portfolioBackShort")}
         </TransitionLink>
 
         <header className={styles.header}>
@@ -87,13 +92,13 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
         </div>
 
         <div className={styles.layout}>
-          <nav className={styles.toc} aria-label="Contenido del proyecto">
+          <nav className={styles.toc} aria-label={t("projectToc")}>
             <ol>
               {sections.map((section, index) => (
                 <li key={section.id}>
                   <a href={`#${section.id}`} className={clsx(active === section.id && styles.tocActive)} aria-current={active === section.id ? "location" : undefined}>
                     <span>{String(index + 1).padStart(2, "0")}</span>
-                    {section.label}
+                    {t(section.labelKey)}
                   </a>
                 </li>
               ))}
@@ -103,7 +108,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
           <div className={styles.content}>
             <section id="resumen" aria-labelledby="resumen-title" className={styles.section}>
               <SectionHead index={0} id="resumen">
-                Resumen
+                {t("sectionSummary")}
               </SectionHead>
               {project.summary.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -117,15 +122,13 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
                 ))}
               </dl>
               <p className={styles.note}>
-                {project.anonymized
-                  ? "Proyecto desarrollado para una empresa del sector energético. Los nombres, los datos y las cifras están anonimizados o redondeados, y las pantallas son maquetas con datos ficticios."
-                  : "Las pantallas son maquetas ilustrativas con datos ficticios."}
+                {project.anonymized ? t("anonymizedNote") : t("mockNote")}
               </p>
             </section>
 
             <section id="contexto" aria-labelledby="contexto-title" className={styles.section}>
               <SectionHead index={1} id="contexto">
-                Contexto
+                {t("sectionContext")}
               </SectionHead>
               {project.context.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -135,22 +138,22 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
 
             <section id="retos" aria-labelledby="retos-title" className={styles.section}>
               <SectionHead index={2} id="retos">
-                Retos técnicos
+                {t("sectionChallenges")}
               </SectionHead>
               <p className={styles.callout}>
-                <strong>Novedad. </strong>
+                <strong>{t("noveltyLabel")} </strong>
                 {project.novelty}
               </p>
               <div className={styles.cards}>
                 {project.challenges.map((challenge, index) => (
                   <article key={challenge.title} className={styles.card}>
-                    <span className={styles.cardTag}>Reto {index + 1}</span>
+                    <span className={styles.cardTag}>{t("challengeLabel", { n: String(index + 1) })}</span>
                     <h3>{challenge.title}</h3>
                     <p>{challenge.text}</p>
                   </article>
                 ))}
               </div>
-              <h3 className={styles.subhead}>Método de trabajo</h3>
+              <h3 className={styles.subhead}>{t("subheadMethod")}</h3>
               <ul className={styles.check}>
                 {project.method.map((item) => (
                   <li key={item}>{item}</li>
@@ -160,15 +163,15 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
 
             <section id="arquitectura" aria-labelledby="arquitectura-title" className={styles.section}>
               <SectionHead index={3} id="arquitectura">
-                Arquitectura
+                {t("sectionArchitecture")}
               </SectionHead>
-              <h3 className={styles.subhead}>Stack</h3>
+              <h3 className={styles.subhead}>{t("subheadStack")}</h3>
               <div className={styles.tableWrap}>
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th scope="col">Tecnología</th>
-                      <th scope="col">Rol</th>
+                      <th scope="col">{t("colTechnology")}</th>
+                      <th scope="col">{t("colRole")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -183,7 +186,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
                   </tbody>
                 </table>
               </div>
-              <h3 className={styles.subhead}>Módulos</h3>
+              <h3 className={styles.subhead}>{t("subheadModules")}</h3>
               <dl className={styles.arch}>
                 {project.architecture.map((item) => (
                   <div key={item.label}>
@@ -192,7 +195,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
                   </div>
                 ))}
               </dl>
-              <h3 className={styles.subhead}>Flujo</h3>
+              <h3 className={styles.subhead}>{t("subheadFlow")}</h3>
               <ol className={styles.flow}>
                 {project.flow.map((step) => (
                   <li key={step}>{step}</li>
@@ -202,7 +205,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
 
             <section id="funciones" aria-labelledby="funciones-title" className={styles.section}>
               <SectionHead index={4} id="funciones">
-                Funcionalidades
+                {t("sectionFeatures")}
               </SectionHead>
               <ul className={styles.features}>
                 {project.features.map((feature) => (
@@ -216,7 +219,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
 
             <section id="interfaz" aria-labelledby="interfaz-title" className={styles.section}>
               <SectionHead index={5} id="interfaz">
-                Interfaz
+                {t("sectionInterface")}
               </SectionHead>
               <div className={styles.figures}>
                 {project.screens.map((screen, index) => (
@@ -225,7 +228,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
                       <Mock id={screen.mock} />
                     </div>
                     <figcaption>
-                      <span>Pantalla {index + 1}</span>
+                      <span>{t("screenLabel", { n: String(index + 1) })}</span>
                       <strong>{screen.title}</strong>
                       {screen.caption}
                     </figcaption>
@@ -236,7 +239,7 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
 
             <section id="impacto" aria-labelledby="impacto-title" className={styles.section}>
               <SectionHead index={6} id="impacto">
-                Impacto
+                {t("sectionImpact")}
               </SectionHead>
               <ul className={styles.stats}>
                 {project.impact.stats.map((stat) => (
@@ -250,9 +253,9 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th scope="col">Indicador</th>
-                      <th scope="col">Antes</th>
-                      <th scope="col">Ahora</th>
+                      <th scope="col">{t("colIndicator")}</th>
+                      <th scope="col">{t("colBefore")}</th>
+                      <th scope="col">{t("colAfter")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -269,12 +272,12 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
               <p>{project.impact.closing}</p>
             </section>
 
-            <nav className={styles.footerNav} aria-label="Navegación entre proyectos">
+            <nav className={styles.footerNav} aria-label={t("projectNav")}>
               <TransitionLink to="/portfolio" className={styles.back}>
-                ← Back to portfolio
+                {t("backToPortfolio")}
               </TransitionLink>
               <TransitionLink to={`/portfolio/${next.slug}`} className={styles.cta}>
-                Next: {next.title}
+                {t("projectNext", { title: next.title })}
               </TransitionLink>
             </nav>
           </div>
@@ -286,7 +289,23 @@ function ProjectDetail({ project, next }: { project: Project; next: Project }) {
 }
 
 export function ProjectDetailPage() {
+  const { t } = useLocale();
   const { slug = "" } = useParams();
+  const { projects, loading, error } = useProjects();
+  if (error) {
+    return (
+      <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
+        <p role="alert">{t("projectsError")} {error.message}</p>
+      </section>
+    );
+  }
+  if (loading) {
+    return (
+      <section className={clsx("container", pageLayout.pageSection, pageLayout.mainBlock)}>
+        <p aria-live="polite">{t("projectsLoading")}</p>
+      </section>
+    );
+  }
   const index = projects.findIndex((item) => item.slug === slug);
   if (index === -1) return <NotFound />;
   return <ProjectDetail key={slug} project={projects[index]} next={projects[(index + 1) % projects.length]} />;

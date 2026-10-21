@@ -24,11 +24,16 @@ const validEmbed = {
 
 const validPost: PostInput = {
   slug: "post-seguro",
-  title: "Post seguro",
-  excerpt: "Resumen público",
+  titleEs: "Post seguro",
+  titleEn: "Safe post",
+  excerptEs: "Resumen público",
+  excerptEn: "Public summary",
   publishedAt: "2026-08-27",
   featured: false,
-  tags: ["React", "Security"],
+  tags: [
+    { slug: "react", es: "React", en: "React" },
+    { slug: "security", es: "Security", en: "Security" },
+  ],
   coverKey: "thumb-1",
   linkedinEmbed: validEmbed,
   displayOrder: 1,
@@ -132,17 +137,32 @@ describe("post input validation", () => {
     const result = validatePostInput({
       ...validPost,
       slug: "  post-seguro  ",
-      title: "  Post seguro  ",
-      tags: ["React", " React ", "", "Security"],
+      titleEs: "  Post seguro  ",
+      tags: [
+        { slug: "", es: "React", en: "React" },
+        { slug: "", es: " React ", en: "" },
+        { slug: "", es: "", en: "" },
+        { slug: "", es: "Security", en: "Security" },
+      ],
     });
     expect(result).toEqual({
       ok: true,
       value: {
         ...validPost,
-        tags: ["React", "Security"],
+        tags: [
+          { slug: "react", es: "React", en: "React" },
+          { slug: "security", es: "Security", en: "Security" },
+        ],
       },
     });
-    expect(normalizeTags(["a", " A ", "b"])).toEqual(["a", "b"]);
+    expect(normalizeTags([
+      { slug: "", es: "a", en: "" },
+      { slug: "", es: " A ", en: "" },
+      { slug: "", es: "b", en: "" },
+    ])).toEqual([
+      { slug: "a", es: "a", en: "" },
+      { slug: "b", es: "b", en: "" },
+    ]);
   });
 
   it("normalizes uppercase slugs before validation", () => {

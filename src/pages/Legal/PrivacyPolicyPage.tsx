@@ -1,6 +1,7 @@
 import { Seo } from "@/components/Seo/Seo";
 import { PRIVACY_POLICY_VERSION } from "@/lib/contactMessage";
 import { siteUrl } from "@/data/site";
+import { useLocale } from "@/i18n/LocaleProvider";
 import styles from "./PrivacyPolicyPage.module.scss";
 
 /** Responsable del tratamiento (Decreto 1377 de 2013, art. 13): nombre, domicilio, correo y teléfono. */
@@ -11,23 +12,19 @@ const RESPONSIBLE = {
   phone: "+57 301 632 0701",
 };
 
-const EFFECTIVE_DATE = "21 de octubre de 2026";
+const EFFECTIVE_DATE = { es: "21 de octubre de 2026", en: "October 21, 2026" };
 
 export function PrivacyPolicyPage() {
+  const { locale, t } = useLocale();
   return (
     <section className={`container ${styles.wrap}`}>
-      <Seo
-        title="Privacy policy — Andres Badillo"
-        description="Política de tratamiento de datos personales de andresbadillo.co (Ley 1581 de 2012)."
-      />
-      <h1>Política de Tratamiento de Datos Personales</h1>
+      <Seo title={t("seoPrivacyTitle")} description={t("seoPrivacyDescription")} />
+      <h1>{t("privacyTitle")}</h1>
       <p className={styles.meta}>
-        Vigente desde el {EFFECTIVE_DATE} · Versión {PRIVACY_POLICY_VERSION}
+        {t("privacyEffective", { date: EFFECTIVE_DATE[locale], version: PRIVACY_POLICY_VERSION })}
       </p>
-      <p className={styles.summary} lang="en">
-        <strong>Summary in English:</strong> I only use the name, email and message you send through the contact form
-        to reply to you. They are delivered to my inbox by email and are not stored on this site. You can ask me to
-        access, correct or delete them at any time by writing to {RESPONSIBLE.email}.
+      <p className={styles.summary} lang={locale}>
+        <strong>{t("privacySummaryLabel")}</strong> {t("privacySummary", { email: RESPONSIBLE.email })}
       </p>
 
       <h2>1. Responsable del tratamiento</h2>

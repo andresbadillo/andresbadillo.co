@@ -1,3 +1,4 @@
+import { useLocale } from "@/i18n/LocaleProvider";
 import clsx from "clsx";
 import styles from "./ThemeToggle.module.scss";
 
@@ -26,6 +27,7 @@ function MoonIcon({ className }: { className?: string }) {
 }
 
 export function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) {
+  const { t } = useLocale();
   const isLight = theme === "light";
   const next = isLight ? "dark" : "light";
 
@@ -40,7 +42,7 @@ export function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) {
       aria-checked={isLight}
       className={styles.switch}
       onClick={handleClick}
-      aria-label={isLight ? "Cambiar a tema oscuro" : "Cambiar a tema claro"}
+      aria-label={isLight ? t("themeToDark") : t("themeToLight")}
     >
       <span className={styles.track}>
         <MoonIcon className={styles.decorMoon} />

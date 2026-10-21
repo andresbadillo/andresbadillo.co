@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
+import { useLocale } from "@/i18n/LocaleProvider";
 import clsx from "clsx";
 import { type PropsWithChildren, useEffect, useRef, useState } from "react";
 import styles from "./SiteLayout.module.scss";
@@ -113,6 +114,7 @@ interface SiteLayoutProps {
 }
 
 export function SiteLayout({ theme, onThemeChange, children }: PropsWithChildren<SiteLayoutProps>) {
+  const { t } = useLocale();
   const [backToTopVisible, setBackToTopVisible] = useState(false);
 
   useEffect(() => {
@@ -150,17 +152,17 @@ export function SiteLayout({ theme, onThemeChange, children }: PropsWithChildren
                 <SocialLinksRow />
               </div>
               <p>
-                © 2026 - Designed and built by <FooterAttributionName />
+                © 2026 - {t("footerCredit")} <FooterAttributionName />
               </p>
               <p className={styles.footerLegal}>
-                <TransitionLink to="/privacy-policy">Privacy policy</TransitionLink>
+                <TransitionLink to="/privacy-policy">{t("privacyLink")}</TransitionLink>
               </p>
             </div>
             <button
               type="button"
               className={clsx(styles.backToTop, backToTopVisible && styles.backToTopVisible)}
               onClick={scrollToTop}
-              aria-label="Volver arriba"
+              aria-label={t("backToTop")}
             >
               <svg
                 className={styles.backToTopIcon}

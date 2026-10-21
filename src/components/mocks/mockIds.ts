@@ -1,4 +1,4 @@
-/** Ids de las maquetas. Los usa projects.ts (solo texto) y los resuelve el registro de index.tsx. */
+/** Ids de las maquetas. El admin solo puede elegir estos ids; el registro de index.tsx las dibuja. */
 export const mockIds = [
   "tarifas-hero",
   "tarifas-config",

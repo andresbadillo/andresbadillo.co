@@ -22,13 +22,20 @@ interface AdminPostEditorPageProps {
   mode: "create" | "edit";
 }
 
+interface TagDraft {
+  es: string;
+  en: string;
+}
+
 interface EditorState {
   slug: string;
-  title: string;
-  excerpt: string;
+  titleEs: string;
+  titleEn: string;
+  excerptEs: string;
+  excerptEn: string;
   publishedAt: string;
   featured: boolean;
-  tagsText: string;
+  tags: TagDraft[];
   coverKey: CoverKey | "";
   displayOrder: string;
   useEmbed: boolean;
@@ -42,7 +49,8 @@ interface EditorState {
   fullHeight: string;
 }
 
-const POST_COLUMNS = "id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order";
+const POST_COLUMNS =
+  "id, slug, title_es, title_en, excerpt_es, excerpt_en, published_at, featured, tags, cover_key, linkedin_embed, display_order";
 
 function todayUtc(): string {
   return new Date().toISOString().slice(0, 10);
@@ -51,11 +59,13 @@ function todayUtc(): string {
 function emptyState(): EditorState {
   return {
     slug: "",
-    title: "",
-    excerpt: "",
+    titleEs: "",
+    titleEn: "",
+    excerptEs: "",
+    excerptEn: "",
     publishedAt: todayUtc(),
     featured: false,
-    tagsText: "",
+    tags: [{ es: "", en: "" }],
     coverKey: "thumb-1",
     displayOrder: "0",
     useEmbed: false,
@@ -92,11 +102,13 @@ function stateToInput(state: EditorState): PostInput {
 
   return {
     slug: state.slug,
-    title: state.title,
-    excerpt: state.excerpt,
+    titleEs: state.titleEs,
+    titleEn: state.titleEn,
+    excerptEs: state.excerptEs,
+    excerptEn: state.excerptEn,
     publishedAt: state.publishedAt,
     featured: state.featured,
-    tags: state.tagsText.split(","),
+    tags: state.tags.map((tag) => ({ slug: "", es: tag.es, en: tag.en })),
     coverKey: state.coverKey || null,
     linkedinEmbed,
     displayOrder: Number(state.displayOrder),
@@ -106,11 +118,13 @@ function stateToInput(state: EditorState): PostInput {
 function inputToState(input: PostInput): EditorState {
   return {
     slug: input.slug,
-    title: input.title,
-    excerpt: input.excerpt,
+    titleEs: input.titleEs,
+    titleEn: input.titleEn,
+    excerptEs: input.excerptEs,
+    excerptEn: input.excerptEn,
     publishedAt: input.publishedAt,
     featured: input.featured,
-    tagsText: input.tags.join(", "),
+    tags: input.tags.length ? input.tags.map((tag) => ({ es: tag.es, en: tag.en })) : [{ es: "", en: "" }],
     coverKey: input.coverKey ?? "",
     displayOrder: String(input.displayOrder),
     useEmbed: input.linkedinEmbed !== null,
@@ -222,8 +236,10 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
     const result = postId === null
       ? await supabase.rpc("create_post_at_top", {
           p_slug: payload.slug,
-          p_title: payload.title,
-          p_excerpt: payload.excerpt,
+          p_title_es: payload.title_es ?? null,
+          p_title_en: payload.title_en ?? null,
+          p_excerpt_es: payload.excerpt_es ?? null,
+          p_excerpt_en: payload.excerpt_en ?? null,
           p_published_at: payload.published_at,
           p_featured: payload.featured ?? false,
           p_tags: payload.tags ?? [],
@@ -281,24 +297,33 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
       <div className={styles.panel}>
         {requestError ? <p className={styles.error} role="alert">{requestError}</p> : null}
         <form className={styles.form} onSubmit={(event) => void save(event)} noValidate>
+          <div className={styles.field}>
+            <label htmlFor="post-slug">Slug</label>
+            <input id="post-slug" className={styles.input} value={state.slug} onChange={(event) => update("slug", event.target.value)} maxLength={80} placeholder="mi-publicacion" required />
+            {errors.slug ? <span className={styles.error}>{errors.slug}</span> : null}
+          </div>
           <div className={styles.fieldGrid}>
             <div className={styles.field}>
-              <label htmlFor="post-title">Título</label>
-              <input id="post-title" className={styles.input} value={state.title} onChange={(event) => update("title", event.target.value)} maxLength={120} required />
-              {errors.title ? <span className={styles.error}>{errors.title}</span> : null}
+              <label htmlFor="post-title-es">Título en español</label>
+              <input id="post-title-es" className={styles.input} value={state.titleEs} onChange={(event) => update("titleEs", event.target.value)} maxLength={120} />
             </div>
             <div className={styles.field}>
-              <label htmlFor="post-slug">Slug</label>
-              <input id="post-slug" className={styles.input} value={state.slug} onChange={(event) => update("slug", event.target.value)} maxLength={80} placeholder="mi-publicacion" required />
-              {errors.slug ? <span className={styles.error}>{errors.slug}</span> : null}
+              <label htmlFor="post-title-en">Título en inglés</label>
+              <input id="post-title-en" className={styles.input} value={state.titleEn} onChange={(event) => update("titleEn", event.target.value)} maxLength={120} />
             </div>
           </div>
-
-          <div className={styles.field}>
-            <label htmlFor="post-excerpt">Resumen</label>
-            <textarea id="post-excerpt" className={styles.textarea} value={state.excerpt} onChange={(event) => update("excerpt", event.target.value)} maxLength={300} required />
-            {errors.excerpt ? <span className={styles.error}>{errors.excerpt}</span> : null}
+          {errors.title ? <span className={styles.error}>{errors.title}</span> : null}
+          <div className={styles.fieldGrid}>
+            <div className={styles.field}>
+              <label htmlFor="post-excerpt-es">Resumen en español</label>
+              <textarea id="post-excerpt-es" className={styles.textarea} value={state.excerptEs} onChange={(event) => update("excerptEs", event.target.value)} maxLength={300} />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="post-excerpt-en">Resumen en inglés</label>
+              <textarea id="post-excerpt-en" className={styles.textarea} value={state.excerptEn} onChange={(event) => update("excerptEn", event.target.value)} maxLength={300} />
+            </div>
           </div>
+          {errors.excerpt ? <span className={styles.error}>{errors.excerpt}</span> : null}
 
           <div className={styles.field}>
             <label htmlFor="post-date">Fecha de publicación</label>
@@ -309,9 +334,41 @@ export function AdminPostEditorPage({ mode }: AdminPostEditorPageProps) {
 
           <div className={styles.fieldGrid}>
             <div className={styles.field}>
-              <label htmlFor="post-tags">Etiquetas</label>
-              <input id="post-tags" className={styles.input} value={state.tagsText} onChange={(event) => update("tagsText", event.target.value)} placeholder="React, Supabase, Web" />
-              <span className={styles.hint}>Separadas por comas; máximo 10.</span>
+              <label htmlFor="post-tags-es-0">Etiquetas</label>
+              {state.tags.map((tag, index) => (
+                <div className={styles.fieldGrid} key={index}>
+                  <input
+                    id={`post-tags-es-${index}`}
+                    className={styles.input}
+                    value={tag.es}
+                    placeholder="Español"
+                    maxLength={30}
+                    onChange={(event) => {
+                      const tags = state.tags.map((item, itemIndex) => itemIndex === index ? { ...item, es: event.target.value } : item);
+                      update("tags", tags);
+                    }}
+                  />
+                  <input
+                    className={styles.input}
+                    value={tag.en}
+                    placeholder="Inglés"
+                    maxLength={30}
+                    aria-label={`Etiqueta ${index + 1} en inglés`}
+                    onChange={(event) => {
+                      const tags = state.tags.map((item, itemIndex) => itemIndex === index ? { ...item, en: event.target.value } : item);
+                      update("tags", tags);
+                    }}
+                  />
+                </div>
+              ))}
+              <button
+                className={styles.linkAction}
+                type="button"
+                onClick={() => update("tags", [...state.tags, { es: "", en: "" }])}
+              >
+                Añadir etiqueta
+              </button>
+              <span className={styles.hint}>Español e inglés, máximo 10. El enlace público usa el texto en minúsculas.</span>
               {errors.tags ? <span className={styles.error}>{errors.tags}</span> : null}
             </div>
             <div className={styles.field}>

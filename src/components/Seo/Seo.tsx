@@ -1,4 +1,5 @@
 import { siteName, siteOgImage, siteUrl } from "@/data/site";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
@@ -16,8 +17,10 @@ interface SeoProps {
  */
 export function Seo({ title, description, noindex = false, type = "website" }: SeoProps) {
   const { pathname } = useLocation();
+  const { locale } = useLocale();
   const path = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
   const url = `${siteUrl}${path}`;
+  const ogLocale = locale === "es" ? "es_CO" : "en_US";
 
   return (
     /* defer={false}: se aplica en el mismo render, sin esperar a un requestAnimationFrame
@@ -28,6 +31,7 @@ export function Seo({ title, description, noindex = false, type = "website" }: S
       <link rel="canonical" href={url} />
       {noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
       <meta property="og:type" content={type} />
+      <meta property="og:locale" content={ogLocale} />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

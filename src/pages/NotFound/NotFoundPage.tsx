@@ -1,16 +1,18 @@
 import { Seo } from "@/components/Seo/Seo";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
+import { useLocale } from "@/i18n/LocaleProvider";
 import styles from "./NotFoundPage.module.scss";
 
 export function NotFoundPage() {
+  const { t } = useLocale();
   return (
     <section className={`container ${styles.wrap}`}>
-      <Seo title="Página no encontrada — Andres Badillo" description="La página que buscas no existe." noindex />
+      <Seo title={t("seoNotFoundTitle")} description={t("seoNotFoundDescription")} noindex />
       <div className={styles.poem}>
         <h1>404</h1>
-        <p>La ruta se perdió en el ruido,</p>
-        <p>pero el pulso del código sigue vivo.</p>
-        <TransitionLink to="/">Volver al inicio</TransitionLink>
+        <p>{t("notFoundLine1")}</p>
+        <p>{t("notFoundLine2")}</p>
+        <TransitionLink to="/">{t("backHome")}</TransitionLink>
       </div>
     </section>
   );

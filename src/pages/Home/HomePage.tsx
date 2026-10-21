@@ -7,7 +7,8 @@ import { BlogPostCard } from "@/components/cards/BlogPostCard";
 import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { usePosts } from "@/context/PostsContext";
-import { projects } from "@/data/projects";
+import { useProjects } from "@/context/ProjectsContext";
+import { useLocale } from "@/i18n/LocaleProvider";
 import avatarAvif from "@/assets/avatar/avatar-600.avif";
 import avatarWebp from "@/assets/avatar/avatar-600.webp";
 import { useHeadingAccentReveal } from "@/hooks/useHeadingAccentReveal";
@@ -24,7 +25,9 @@ import {
 import styles from "./HomePage.module.scss";
 
 export function HomePage() {
+  const { t } = useLocale();
   const { posts, loading: postsLoading, error: postsError } = usePosts();
+  const { projects, loading: projectsLoading, error: projectsError } = useProjects();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const scrollProgressRef = useRef(0);
@@ -193,8 +196,8 @@ export function HomePage() {
   return (
     <div className={styles.home}>
       <Seo
-        title="Andres Badillo — Product Manager & Automation Expert"
-        description="Andres Badillo's portfolio: MBA, Product Manager, Data Analyst & Automation Expert. Projects, articles and contact."
+        title={t("seoHomeTitle")}
+        description={t("seoHomeDescription")}
       />
       <div
         ref={heroTrackRef}
@@ -203,7 +206,7 @@ export function HomePage() {
         <section
           ref={heroStickyRef}
           className={clsx(styles.hero, prefersReducedMotion ? styles.heroStatic : styles.heroSticky)}
-          aria-label="Presentación"
+          aria-label={t("heroAria")}
         >
         <StarfieldCanvas
           canvasRef={starCanvasRef}
@@ -220,7 +223,7 @@ export function HomePage() {
                 <img
                   src={avatarWebp}
                   className={styles.avatar}
-                  alt="Retrato de Andrés Badillo"
+                  alt={t("avatarAlt")}
                   width={600}
                   height={600}
                   decoding="async"
@@ -232,16 +235,20 @@ export function HomePage() {
             <div className={styles.intro}>
               <div className={styles.introText}>
                 <h1>
-                  <span className={styles.greet}>Hey, I&apos;m</span>{" "}
+                  <span className={styles.greet}>{t("greet")}</span>{" "}
                   <span className={styles.nameHighlight}>Andrés Badillo</span>
                 </h1>
                 <div ref={introRevealRef} className={styles.introReveal}>
                   <p className={clsx(styles.bio, styles.bioLine, styles.bioLine1)}>
-                    MBA, Product Manager, Project Manager,<br />
-                    Data Science/Analyst, BI & Automation Expert.
+                    {t("heroBio").split("\n").map((line, index) => (
+                      <span key={line}>
+                        {index > 0 ? <br /> : null}
+                        {line}
+                      </span>
+                    ))}
                   </p>
                   <p className={clsx(styles.bio, styles.bioLine, styles.bioLine3)}>
-                    Turning complexity into software, data, and decisions that drive impact.
+                    {t("heroTagline")}
                   </p>
                 </div>
               </div>
@@ -253,7 +260,7 @@ export function HomePage() {
         </div>
         {!prefersReducedMotion && (
           <div ref={scrollCueRef} className={styles.scrollCue}>
-            <span className={styles.scrollText}>SCROLL</span>
+            <span className={styles.scrollText}>{t("scroll")}</span>
             <svg
               className={styles.scrollLine}
               viewBox="0 0 10 40"
@@ -294,14 +301,16 @@ export function HomePage() {
             aria-labelledby="home-projects-heading"
           >
             <h2 id="home-projects-heading" ref={projectsHeadingRef} className={styles.sectionTitle}>
-              <span className={headingAccent.sectionAccent}>Selected</span>
-              Portfolio Projects
+              <span className={headingAccent.sectionAccent}>{t("homeProjectsAccent")}</span>
+              {` ${t("homeProjectsRest")}`}
             </h2>
+            {projectsError && <p role="alert">{t("projectsError")} {projectsError.message}</p>}
+            {projectsLoading && <p aria-live="polite">{t("projectsLoading")}</p>}
             {projects.slice(0, 4).map((project, index) => (
               <HomeProjectRow key={project.slug} project={project} reversed={index % 2 === 0} />
             ))}
             <TransitionLink to="/portfolio" className={styles.seeAllCta}>
-              See all
+              {t("seeAll")}
             </TransitionLink>
           </section>
         </div>
@@ -313,16 +322,16 @@ export function HomePage() {
         <div className="container">
           <section className={styles.blogSection} aria-labelledby="home-blog-heading">
             <h2 id="home-blog-heading" ref={blogHeadingRef} className={styles.sectionTitle}>
-              <span className={headingAccent.sectionAccent}>Selected</span>
-              Blog Articles
+              <span className={headingAccent.sectionAccent}>{t("homeBlogAccent")}</span>
+              {` ${t("homeBlogRest")}`}
             </h2>
-            {postsError && <p role="alert">No se pudo cargar el blog. {postsError.message}</p>}
-            {postsLoading && <p aria-live="polite">Cargando artículos…</p>}
+            {postsError && <p role="alert">{t("blogError")} {postsError.message}</p>}
+            {postsLoading && <p aria-live="polite">{t("blogLoading")}</p>}
             {!postsLoading && !postsError && (
               <div className={styles.blogGrid}>{posts.slice(0, 6).map((p) => <BlogPostCard key={p.slug} post={p} />)}</div>
             )}
             <TransitionLink to="/blog" className={styles.seeAllCta}>
-              See all
+              {t("seeAll")}
             </TransitionLink>
           </section>
         </div>
@@ -341,7 +350,7 @@ export function HomePage() {
         <div className="container">
           <section className={styles.contactSection} aria-labelledby="home-contact-heading">
             <h2 id="home-contact-heading" ref={contactHeadingRef} className={styles.sectionTitle}>
-              <span className={headingAccent.sectionAccent}>Contact</span>
+              <span className={headingAccent.sectionAccent}>{t("contactHeading")}</span>
             </h2>
             <ContactForm idPrefix="home-contact" />
           </section>

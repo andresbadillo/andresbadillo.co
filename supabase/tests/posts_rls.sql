@@ -4,21 +4,21 @@ create extension if not exists pgtap with schema extensions;
 select plan(19);
 
 select matches(
-  (select pg_get_functiondef('public.create_post_at_top(text,text,text,date,boolean,text[],text,jsonb)'::regprocedure)),
+  (select pg_get_functiondef('public.create_post_at_top(text,text,text,text,text,date,boolean,jsonb,text,jsonb)'::regprocedure)),
   'where true',
   'the create-post RPC is compatible with PostgREST safeupdate'
 );
 
 insert into public.posts (
-  id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order
+  id, slug, title_es, title_en, excerpt_es, excerpt_en, published_at, featured, tags, cover_key, linkedin_embed, display_order
 ) values (
-  900001, 'rls-existing', 'RLS existing', 'Policy test row', now(), false, '{}', 'thumb-1', null, 9000
+  900001, 'rls-existing', 'RLS existing', null, 'Policy test row', null, now(), false, '[]'::jsonb, 'thumb-1', null, 9000
 );
 
 set local role anon;
 select is((select count(*) from public.posts where id = 900001), 1::bigint, 'anon can read posts');
 select throws_ok(
-  $$insert into public.posts (id, slug, title, excerpt, published_at, display_order) values (900002, 'anon-write', 'Denied', 'Denied', now(), 9001)$$,
+  $$insert into public.posts (id, slug, title_es, excerpt_es, published_at, display_order) values (900002, 'anon-write', 'Denied', 'Denied', now(), 9001)$$,
   '42501',
   'permission denied for table posts',
   'anon cannot insert posts'
@@ -26,7 +26,7 @@ select throws_ok(
 select is(
   has_function_privilege(
     current_user,
-    'public.create_post_at_top(text,text,text,date,boolean,text[],text,jsonb)',
+    'public.create_post_at_top(text,text,text,text,text,date,boolean,jsonb,text,jsonb)',
     'EXECUTE'
   ),
   false,
@@ -38,15 +38,15 @@ select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000
 set local role authenticated;
 select is((select count(*) from public.posts where id = 900001), 1::bigint, 'authenticated non-admin can read posts');
 select throws_ok(
-  $$insert into public.posts (id, slug, title, excerpt, published_at, display_order) values (900003, 'viewer-write', 'Denied', 'Denied', now(), 9002)$$,
+  $$insert into public.posts (id, slug, title_es, excerpt_es, published_at, display_order) values (900003, 'viewer-write', 'Denied', 'Denied', now(), 9002)$$,
   '42501',
   'new row violates row-level security policy for table "posts"',
   'authenticated non-admin cannot insert posts'
 );
-update public.posts set title = 'Viewer changed it' where id = 900001;
-select is((select title from public.posts where id = 900001), 'RLS existing', 'authenticated non-admin cannot update posts');
+update public.posts set title_es = 'Viewer changed it' where id = 900001;
+select is((select title_es from public.posts where id = 900001), 'RLS existing', 'authenticated non-admin cannot update posts');
 select throws_ok(
-  $$select public.create_post_at_top('viewer-rpc', 'Denied', 'Denied', current_date, false, '{}', null, null)$$,
+  $$select public.create_post_at_top('viewer-rpc', 'Denied', null, 'Denied', null, current_date, false, '[]'::jsonb, null, null)$$,
   '42501',
   'Administrators only',
   'authenticated non-admin cannot create a post through the RPC'
@@ -56,25 +56,25 @@ reset role;
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000002","app_metadata":{"role":"admin"}}', true);
 set local role authenticated;
 insert into public.posts (
-  id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order
+  id, slug, title_es, title_en, excerpt_es, excerpt_en, published_at, featured, tags, cover_key, linkedin_embed, display_order
 ) values (
-  900004, 'admin-write', 'Admin created', 'Allowed', now(), false, '{}', 'thumb-1', null, 9003
+  900004, 'admin-write', 'Admin created', null, 'Allowed', null, now(), false, '[]'::jsonb, 'thumb-1', null, 9003
 );
 select is((select count(*) from public.posts where id = 900004), 1::bigint, 'admin can insert posts');
-update public.posts set title = 'Admin updated' where id = 900004;
-select is((select title from public.posts where id = 900004), 'Admin updated', 'admin can update posts');
+update public.posts set title_es = 'Admin updated' where id = 900004;
+select is((select title_es from public.posts where id = 900004), 'Admin updated', 'admin can update posts');
 reset role;
 
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000002","app_metadata":{}}', true);
 set local role authenticated;
-update public.posts set title = 'Stale token update' where id = 900004;
-select is((select title from public.posts where id = 900004), 'Admin updated', 'writes stop when refreshed token loses admin role');
+update public.posts set title_es = 'Stale token update' where id = 900004;
+select is((select title_es from public.posts where id = 900004), 'Admin updated', 'writes stop when refreshed token loses admin role');
 reset role;
 
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-000000000002","app_metadata":{"role":"admin"}}', true);
 set local role authenticated;
 select lives_ok(
-  $$insert into public.posts (id, slug, title, excerpt, published_at, display_order, linkedin_embed) values (
+  $$insert into public.posts (id, slug, title_es, excerpt_es, published_at, display_order, linkedin_embed) values (
     900005,
     'valid-linkedin-embed',
     'Valid embed',
@@ -86,7 +86,7 @@ select lives_ok(
   'admin can insert a valid LinkedIn embed'
 );
 select throws_ok(
-  $$insert into public.posts (id, slug, title, excerpt, published_at, display_order, linkedin_embed) values (
+  $$insert into public.posts (id, slug, title_es, excerpt_es, published_at, display_order, linkedin_embed) values (
     900006,
     'missing-linkedin-src',
     'Missing src',
@@ -100,7 +100,7 @@ select throws_ok(
   'database rejects a LinkedIn embed without src'
 );
 select throws_ok(
-  $$insert into public.posts (id, slug, title, excerpt, published_at, display_order, linkedin_embed) values (
+  $$insert into public.posts (id, slug, title_es, excerpt_es, published_at, display_order, linkedin_embed) values (
     900007,
     'malicious-linkedin-host',
     'Malicious host',
@@ -121,10 +121,12 @@ select lives_ok(
   $$select public.create_post_at_top(
     'admin-rpc',
     'Created at top',
+    null,
     'Allowed',
+    null,
     current_date,
     false,
-    '{Supabase}',
+    '[{"slug":"supabase","es":"Supabase","en":"Supabase"}]'::jsonb,
     'thumb-1',
     null
   )$$,

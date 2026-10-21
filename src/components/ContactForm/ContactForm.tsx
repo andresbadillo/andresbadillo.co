@@ -1,3 +1,4 @@
+import { useLocale } from "@/i18n/LocaleProvider";
 import { useContactForm } from "@/hooks/useContactForm";
 import type { ContactField } from "@/lib/contactMessage";
 import clsx from "clsx";
@@ -11,24 +12,30 @@ interface ContactFormProps {
 
 /** Texto, formulario y estado del contacto. Lo usan la home y /contact. */
 export function ContactForm({ idPrefix }: ContactFormProps) {
+  const { t } = useLocale();
   const contactForm = useContactForm();
   const id = (field: string) => `${idPrefix}-${field}`;
+  const showError = (message: string | undefined) => {
+    if (!message) return undefined;
+    if (message.startsWith("Write your name")) return t("contactNameError");
+    if (message.startsWith("Enter a valid email")) return t("contactEmailError");
+    if (message.startsWith("Write between")) return t("contactMessageError");
+    if (message.startsWith("Accept the privacy")) return t("contactConsentError");
+    return message;
+  };
 
   const fieldA11y = (field: ContactField) =>
     contactForm.errors[field] ? { "aria-invalid": true, "aria-describedby": id(`${field}-error`) } : {};
   const fieldError = (field: ContactField) =>
     contactForm.errors[field] ? (
       <p id={id(`${field}-error`)} className={controls.fieldError}>
-        {contactForm.errors[field]}
+        {showError(contactForm.errors[field])}
       </p>
     ) : null;
 
   return (
     <>
-      <p className={styles.lead}>
-        Feel free to contact me at <strong>r.andres.badillo@gmail.com</strong> or drop me a message using the contact
-        form below:
-      </p>
+      <p className={styles.lead}>{t("contactLead")}</p>
       <form className={styles.form} onSubmit={contactForm.onSubmit} noValidate>
         {/* Trampa para bots: fuera de pantalla e ignorada por lectores de pantalla y teclado. */}
         <div className={styles.honeypot} aria-hidden="true">
@@ -38,14 +45,14 @@ export function ContactForm({ idPrefix }: ContactFormProps) {
         <div className={styles.row2}>
           <div className={styles.field}>
             <label className={controls.srOnly} htmlFor={id("name")}>
-              Name
+              {t("contactName")}
             </label>
             <input
               id={id("name")}
               name="name"
               className={controls.input}
               autoComplete="name"
-              placeholder="Name"
+              placeholder={t("contactName")}
               required
               {...fieldA11y("name")}
             />
@@ -53,7 +60,7 @@ export function ContactForm({ idPrefix }: ContactFormProps) {
           </div>
           <div className={styles.field}>
             <label className={controls.srOnly} htmlFor={id("email")}>
-              Email
+              {t("contactEmail")}
             </label>
             <input
               id={id("email")}
@@ -61,7 +68,7 @@ export function ContactForm({ idPrefix }: ContactFormProps) {
               type="email"
               className={controls.input}
               autoComplete="email"
-              placeholder="Email"
+              placeholder={t("contactEmail")}
               required
               {...fieldA11y("email")}
             />
@@ -70,14 +77,14 @@ export function ContactForm({ idPrefix }: ContactFormProps) {
         </div>
         <div className={styles.field}>
           <label className={controls.srOnly} htmlFor={id("message")}>
-            Message
+            {t("contactMessage")}
           </label>
           <textarea
             id={id("message")}
             name="message"
             className={controls.textarea}
             rows={6}
-            placeholder="Message"
+            placeholder={t("contactMessage")}
             required
             {...fieldA11y("message")}
           />
@@ -96,22 +103,20 @@ export function ContactForm({ idPrefix }: ContactFormProps) {
               aria-describedby={clsx(id("consent-note"), contactForm.errors.consent && id("consent-error"))}
             />
             <span>
-              I authorize Andres Badillo to process my name, email and message to reply to my inquiry, as described in
-              the{" "}
+              {t("contactConsent")}{" "}
               <a className={styles.consentLink} href="/privacy-policy" target="_blank" rel="noopener">
-                Privacy Policy
+                {t("contactPrivacy")}
               </a>
               .
             </span>
           </label>
           <p id={id("consent-note")} className={styles.consentNote}>
-            Your message is delivered by email through Resend (USA) and is not stored on this site. You can ask me to
-            access, correct or delete your data at any time.
+            {t("contactConsentNote")}
           </p>
           {fieldError("consent")}
         </div>
         <button type="submit" className={controls.submit} disabled={contactForm.sending}>
-          {contactForm.sending ? "Sending…" : "Send"}
+          {contactForm.sending ? t("contactSending") : t("contactSend")}
         </button>
       </form>
       <p

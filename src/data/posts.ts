@@ -10,12 +10,17 @@ export interface LinkedInEmbedPair {
   full: LinkedInFrameSpec;
 }
 
+export interface PostTag {
+  slug: string;
+  label: string;
+}
+
 export interface Post {
   slug: string;
   title: string;
   excerpt: string;
   date: string;
-  tags: string[];
+  tags: PostTag[];
   coverImage: string;
   /** Dos embeds del mismo post: compact = "Embed with less text", full = "Embed full post". */
   linkedinEmbed?: LinkedInEmbedPair;
