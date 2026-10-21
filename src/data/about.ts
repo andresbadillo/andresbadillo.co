@@ -46,7 +46,7 @@ export interface AboutEducation {
 }
 
 export const aboutTagline: LocalizedText = {
-  es: "Convertir la complejidad en software, datos y decisiones que generan impacto.",
+  es: "Convierto complejidad en software, datos y decisiones que generan impacto.",
   en: "Turning complexity into software, data, and decisions that drive impact.",
 };
 
