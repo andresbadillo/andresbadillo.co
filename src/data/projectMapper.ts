@@ -104,13 +104,11 @@ function pickText(locale: Locale, es: string, en: string): string {
   return pickLocalized(locale, es, en);
 }
 
-function pickList<T>(locale: Locale, es: T[], en: T[], read: (item: T | undefined, fallback: T | undefined) => T | null): T[] {
-  const primary = locale === "es" ? es : en;
-  const secondary = locale === "es" ? en : es;
-  const length = Math.max(primary.length, secondary.length);
+function pickList<T>(_locale: Locale, es: T[], en: T[], read: (esItem: T | undefined, enItem: T | undefined) => T | null): T[] {
+  const length = Math.max(es.length, en.length);
   const items: T[] = [];
   for (let index = 0; index < length; index += 1) {
-    const item = read(primary[index], secondary[index]);
+    const item = read(es[index], en[index]);
     if (item) items.push(item);
   }
   return items;
