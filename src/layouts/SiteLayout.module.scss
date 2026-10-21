@@ -20,6 +20,16 @@
   min-width: 0;
 }
 
+.footerLegal {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
 .footerSocial {
   margin-bottom: 0.75rem;
 

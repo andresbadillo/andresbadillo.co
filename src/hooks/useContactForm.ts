@@ -25,6 +25,7 @@ export function useContactForm() {
       name: data.get("name"),
       email: data.get("email"),
       message: data.get("message"),
+      consent: data.get("consent") === "on",
       website: data.get("website"),
       elapsedMs: Math.round(performance.now() - shownAtRef.current),
     };

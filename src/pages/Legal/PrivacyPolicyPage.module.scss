@@ -1,4 +1,24 @@
 .wrap {
   max-width: 780px;
   padding-bottom: 2rem;
+
+  h2 {
+    margin-top: 2rem;
+  }
+
+  li + li {
+    margin-top: var(--space-1);
+  }
+}
+
+.meta {
+  margin-top: 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.summary {
+  color: var(--muted);
 }

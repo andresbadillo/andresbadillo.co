@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header/Header";
 import { SocialLinksRow } from "@/components/SocialLinksRow/SocialLinksRow";
+import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import clsx from "clsx";
 import { type PropsWithChildren, useEffect, useRef, useState } from "react";
 import styles from "./SiteLayout.module.scss";
@@ -150,6 +151,9 @@ export function SiteLayout({ theme, onThemeChange, children }: PropsWithChildren
               </div>
               <p>
                 © 2026 - Designed and built by <FooterAttributionName />
+              </p>
+              <p className={styles.footerLegal}>
+                <TransitionLink to="/privacy-policy">Privacy policy</TransitionLink>
               </p>
             </div>
             <button

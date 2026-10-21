@@ -7,18 +7,23 @@ export interface ContactInput {
   name: string;
   email: string;
   message: string;
+  /** Autorización de tratamiento de datos (Ley 1581 de 2012): sin ella no se envía nada. */
+  consent: boolean;
   /** Campo trampa: invisible para personas; si llega relleno, lo envió un bot. */
   website: string;
   /** Milisegundos entre que se mostró el formulario y el envío. */
   elapsedMs: number;
 }
 
-export type ContactField = "name" | "email" | "message";
+export type ContactField = "name" | "email" | "message" | "consent";
 export type ContactValidationErrors = Partial<Record<ContactField, string>>;
 
 export type ContactValidationResult =
   | { ok: true; value: ContactInput }
   | { ok: false; errors: ContactValidationErrors };
+
+/** Versión vigente de /privacy-policy. Se cambia cuando cambia el texto de la política. */
+export const PRIVACY_POLICY_VERSION = "2026-10-21";
 
 export const CONTACT_LIMITS = {
   nameMax: 100,
@@ -56,6 +61,7 @@ export function validateContactInput(raw: unknown): ContactValidationResult {
     name: cleanSingleLine(source.name),
     email: cleanSingleLine(source.email),
     message: cleanMultiline(source.message),
+    consent: source.consent === true,
     website: asString(source.website).trim(),
     elapsedMs: Number.isFinite(elapsed) ? elapsed : 0,
   };
@@ -70,6 +76,9 @@ export function validateContactInput(raw: unknown): ContactValidationResult {
   if (value.message.length < CONTACT_LIMITS.messageMin || value.message.length > CONTACT_LIMITS.messageMax) {
     errors.message = `Write between ${CONTACT_LIMITS.messageMin} and ${CONTACT_LIMITS.messageMax} characters.`;
   }
+  if (!value.consent) {
+    errors.consent = "Accept the privacy policy to send your message.";
+  }
 
   return Object.keys(errors).length === 0 ? { ok: true, value } : { ok: false, errors };
 }
@@ -78,10 +87,19 @@ export function isLikelyBot(input: ContactInput): boolean {
   return input.website.length > 0 || input.elapsedMs < CONTACT_LIMITS.minElapsedMs;
 }
 
-/** Correo en texto plano: sin HTML no hay nada que escapar ni que inyectar. */
-export function buildEmail(input: ContactInput): { subject: string; text: string } {
+/**
+ * Correo en texto plano: sin HTML no hay nada que escapar ni que inyectar. La línea de
+ * autorización, con la hora del servidor, es la prueba que pide el Decreto 1377 de 2013 (art. 8).
+ */
+export function buildEmail(input: ContactInput, receivedAt: Date = new Date()): { subject: string; text: string } {
   return {
     subject: `Contacto desde el portfolio: ${input.name}`,
-    text: [`Nombre: ${input.name}`, `Email: ${input.email}`, "", input.message].join("\n"),
+    text: [
+      `Nombre: ${input.name}`,
+      `Email: ${input.email}`,
+      `Autorización de tratamiento de datos: aceptada el ${receivedAt.toISOString()} · Política v${PRIVACY_POLICY_VERSION}`,
+      "",
+      input.message,
+    ].join("\n"),
   };
 }

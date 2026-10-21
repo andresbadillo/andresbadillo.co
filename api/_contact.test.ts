@@ -8,6 +8,7 @@ const validBody = {
   name: "Ada Lovelace",
   email: "ada@example.com",
   message: "Hola, me interesa tu trabajo.",
+  consent: true,
   website: "",
   elapsedMs: 12_000,
 };
@@ -59,7 +60,9 @@ describe("POST /api/contact", () => {
       to: ["owner@example.com"],
       reply_to: "ada@example.com",
       subject: "Contacto desde el portfolio: Ada Lovelace",
-      text: "Nombre: Ada Lovelace\nEmail: ada@example.com\n\nHola, me interesa tu trabajo.",
+      text: expect.stringMatching(
+        /^Nombre: Ada Lovelace\nEmail: ada@example\.com\nAutorización de tratamiento de datos: aceptada el \S+ · Política v\S+\n\nHola, me interesa tu trabajo\.$/,
+      ),
     });
     expect(payload).not.toHaveProperty("html");
   });
@@ -75,6 +78,13 @@ describe("POST /api/contact", () => {
     const response = await POST(contactRequest({ ...validBody, email: "nope" }));
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({ errors: { email: expect.any(String) } });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects a message without privacy consent without calling Resend", async () => {
+    const response = await POST(contactRequest({ ...validBody, consent: false }));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ errors: { consent: expect.any(String) } });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

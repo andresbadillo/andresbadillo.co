@@ -26,6 +26,38 @@
   gap: var(--space-1);
 }
 
+/* Casilla de autorización de datos: la nota y el error se alinean con el texto, no con la casilla. */
+.consent {
+  display: grid;
+  gap: var(--space-1);
+  font-size: 0.88rem;
+  line-height: 1.5;
+
+  > :not(.consentLabel) {
+    margin-left: 1.75rem;
+  }
+}
+
+.consentLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.consentLink {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.consentNote {
+  margin-bottom: 0;
+  margin-top: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
 /* Campo trampa para bots: fuera de pantalla (display: none lo detectan algunos bots). */
 .honeypot {
   position: absolute;
