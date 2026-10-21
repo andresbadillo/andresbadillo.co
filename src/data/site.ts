@@ -7,12 +7,12 @@ export const siteName = "Andres Badillo";
 export const siteOgImage = `${siteUrl}/og-image.png`;
 
 export const navItems = [
-  { label: "Home", to: "/" },
-  { label: "Portfolio", to: "/portfolio" },
-  { label: "Blog", to: "/blog" },
-  { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
-];
+  { to: "/" },
+  { to: "/portfolio" },
+  { to: "/blog" },
+  { to: "/about" },
+  { to: "/contact" },
+] as const;
 
 export const socialLinks = [
   { label: "GitHub", href: "https://github.com/andresbadillo" },

@@ -1,4 +1,5 @@
-import type { Project } from "@/data/projects";
+import type { Project } from "@/data/projectModel";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { Mock } from "@/components/mocks";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import clsx from "clsx";
@@ -10,6 +11,7 @@ interface HomeProjectRowProps {
 }
 
 export function HomeProjectRow({ project, reversed }: HomeProjectRowProps) {
+  const { t } = useLocale();
   const meta = [project.date, ...project.tags.map((t) => t.toUpperCase())].join(" | ");
 
   return (
@@ -21,7 +23,7 @@ export function HomeProjectRow({ project, reversed }: HomeProjectRowProps) {
         <h3 className={styles.title}>{project.title}</h3>
         <p className={styles.text}>{project.excerpt}</p>
         <TransitionLink className={styles.cta} to={`/portfolio/${project.slug}`}>
-          More Info
+          {t("moreInfo")}
         </TransitionLink>
         <p className={styles.meta}>{meta}</p>
       </div>

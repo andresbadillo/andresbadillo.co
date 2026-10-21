@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useLocation } from "react-router-dom";
 import { navItems, siteBrandShort } from "@/data/site";
+import type { MessageKey } from "@/data/ui";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { ThemeToggle } from "@/components/ThemeToggle/ThemeToggle";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import styles from "./Header.module.scss";
@@ -19,7 +21,16 @@ interface HeaderProps {
 const SCROLL_TOP_SHOW = 28;
 const SCROLL_MIN_HIDE = 44;
 
+const navLabelKey: Record<(typeof navItems)[number]["to"], MessageKey> = {
+  "/": "navHome",
+  "/portfolio": "navPortfolio",
+  "/blog": "navBlog",
+  "/about": "navAbout",
+  "/contact": "navContact",
+};
+
 export function Header({ theme, onThemeChange }: HeaderProps) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
   const location = useLocation();
@@ -97,7 +108,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
   return (
     <header className={clsx(styles.header, !headerVisible && styles.headerHidden)}>
       <div className={clsx("container", styles.inner)}>
-        <TransitionLink to="/" className={styles.logo} ariaLabel="Ir al inicio">
+        <TransitionLink to="/" className={styles.logo} ariaLabel={t("logoAria")}>
           <span className={styles.logoDot}>{'<'}</span>
           <span className={styles.logoText}>{siteBrandShort}</span>
           <span className={styles.logoDot}>{'/>'}</span>
@@ -105,7 +116,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
         <nav
           ref={navRef}
           className={clsx(styles.nav, open && styles.open)}
-          aria-label="Navegación principal"
+          aria-label={t("navAria")}
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(false);
           }}
@@ -126,7 +137,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
                   ariaCurrent={isNavActive(location.pathname, item.to) ? "page" : undefined}
                   onClick={() => setOpen(false)}
                 >
-                  {item.label}
+                  {t(navLabelKey[item.to])}
                 </TransitionLink>
               </span>
             ))}
@@ -140,7 +151,7 @@ export function Header({ theme, onThemeChange }: HeaderProps) {
             ref={menuButtonRef}
             type="button"
             className={clsx(styles.menuButton, open && styles.menuButtonOpen)}
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            aria-label={open ? t("menuClose") : t("menuOpen")}
             aria-expanded={open}
             onClick={() => setOpen((prev) => !prev)}
           >

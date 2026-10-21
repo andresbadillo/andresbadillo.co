@@ -4,6 +4,9 @@ import { AppRouter } from "@/router";
 import { SiteLayout } from "@/layouts/SiteLayout";
 import { CurtainProvider } from "@/components/CurtainTransition/CurtainTransition";
 import { ScrollToTop } from "@/components/ScrollToTop/ScrollToTop";
+import { PostsProvider } from "@/context/PostsContext";
+import { ProjectsProvider } from "@/context/ProjectsContext";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
 
 const THEME_KEY = "andres_badillo_theme";
 
@@ -25,13 +28,19 @@ export function App() {
   }, [theme]);
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <CurtainProvider>
-        <SiteLayout theme={theme} onThemeChange={setTheme}>
-          <AppRouter />
-        </SiteLayout>
-      </CurtainProvider>
-    </BrowserRouter>
+    <LocaleProvider>
+      <PostsProvider>
+        <ProjectsProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <CurtainProvider>
+              <SiteLayout theme={theme} onThemeChange={setTheme}>
+                <AppRouter />
+              </SiteLayout>
+            </CurtainProvider>
+          </BrowserRouter>
+        </ProjectsProvider>
+      </PostsProvider>
+    </LocaleProvider>
   );
 }

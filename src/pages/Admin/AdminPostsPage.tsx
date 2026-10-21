@@ -7,7 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./AdminPage.module.scss";
 
-const POST_COLUMNS = "id, slug, title, excerpt, published_at, featured, tags, cover_key, linkedin_embed, display_order";
+const POST_COLUMNS =
+  "id, slug, title_es, title_en, excerpt_es, excerpt_en, published_at, featured, tags, cover_key, linkedin_embed, display_order";
 
 export function AdminPostsPage() {
   const { user, signOut } = useAuth();
@@ -40,7 +41,8 @@ export function AdminPostsPage() {
   }, [loadPosts]);
 
   const deletePost = async (post: PostRow) => {
-    const confirmed = window.confirm(`Eliminar definitivamente “${post.title}”?`);
+    const label = post.title_es || post.title_en || post.slug;
+    const confirmed = window.confirm(`Eliminar definitivamente “${label}”?`);
     if (!confirmed) return;
 
     setBusyId(post.id);
@@ -76,7 +78,10 @@ export function AdminPostsPage() {
           <h1 className={styles.title}>Publicaciones</h1>
           <p className={styles.subtitle}>Los cambios guardados se publican inmediatamente.</p>
         </div>
-        <Link className={styles.button} to="/admin/posts/new">Crear post</Link>
+        <div className={styles.rowActions}>
+          <Link className={styles.linkAction} to="/admin/projects">Proyectos</Link>
+          <Link className={styles.button} to="/admin/posts/new">Crear post</Link>
+        </div>
       </div>
 
       <div className={styles.shell}>
@@ -90,7 +95,7 @@ export function AdminPostsPage() {
               <li className={styles.postRow} key={post.id}>
                 <span className={styles.order}>{String(post.display_order).padStart(2, "0")}</span>
                 <div>
-                  <h2 className={styles.postTitle}>{post.title}</h2>
+                  <h2 className={styles.postTitle}>{post.title_es || post.title_en || post.slug}</h2>
                   <p className={styles.postMeta}>/{post.slug} · {post.published_at.slice(0, 10)}</p>
                 </div>
                 <div className={styles.rowActions}>

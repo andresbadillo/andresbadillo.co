@@ -1,5 +1,5 @@
 import type { LinkedInEmbedPair, LinkedInFrameSpec } from "@/data/posts";
-import type { Json, PostInsert, PostRow } from "@/types/database";
+import type { Json, PostInsert, PostRow, PostTagRow } from "@/types/database";
 
 export const COVER_KEYS = [
   "thumb-1",
@@ -11,19 +11,27 @@ export const COVER_KEYS = [
 
 export type CoverKey = (typeof COVER_KEYS)[number];
 
+export interface PostTagInput {
+  slug: string;
+  es: string;
+  en: string;
+}
+
 export interface PostInput {
   slug: string;
-  title: string;
-  excerpt: string;
+  titleEs: string;
+  titleEn: string;
+  excerptEs: string;
+  excerptEn: string;
   publishedAt: string;
   featured: boolean;
-  tags: string[];
+  tags: PostTagInput[];
   coverKey: CoverKey | null;
   linkedinEmbed: LinkedInEmbedPair | null;
   displayOrder: number;
 }
 
-export type PostInputField = keyof PostInput | "linkedinCompact" | "linkedinFull";
+export type PostInputField = keyof PostInput | "title" | "excerpt" | "linkedinCompact" | "linkedinFull";
 export type PostValidationErrors = Partial<Record<PostInputField, string>>;
 
 export type PostValidationResult =
@@ -170,23 +178,33 @@ export function linkedInFrameToIframeCode(frame: LinkedInFrameSpec): string {
   return `<iframe src="${src}"${width}${height}></iframe>`;
 }
 
-export function normalizeTags(tags: string[]): string[] {
-  const normalized = tags.map((tag) => tag.trim()).filter(Boolean);
+export function normalizeTags(tags: PostTagInput[]): PostTagInput[] {
   const seen = new Set<string>();
-  return normalized.filter((tag) => {
-    const comparisonKey = tag.toLocaleLowerCase("es");
-    if (seen.has(comparisonKey)) return false;
-    seen.add(comparisonKey);
-    return true;
-  });
+  const normalized: PostTagInput[] = [];
+  for (const tag of tags) {
+    const es = tag.es.trim();
+    const en = tag.en.trim();
+    if (!es && !en) continue;
+    const slug = (tag.slug.trim() || es || en).toLocaleLowerCase("es");
+    if (!slug || seen.has(slug)) continue;
+    seen.add(slug);
+    normalized.push({ slug, es, en });
+  }
+  return normalized;
 }
 
 export function validatePostInput(input: PostInput): PostValidationResult {
+  const titleEs = input.titleEs.trim();
+  const titleEn = input.titleEn.trim();
+  const excerptEs = input.excerptEs.trim();
+  const excerptEn = input.excerptEn.trim();
   const value: PostInput = {
     ...input,
     slug: input.slug.trim().toLowerCase(),
-    title: input.title.trim(),
-    excerpt: input.excerpt.trim(),
+    titleEs,
+    titleEn,
+    excerptEs,
+    excerptEn,
     tags: normalizeTags(input.tags),
   };
   const errors: PostValidationErrors = {};
@@ -194,11 +212,17 @@ export function validatePostInput(input: PostInput): PostValidationResult {
   if (!SLUG_PATTERN.test(value.slug) || value.slug.length > 80) {
     errors.slug = "Usa hasta 80 caracteres en minúscula, números y guiones.";
   }
-  if (value.title.length < 1 || value.title.length > 120) {
-    errors.title = "El título debe tener entre 1 y 120 caracteres.";
+  if (!titleEs && !titleEn) {
+    errors.title = "Escribe el título en español o en inglés.";
   }
-  if (value.excerpt.length < 1 || value.excerpt.length > 300) {
-    errors.excerpt = "El resumen debe tener entre 1 y 300 caracteres.";
+  if ((titleEs && (titleEs.length < 1 || titleEs.length > 120)) || (titleEn && titleEn.length > 120)) {
+    errors.title = "Cada título presente debe tener entre 1 y 120 caracteres.";
+  }
+  if (!excerptEs && !excerptEn) {
+    errors.excerpt = "Escribe el resumen en español o en inglés.";
+  }
+  if ((excerptEs && excerptEs.length > 300) || (excerptEn && excerptEn.length > 300)) {
+    errors.excerpt = "Cada resumen presente debe tener entre 1 y 300 caracteres.";
   }
   if (!isValidIsoDate(value.publishedAt)) {
     errors.publishedAt = "Selecciona una fecha válida.";
@@ -206,8 +230,11 @@ export function validatePostInput(input: PostInput): PostValidationResult {
   if (!Number.isInteger(value.displayOrder) || value.displayOrder < 0 || value.displayOrder > 9999) {
     errors.displayOrder = "El orden debe ser un entero entre 0 y 9999.";
   }
-  if (value.tags.length > 10 || value.tags.some((tag) => tag.length > 30)) {
-    errors.tags = "Usa máximo 10 etiquetas de hasta 30 caracteres.";
+  if (
+    value.tags.length > 10
+    || value.tags.some((tag) => tag.slug.length > 30 || tag.es.length > 30 || tag.en.length > 30)
+  ) {
+    errors.tags = "Usa máximo 10 etiquetas de hasta 30 caracteres por idioma.";
   }
   if (value.coverKey !== null && !COVER_KEYS.includes(value.coverKey)) {
     errors.coverKey = "Selecciona una portada conocida.";
@@ -219,14 +246,29 @@ export function validatePostInput(input: PostInput): PostValidationResult {
   return Object.keys(errors).length === 0 ? { ok: true, value } : { ok: false, errors };
 }
 
+function tagRows(tags: PostRow["tags"]): PostTagRow[] {
+  return Array.isArray(tags)
+    ? tags.flatMap((tag) => {
+      if (!tag || typeof tag !== "object") return [];
+      return [{
+        slug: typeof tag.slug === "string" ? tag.slug : "",
+        es: typeof tag.es === "string" ? tag.es : "",
+        en: typeof tag.en === "string" ? tag.en : "",
+      }];
+    })
+    : [];
+}
+
 export function postRowToInput(row: PostRow): PostInput {
   return {
     slug: row.slug,
-    title: row.title,
-    excerpt: row.excerpt,
+    titleEs: row.title_es ?? "",
+    titleEn: row.title_en ?? "",
+    excerptEs: row.excerpt_es ?? "",
+    excerptEn: row.excerpt_en ?? "",
     publishedAt: row.published_at.slice(0, 10),
     featured: row.featured,
-    tags: row.tags ?? [],
+    tags: tagRows(row.tags),
     coverKey: COVER_KEYS.includes(row.cover_key as CoverKey) ? (row.cover_key as CoverKey) : null,
     linkedinEmbed: isLinkedInEmbedPair(row.linkedin_embed) ? row.linkedin_embed : null,
     displayOrder: row.display_order,
@@ -236,8 +278,10 @@ export function postRowToInput(row: PostRow): PostInput {
 export function postInputToInsert(input: PostInput): Omit<PostInsert, "id"> {
   return {
     slug: input.slug,
-    title: input.title,
-    excerpt: input.excerpt,
+    title_es: input.titleEs || null,
+    title_en: input.titleEn || null,
+    excerpt_es: input.excerptEs || null,
+    excerpt_en: input.excerptEn || null,
     published_at: input.publishedAt,
     featured: input.featured,
     tags: input.tags,
